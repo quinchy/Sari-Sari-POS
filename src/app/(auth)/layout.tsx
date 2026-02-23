@@ -21,7 +21,7 @@ export default function AuthLayout({
             </p>
           </section>
         </div>
-        <div className="bg-brickwall min-h-dvh flex items-center justify-center">
+        <div className="bg-brickwall min-h-dvh flex items-center justify-center px-3 lg:px-0">
           {children}
         </div>
       </main>
