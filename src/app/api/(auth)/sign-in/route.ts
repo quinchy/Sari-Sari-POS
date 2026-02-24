@@ -6,25 +6,26 @@ import { z } from "zod";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const parsed = signInSchema.safeParse(body);
 
-    // Validate with Zod
-    const validationResult = signInSchema.safeParse(body);
+    if (!parsed.success) {
+      const errors = z.flattenError(parsed.error);
+      const formattedErrors = Object.values(errors.fieldErrors)
+        .flat()
+        .join(", ");
 
-    if (!validationResult.success) {
       return NextResponse.json(
         {
-          error: "Validation failed",
-          details: z.treeifyError(validationResult.error),
+          success: false,
+          message: `Validation failed: ${formattedErrors}`,
         },
         { status: 400 },
       );
     }
 
-    const { email, password } = validationResult.data;
-
+    const { email, password } = parsed.data;
     const supabase = await createClient();
 
-    // Sign in the user with Supabase Auth
     const { data: authData, error: authError } =
       await supabase.auth.signInWithPassword({
         email,
@@ -32,24 +33,33 @@ export async function POST(request: NextRequest) {
       });
 
     if (authError) {
-      return NextResponse.json({ error: authError.message }, { status: 401 });
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Authentication failed: ${authError.message}`,
+        },
+        { status: 401 },
+      );
     }
 
     return NextResponse.json(
       {
+        success: true,
         message: "Login successful",
-        user: {
-          id: authData.user?.id,
-          email: authData.user?.email,
-          accessToken: authData.session?.access_token,
+        data: {
+          user: authData.user,
         },
       },
       { status: 200 },
     );
-  } catch (error) {
-    console.error("Login error:", error);
+  } catch (err) {
+    console.error(err);
+
     return NextResponse.json(
-      { error: "Internal server error" },
+      {
+        success: false,
+        message: "Internal server error",
+      },
       { status: 500 },
     );
   }

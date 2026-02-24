@@ -3,6 +3,7 @@ import type {
   SignInResponse,
   SignUpData as SignUpRequest,
   SignUpResponse,
+  SignOutResponse,
 } from "@/features/auth/types/auth";
 
 export type { SignInRequest, SignInResponse, SignUpRequest, SignUpResponse };
@@ -42,6 +43,23 @@ export async function signUp(
 
   if (!response.ok || !data.success) {
     throw new Error(data.message || "Sign up failed");
+  }
+
+  return data;
+}
+
+export async function signOut(): Promise<SignOutResponse> {
+  const response = await fetch("/api/sign-out", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Sign out failed");
   }
 
   return data;

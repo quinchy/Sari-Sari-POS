@@ -37,3 +37,8 @@ export interface SignUpResponse {
     email: string;
   };
 }
+
+export interface SignOutResponse {
+  success: boolean;
+  message: string;
+}

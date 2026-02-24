@@ -4,7 +4,7 @@
 // biome-ignore-all lint: generated file
 // @ts-nocheck 
 /*
- * This file exports the `store` model and its related types.
+ * This file exports the `Store` model and its related types.
  *
  * 🟢 You can import this file directly.
  */
@@ -13,10 +13,10 @@ import type * as $Enums from "../enums"
 import type * as Prisma from "../internal/prismaNamespace"
 
 /**
- * Model store
+ * Model Store
  * 
  */
-export type storeModel = runtime.Types.Result.DefaultSelection<Prisma.$storePayload>
+export type StoreModel = runtime.Types.Result.DefaultSelection<Prisma.$StorePayload>
 
 export type AggregateStore = {
   _count: StoreCountAggregateOutputType | null
@@ -71,37 +71,37 @@ export type StoreCountAggregateInputType = {
 
 export type StoreAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which store to aggregate.
+   * Filter which Store to aggregate.
    */
-  where?: Prisma.storeWhereInput
+  where?: Prisma.StoreWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of stores to fetch.
+   * Determine the order of Stores to fetch.
    */
-  orderBy?: Prisma.storeOrderByWithRelationInput | Prisma.storeOrderByWithRelationInput[]
+  orderBy?: Prisma.StoreOrderByWithRelationInput | Prisma.StoreOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
    * Sets the start position
    */
-  cursor?: Prisma.storeWhereUniqueInput
+  cursor?: Prisma.StoreWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` stores from the position of the cursor.
+   * Take `±n` Stores from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` stores.
+   * Skip the first `n` Stores.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Count returned stores
+   * Count returned Stores
   **/
   _count?: true | StoreCountAggregateInputType
   /**
@@ -129,11 +129,11 @@ export type GetStoreAggregateType<T extends StoreAggregateArgs> = {
 
 
 
-export type storeGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.storeWhereInput
-  orderBy?: Prisma.storeOrderByWithAggregationInput | Prisma.storeOrderByWithAggregationInput[]
+export type StoreGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StoreWhereInput
+  orderBy?: Prisma.StoreOrderByWithAggregationInput | Prisma.StoreOrderByWithAggregationInput[]
   by: Prisma.StoreScalarFieldEnum[] | Prisma.StoreScalarFieldEnum
-  having?: Prisma.storeScalarWhereWithAggregatesInput
+  having?: Prisma.StoreScalarWhereWithAggregatesInput
   take?: number
   skip?: number
   _count?: StoreCountAggregateInputType | true
@@ -151,7 +151,7 @@ export type StoreGroupByOutputType = {
   _max: StoreMaxAggregateOutputType | null
 }
 
-type GetStoreGroupByPayload<T extends storeGroupByArgs> = Prisma.PrismaPromise<
+type GetStoreGroupByPayload<T extends StoreGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<StoreGroupByOutputType, T['by']> &
       {
@@ -166,158 +166,267 @@ type GetStoreGroupByPayload<T extends storeGroupByArgs> = Prisma.PrismaPromise<
 
 
 
-export type storeWhereInput = {
-  AND?: Prisma.storeWhereInput | Prisma.storeWhereInput[]
-  OR?: Prisma.storeWhereInput[]
-  NOT?: Prisma.storeWhereInput | Prisma.storeWhereInput[]
-  id?: Prisma.UuidFilter<"store"> | string
-  name?: Prisma.StringFilter<"store"> | string
-  created_at?: Prisma.DateTimeFilter<"store"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"store"> | Date | string
+export type StoreWhereInput = {
+  AND?: Prisma.StoreWhereInput | Prisma.StoreWhereInput[]
+  OR?: Prisma.StoreWhereInput[]
+  NOT?: Prisma.StoreWhereInput | Prisma.StoreWhereInput[]
+  id?: Prisma.UuidFilter<"Store"> | string
+  name?: Prisma.StringFilter<"Store"> | string
+  created_at?: Prisma.DateTimeFilter<"Store"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Store"> | Date | string
+  storeMembers?: Prisma.StoreMemberListRelationFilter
 }
 
-export type storeOrderByWithRelationInput = {
+export type StoreOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
+  storeMembers?: Prisma.StoreMemberOrderByRelationAggregateInput
 }
 
-export type storeWhereUniqueInput = Prisma.AtLeast<{
+export type StoreWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  AND?: Prisma.storeWhereInput | Prisma.storeWhereInput[]
-  OR?: Prisma.storeWhereInput[]
-  NOT?: Prisma.storeWhereInput | Prisma.storeWhereInput[]
-  name?: Prisma.StringFilter<"store"> | string
-  created_at?: Prisma.DateTimeFilter<"store"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"store"> | Date | string
+  AND?: Prisma.StoreWhereInput | Prisma.StoreWhereInput[]
+  OR?: Prisma.StoreWhereInput[]
+  NOT?: Prisma.StoreWhereInput | Prisma.StoreWhereInput[]
+  name?: Prisma.StringFilter<"Store"> | string
+  created_at?: Prisma.DateTimeFilter<"Store"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"Store"> | Date | string
+  storeMembers?: Prisma.StoreMemberListRelationFilter
 }, "id">
 
-export type storeOrderByWithAggregationInput = {
+export type StoreOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
-  _count?: Prisma.storeCountOrderByAggregateInput
-  _max?: Prisma.storeMaxOrderByAggregateInput
-  _min?: Prisma.storeMinOrderByAggregateInput
+  _count?: Prisma.StoreCountOrderByAggregateInput
+  _max?: Prisma.StoreMaxOrderByAggregateInput
+  _min?: Prisma.StoreMinOrderByAggregateInput
 }
 
-export type storeScalarWhereWithAggregatesInput = {
-  AND?: Prisma.storeScalarWhereWithAggregatesInput | Prisma.storeScalarWhereWithAggregatesInput[]
-  OR?: Prisma.storeScalarWhereWithAggregatesInput[]
-  NOT?: Prisma.storeScalarWhereWithAggregatesInput | Prisma.storeScalarWhereWithAggregatesInput[]
-  id?: Prisma.UuidWithAggregatesFilter<"store"> | string
-  name?: Prisma.StringWithAggregatesFilter<"store"> | string
-  created_at?: Prisma.DateTimeWithAggregatesFilter<"store"> | Date | string
-  updated_at?: Prisma.DateTimeWithAggregatesFilter<"store"> | Date | string
+export type StoreScalarWhereWithAggregatesInput = {
+  AND?: Prisma.StoreScalarWhereWithAggregatesInput | Prisma.StoreScalarWhereWithAggregatesInput[]
+  OR?: Prisma.StoreScalarWhereWithAggregatesInput[]
+  NOT?: Prisma.StoreScalarWhereWithAggregatesInput | Prisma.StoreScalarWhereWithAggregatesInput[]
+  id?: Prisma.UuidWithAggregatesFilter<"Store"> | string
+  name?: Prisma.StringWithAggregatesFilter<"Store"> | string
+  created_at?: Prisma.DateTimeWithAggregatesFilter<"Store"> | Date | string
+  updated_at?: Prisma.DateTimeWithAggregatesFilter<"Store"> | Date | string
 }
 
-export type storeCreateInput = {
+export type StoreCreateInput = {
+  id?: string
+  name: string
+  created_at: Date | string
+  updated_at: Date | string
+  storeMembers?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
+}
+
+export type StoreUncheckedCreateInput = {
+  id?: string
+  name: string
+  created_at: Date | string
+  updated_at: Date | string
+  storeMembers?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
+}
+
+export type StoreUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storeMembers?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreUncheckedUpdateInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storeMembers?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreCreateManyInput = {
   id?: string
   name: string
   created_at: Date | string
   updated_at: Date | string
 }
 
-export type storeUncheckedCreateInput = {
+export type StoreUpdateManyMutationInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StoreUncheckedUpdateManyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StoreCountOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+}
+
+export type StoreMaxOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+}
+
+export type StoreMinOrderByAggregateInput = {
+  id?: Prisma.SortOrder
+  name?: Prisma.SortOrder
+  created_at?: Prisma.SortOrder
+  updated_at?: Prisma.SortOrder
+}
+
+export type StoreScalarRelationFilter = {
+  is?: Prisma.StoreWhereInput
+  isNot?: Prisma.StoreWhereInput
+}
+
+export type StoreCreateNestedOneWithoutStoreMembersInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutStoreMembersInput, Prisma.StoreUncheckedCreateWithoutStoreMembersInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutStoreMembersInput
+  connect?: Prisma.StoreWhereUniqueInput
+}
+
+export type StoreUpdateOneRequiredWithoutStoreMembersNestedInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutStoreMembersInput, Prisma.StoreUncheckedCreateWithoutStoreMembersInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutStoreMembersInput
+  upsert?: Prisma.StoreUpsertWithoutStoreMembersInput
+  connect?: Prisma.StoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutStoreMembersInput, Prisma.StoreUpdateWithoutStoreMembersInput>, Prisma.StoreUncheckedUpdateWithoutStoreMembersInput>
+}
+
+export type StoreCreateWithoutStoreMembersInput = {
   id?: string
   name: string
   created_at: Date | string
   updated_at: Date | string
 }
 
-export type storeUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type storeUncheckedUpdateInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.StringFieldUpdateOperationsInput | string
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type storeCreateManyInput = {
+export type StoreUncheckedCreateWithoutStoreMembersInput = {
   id?: string
   name: string
   created_at: Date | string
   updated_at: Date | string
 }
 
-export type storeUpdateManyMutationInput = {
+export type StoreCreateOrConnectWithoutStoreMembersInput = {
+  where: Prisma.StoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoreCreateWithoutStoreMembersInput, Prisma.StoreUncheckedCreateWithoutStoreMembersInput>
+}
+
+export type StoreUpsertWithoutStoreMembersInput = {
+  update: Prisma.XOR<Prisma.StoreUpdateWithoutStoreMembersInput, Prisma.StoreUncheckedUpdateWithoutStoreMembersInput>
+  create: Prisma.XOR<Prisma.StoreCreateWithoutStoreMembersInput, Prisma.StoreUncheckedCreateWithoutStoreMembersInput>
+  where?: Prisma.StoreWhereInput
+}
+
+export type StoreUpdateToOneWithWhereWithoutStoreMembersInput = {
+  where?: Prisma.StoreWhereInput
+  data: Prisma.XOR<Prisma.StoreUpdateWithoutStoreMembersInput, Prisma.StoreUncheckedUpdateWithoutStoreMembersInput>
+}
+
+export type StoreUpdateWithoutStoreMembersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type storeUncheckedUpdateManyInput = {
+export type StoreUncheckedUpdateWithoutStoreMembersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type storeCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+
+/**
+ * Count Type StoreCountOutputType
+ */
+
+export type StoreCountOutputType = {
+  storeMembers: number
 }
 
-export type storeMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+export type StoreCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  storeMembers?: boolean | StoreCountOutputTypeCountStoreMembersArgs
 }
 
-export type storeMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
-  created_at?: Prisma.SortOrder
-  updated_at?: Prisma.SortOrder
+/**
+ * StoreCountOutputType without action
+ */
+export type StoreCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StoreCountOutputType
+   */
+  select?: Prisma.StoreCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * StoreCountOutputType without action
+ */
+export type StoreCountOutputTypeCountStoreMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StoreMemberWhereInput
 }
 
 
+export type StoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  name?: boolean
+  created_at?: boolean
+  updated_at?: boolean
+  storeMembers?: boolean | Prisma.Store$storeMembersArgs<ExtArgs>
+  _count?: boolean | Prisma.StoreCountOutputTypeDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["store"]>
 
-export type storeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type StoreSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   created_at?: boolean
   updated_at?: boolean
 }, ExtArgs["result"]["store"]>
 
-export type storeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+export type StoreSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   name?: boolean
   created_at?: boolean
   updated_at?: boolean
 }, ExtArgs["result"]["store"]>
 
-export type storeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
-  name?: boolean
-  created_at?: boolean
-  updated_at?: boolean
-}, ExtArgs["result"]["store"]>
-
-export type storeSelectScalar = {
+export type StoreSelectScalar = {
   id?: boolean
   name?: boolean
   created_at?: boolean
   updated_at?: boolean
 }
 
-export type storeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "created_at" | "updated_at", ExtArgs["result"]["store"]>
+export type StoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "created_at" | "updated_at", ExtArgs["result"]["store"]>
+export type StoreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  storeMembers?: boolean | Prisma.Store$storeMembersArgs<ExtArgs>
+  _count?: boolean | Prisma.StoreCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type StoreIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type StoreIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
-export type $storePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  name: "store"
-  objects: {}
+export type $StorePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  name: "Store"
+  objects: {
+    storeMembers: Prisma.$StoreMemberPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
@@ -327,18 +436,18 @@ export type $storePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   composites: {}
 }
 
-export type storeGetPayload<S extends boolean | null | undefined | storeDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$storePayload, S>
+export type StoreGetPayload<S extends boolean | null | undefined | StoreDefaultArgs> = runtime.Types.Result.GetResult<Prisma.$StorePayload, S>
 
-export type storeCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
-  Omit<storeFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+export type StoreCountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> =
+  Omit<StoreFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
     select?: StoreCountAggregateInputType | true
   }
 
-export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
-  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['store'], meta: { name: 'store' } }
+export interface StoreDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+  [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Store'], meta: { name: 'Store' } }
   /**
    * Find zero or one Store that matches the filter.
-   * @param {storeFindUniqueArgs} args - Arguments to find a Store
+   * @param {StoreFindUniqueArgs} args - Arguments to find a Store
    * @example
    * // Get one Store
    * const store = await prisma.store.findUnique({
@@ -347,12 +456,12 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   }
    * })
    */
-  findUnique<T extends storeFindUniqueArgs>(args: Prisma.SelectSubset<T, storeFindUniqueArgs<ExtArgs>>): Prisma.Prisma__storeClient<runtime.Types.Result.GetResult<Prisma.$storePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findUnique<T extends StoreFindUniqueArgs>(args: Prisma.SelectSubset<T, StoreFindUniqueArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find one Store that matches the filter or throw an error with `error.code='P2025'`
    * if no matches were found.
-   * @param {storeFindUniqueOrThrowArgs} args - Arguments to find a Store
+   * @param {StoreFindUniqueOrThrowArgs} args - Arguments to find a Store
    * @example
    * // Get one Store
    * const store = await prisma.store.findUniqueOrThrow({
@@ -361,13 +470,13 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   }
    * })
    */
-  findUniqueOrThrow<T extends storeFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, storeFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__storeClient<runtime.Types.Result.GetResult<Prisma.$storePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findUniqueOrThrow<T extends StoreFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, StoreFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Store that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {storeFindFirstArgs} args - Arguments to find a Store
+   * @param {StoreFindFirstArgs} args - Arguments to find a Store
    * @example
    * // Get one Store
    * const store = await prisma.store.findFirst({
@@ -376,14 +485,14 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   }
    * })
    */
-  findFirst<T extends storeFindFirstArgs>(args?: Prisma.SelectSubset<T, storeFindFirstArgs<ExtArgs>>): Prisma.Prisma__storeClient<runtime.Types.Result.GetResult<Prisma.$storePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends StoreFindFirstArgs>(args?: Prisma.SelectSubset<T, StoreFindFirstArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first Store that matches the filter or
    * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {storeFindFirstOrThrowArgs} args - Arguments to find a Store
+   * @param {StoreFindFirstOrThrowArgs} args - Arguments to find a Store
    * @example
    * // Get one Store
    * const store = await prisma.store.findFirstOrThrow({
@@ -392,13 +501,13 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   }
    * })
    */
-  findFirstOrThrow<T extends storeFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, storeFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__storeClient<runtime.Types.Result.GetResult<Prisma.$storePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends StoreFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, StoreFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more Stores that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {storeFindManyArgs} args - Arguments to filter and select certain fields only.
+   * @param {StoreFindManyArgs} args - Arguments to filter and select certain fields only.
    * @example
    * // Get all Stores
    * const stores = await prisma.store.findMany()
@@ -410,11 +519,11 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * const storeWithIdOnly = await prisma.store.findMany({ select: { id: true } })
    * 
    */
-  findMany<T extends storeFindManyArgs>(args?: Prisma.SelectSubset<T, storeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$storePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends StoreFindManyArgs>(args?: Prisma.SelectSubset<T, StoreFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
   /**
    * Create a Store.
-   * @param {storeCreateArgs} args - Arguments to create a Store.
+   * @param {StoreCreateArgs} args - Arguments to create a Store.
    * @example
    * // Create one Store
    * const Store = await prisma.store.create({
@@ -424,11 +533,11 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * })
    * 
    */
-  create<T extends storeCreateArgs>(args: Prisma.SelectSubset<T, storeCreateArgs<ExtArgs>>): Prisma.Prisma__storeClient<runtime.Types.Result.GetResult<Prisma.$storePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  create<T extends StoreCreateArgs>(args: Prisma.SelectSubset<T, StoreCreateArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Create many Stores.
-   * @param {storeCreateManyArgs} args - Arguments to create many Stores.
+   * @param {StoreCreateManyArgs} args - Arguments to create many Stores.
    * @example
    * // Create many Stores
    * const store = await prisma.store.createMany({
@@ -438,11 +547,11 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * })
    *     
    */
-  createMany<T extends storeCreateManyArgs>(args?: Prisma.SelectSubset<T, storeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  createMany<T extends StoreCreateManyArgs>(args?: Prisma.SelectSubset<T, StoreCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Create many Stores and returns the data saved in the database.
-   * @param {storeCreateManyAndReturnArgs} args - Arguments to create many Stores.
+   * @param {StoreCreateManyAndReturnArgs} args - Arguments to create many Stores.
    * @example
    * // Create many Stores
    * const store = await prisma.store.createManyAndReturn({
@@ -462,11 +571,11 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * Read more here: https://pris.ly/d/null-undefined
    * 
    */
-  createManyAndReturn<T extends storeCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, storeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$storePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+  createManyAndReturn<T extends StoreCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, StoreCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Delete a Store.
-   * @param {storeDeleteArgs} args - Arguments to delete one Store.
+   * @param {StoreDeleteArgs} args - Arguments to delete one Store.
    * @example
    * // Delete one Store
    * const Store = await prisma.store.delete({
@@ -476,11 +585,11 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * })
    * 
    */
-  delete<T extends storeDeleteArgs>(args: Prisma.SelectSubset<T, storeDeleteArgs<ExtArgs>>): Prisma.Prisma__storeClient<runtime.Types.Result.GetResult<Prisma.$storePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  delete<T extends StoreDeleteArgs>(args: Prisma.SelectSubset<T, StoreDeleteArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Update one Store.
-   * @param {storeUpdateArgs} args - Arguments to update one Store.
+   * @param {StoreUpdateArgs} args - Arguments to update one Store.
    * @example
    * // Update one Store
    * const store = await prisma.store.update({
@@ -493,11 +602,11 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * })
    * 
    */
-  update<T extends storeUpdateArgs>(args: Prisma.SelectSubset<T, storeUpdateArgs<ExtArgs>>): Prisma.Prisma__storeClient<runtime.Types.Result.GetResult<Prisma.$storePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  update<T extends StoreUpdateArgs>(args: Prisma.SelectSubset<T, StoreUpdateArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Delete zero or more Stores.
-   * @param {storeDeleteManyArgs} args - Arguments to filter Stores to delete.
+   * @param {StoreDeleteManyArgs} args - Arguments to filter Stores to delete.
    * @example
    * // Delete a few Stores
    * const { count } = await prisma.store.deleteMany({
@@ -507,13 +616,13 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * })
    * 
    */
-  deleteMany<T extends storeDeleteManyArgs>(args?: Prisma.SelectSubset<T, storeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  deleteMany<T extends StoreDeleteManyArgs>(args?: Prisma.SelectSubset<T, StoreDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Stores.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {storeUpdateManyArgs} args - Arguments to update one or more rows.
+   * @param {StoreUpdateManyArgs} args - Arguments to update one or more rows.
    * @example
    * // Update many Stores
    * const store = await prisma.store.updateMany({
@@ -526,11 +635,11 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * })
    * 
    */
-  updateMany<T extends storeUpdateManyArgs>(args: Prisma.SelectSubset<T, storeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+  updateMany<T extends StoreUpdateManyArgs>(args: Prisma.SelectSubset<T, StoreUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
    * Update zero or more Stores and returns the data updated in the database.
-   * @param {storeUpdateManyAndReturnArgs} args - Arguments to update many Stores.
+   * @param {StoreUpdateManyAndReturnArgs} args - Arguments to update many Stores.
    * @example
    * // Update many Stores
    * const store = await prisma.store.updateManyAndReturn({
@@ -556,11 +665,11 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * Read more here: https://pris.ly/d/null-undefined
    * 
    */
-  updateManyAndReturn<T extends storeUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, storeUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$storePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+  updateManyAndReturn<T extends StoreUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, StoreUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Store.
-   * @param {storeUpsertArgs} args - Arguments to update or create a Store.
+   * @param {StoreUpsertArgs} args - Arguments to update or create a Store.
    * @example
    * // Update or create a Store
    * const store = await prisma.store.upsert({
@@ -575,14 +684,14 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   }
    * })
    */
-  upsert<T extends storeUpsertArgs>(args: Prisma.SelectSubset<T, storeUpsertArgs<ExtArgs>>): Prisma.Prisma__storeClient<runtime.Types.Result.GetResult<Prisma.$storePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  upsert<T extends StoreUpsertArgs>(args: Prisma.SelectSubset<T, StoreUpsertArgs<ExtArgs>>): Prisma.Prisma__StoreClient<runtime.Types.Result.GetResult<Prisma.$StorePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
 
   /**
    * Count the number of Stores.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {storeCountArgs} args - Arguments to filter Stores to count.
+   * @param {StoreCountArgs} args - Arguments to filter Stores to count.
    * @example
    * // Count the number of Stores
    * const count = await prisma.store.count({
@@ -591,8 +700,8 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    *   }
    * })
   **/
-  count<T extends storeCountArgs>(
-    args?: Prisma.Subset<T, storeCountArgs>,
+  count<T extends StoreCountArgs>(
+    args?: Prisma.Subset<T, StoreCountArgs>,
   ): Prisma.PrismaPromise<
     T extends runtime.Types.Utils.Record<'select', any>
       ? T['select'] extends true
@@ -631,7 +740,7 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * Group by Store.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
-   * @param {storeGroupByArgs} args - Group by arguments.
+   * @param {StoreGroupByArgs} args - Group by arguments.
    * @example
    * // Group by city, order by createdAt, get count
    * const result = await prisma.user.groupBy({
@@ -646,14 +755,14 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * 
   **/
   groupBy<
-    T extends storeGroupByArgs,
+    T extends StoreGroupByArgs,
     HasSelectOrTake extends Prisma.Or<
       Prisma.Extends<'skip', Prisma.Keys<T>>,
       Prisma.Extends<'take', Prisma.Keys<T>>
     >,
     OrderByArg extends Prisma.True extends HasSelectOrTake
-      ? { orderBy: storeGroupByArgs['orderBy'] }
-      : { orderBy?: storeGroupByArgs['orderBy'] },
+      ? { orderBy: StoreGroupByArgs['orderBy'] }
+      : { orderBy?: StoreGroupByArgs['orderBy'] },
     OrderFields extends Prisma.ExcludeUnderscoreKeys<Prisma.Keys<Prisma.MaybeTupleToUnion<T['orderBy']>>>,
     ByFields extends Prisma.MaybeTupleToUnion<T['by']>,
     ByValid extends Prisma.Has<ByFields, OrderFields>,
@@ -702,21 +811,22 @@ export interface storeDelegate<ExtArgs extends runtime.Types.Extensions.Internal
           ? never
           : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
       }[OrderFields]
-  >(args: Prisma.SubsetIntersection<T, storeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStoreGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  >(args: Prisma.SubsetIntersection<T, StoreGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStoreGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
 /**
- * Fields of the store model
+ * Fields of the Store model
  */
-readonly fields: storeFieldRefs;
+readonly fields: StoreFieldRefs;
 }
 
 /**
- * The delegate class that acts as a "Promise-like" for store.
+ * The delegate class that acts as a "Promise-like" for Store.
  * Why is this prefixed with `Prisma__`?
  * Because we want to prevent naming conflicts as mentioned in
  * https://github.com/prisma/prisma-client-js/issues/707
  */
-export interface Prisma__storeClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+export interface Prisma__StoreClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  storeMembers<T extends Prisma.Store$storeMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$storeMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StoreMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -743,374 +853,438 @@ export interface Prisma__storeClient<T, Null = never, ExtArgs extends runtime.Ty
 
 
 /**
- * Fields of the store model
+ * Fields of the Store model
  */
-export interface storeFieldRefs {
-  readonly id: Prisma.FieldRef<"store", 'String'>
-  readonly name: Prisma.FieldRef<"store", 'String'>
-  readonly created_at: Prisma.FieldRef<"store", 'DateTime'>
-  readonly updated_at: Prisma.FieldRef<"store", 'DateTime'>
+export interface StoreFieldRefs {
+  readonly id: Prisma.FieldRef<"Store", 'String'>
+  readonly name: Prisma.FieldRef<"Store", 'String'>
+  readonly created_at: Prisma.FieldRef<"Store", 'DateTime'>
+  readonly updated_at: Prisma.FieldRef<"Store", 'DateTime'>
 }
     
 
 // Custom InputTypes
 /**
- * store findUnique
+ * Store findUnique
  */
-export type storeFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the store
+   * Select specific fields to fetch from the Store
    */
-  select?: Prisma.storeSelect<ExtArgs> | null
+  select?: Prisma.StoreSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the store
+   * Omit specific fields from the Store
    */
-  omit?: Prisma.storeOmit<ExtArgs> | null
+  omit?: Prisma.StoreOmit<ExtArgs> | null
   /**
-   * Filter, which store to fetch.
+   * Choose, which related nodes to fetch as well
    */
-  where: Prisma.storeWhereUniqueInput
+  include?: Prisma.StoreInclude<ExtArgs> | null
+  /**
+   * Filter, which Store to fetch.
+   */
+  where: Prisma.StoreWhereUniqueInput
 }
 
 /**
- * store findUniqueOrThrow
+ * Store findUniqueOrThrow
  */
-export type storeFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the store
+   * Select specific fields to fetch from the Store
    */
-  select?: Prisma.storeSelect<ExtArgs> | null
+  select?: Prisma.StoreSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the store
+   * Omit specific fields from the Store
    */
-  omit?: Prisma.storeOmit<ExtArgs> | null
+  omit?: Prisma.StoreOmit<ExtArgs> | null
   /**
-   * Filter, which store to fetch.
+   * Choose, which related nodes to fetch as well
    */
-  where: Prisma.storeWhereUniqueInput
+  include?: Prisma.StoreInclude<ExtArgs> | null
+  /**
+   * Filter, which Store to fetch.
+   */
+  where: Prisma.StoreWhereUniqueInput
 }
 
 /**
- * store findFirst
+ * Store findFirst
  */
-export type storeFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreFindFirstArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the store
+   * Select specific fields to fetch from the Store
    */
-  select?: Prisma.storeSelect<ExtArgs> | null
+  select?: Prisma.StoreSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the store
+   * Omit specific fields from the Store
    */
-  omit?: Prisma.storeOmit<ExtArgs> | null
+  omit?: Prisma.StoreOmit<ExtArgs> | null
   /**
-   * Filter, which store to fetch.
+   * Choose, which related nodes to fetch as well
    */
-  where?: Prisma.storeWhereInput
+  include?: Prisma.StoreInclude<ExtArgs> | null
+  /**
+   * Filter, which Store to fetch.
+   */
+  where?: Prisma.StoreWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of stores to fetch.
+   * Determine the order of Stores to fetch.
    */
-  orderBy?: Prisma.storeOrderByWithRelationInput | Prisma.storeOrderByWithRelationInput[]
+  orderBy?: Prisma.StoreOrderByWithRelationInput | Prisma.StoreOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for stores.
+   * Sets the position for searching for Stores.
    */
-  cursor?: Prisma.storeWhereUniqueInput
+  cursor?: Prisma.StoreWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` stores from the position of the cursor.
+   * Take `±n` Stores from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` stores.
+   * Skip the first `n` Stores.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of stores.
+   * Filter by unique combinations of Stores.
    */
   distinct?: Prisma.StoreScalarFieldEnum | Prisma.StoreScalarFieldEnum[]
 }
 
 /**
- * store findFirstOrThrow
+ * Store findFirstOrThrow
  */
-export type storeFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the store
+   * Select specific fields to fetch from the Store
    */
-  select?: Prisma.storeSelect<ExtArgs> | null
+  select?: Prisma.StoreSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the store
+   * Omit specific fields from the Store
    */
-  omit?: Prisma.storeOmit<ExtArgs> | null
+  omit?: Prisma.StoreOmit<ExtArgs> | null
   /**
-   * Filter, which store to fetch.
+   * Choose, which related nodes to fetch as well
    */
-  where?: Prisma.storeWhereInput
+  include?: Prisma.StoreInclude<ExtArgs> | null
+  /**
+   * Filter, which Store to fetch.
+   */
+  where?: Prisma.StoreWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of stores to fetch.
+   * Determine the order of Stores to fetch.
    */
-  orderBy?: Prisma.storeOrderByWithRelationInput | Prisma.storeOrderByWithRelationInput[]
+  orderBy?: Prisma.StoreOrderByWithRelationInput | Prisma.StoreOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for searching for stores.
+   * Sets the position for searching for Stores.
    */
-  cursor?: Prisma.storeWhereUniqueInput
+  cursor?: Prisma.StoreWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` stores from the position of the cursor.
+   * Take `±n` Stores from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` stores.
+   * Skip the first `n` Stores.
    */
   skip?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
    * 
-   * Filter by unique combinations of stores.
+   * Filter by unique combinations of Stores.
    */
   distinct?: Prisma.StoreScalarFieldEnum | Prisma.StoreScalarFieldEnum[]
 }
 
 /**
- * store findMany
+ * Store findMany
  */
-export type storeFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the store
+   * Select specific fields to fetch from the Store
    */
-  select?: Prisma.storeSelect<ExtArgs> | null
+  select?: Prisma.StoreSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the store
+   * Omit specific fields from the Store
    */
-  omit?: Prisma.storeOmit<ExtArgs> | null
+  omit?: Prisma.StoreOmit<ExtArgs> | null
   /**
-   * Filter, which stores to fetch.
+   * Choose, which related nodes to fetch as well
    */
-  where?: Prisma.storeWhereInput
+  include?: Prisma.StoreInclude<ExtArgs> | null
+  /**
+   * Filter, which Stores to fetch.
+   */
+  where?: Prisma.StoreWhereInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
    * 
-   * Determine the order of stores to fetch.
+   * Determine the order of Stores to fetch.
    */
-  orderBy?: Prisma.storeOrderByWithRelationInput | Prisma.storeOrderByWithRelationInput[]
+  orderBy?: Prisma.StoreOrderByWithRelationInput | Prisma.StoreOrderByWithRelationInput[]
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
    * 
-   * Sets the position for listing stores.
+   * Sets the position for listing Stores.
    */
-  cursor?: Prisma.storeWhereUniqueInput
+  cursor?: Prisma.StoreWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Take `±n` stores from the position of the cursor.
+   * Take `±n` Stores from the position of the cursor.
    */
   take?: number
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
-   * Skip the first `n` stores.
+   * Skip the first `n` Stores.
    */
   skip?: number
   distinct?: Prisma.StoreScalarFieldEnum | Prisma.StoreScalarFieldEnum[]
 }
 
 /**
- * store create
+ * Store create
  */
-export type storeCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreCreateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the store
+   * Select specific fields to fetch from the Store
    */
-  select?: Prisma.storeSelect<ExtArgs> | null
+  select?: Prisma.StoreSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the store
+   * Omit specific fields from the Store
    */
-  omit?: Prisma.storeOmit<ExtArgs> | null
+  omit?: Prisma.StoreOmit<ExtArgs> | null
   /**
-   * The data needed to create a store.
+   * Choose, which related nodes to fetch as well
    */
-  data: Prisma.XOR<Prisma.storeCreateInput, Prisma.storeUncheckedCreateInput>
+  include?: Prisma.StoreInclude<ExtArgs> | null
+  /**
+   * The data needed to create a Store.
+   */
+  data: Prisma.XOR<Prisma.StoreCreateInput, Prisma.StoreUncheckedCreateInput>
 }
 
 /**
- * store createMany
+ * Store createMany
  */
-export type storeCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreCreateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to create many stores.
+   * The data used to create many Stores.
    */
-  data: Prisma.storeCreateManyInput | Prisma.storeCreateManyInput[]
+  data: Prisma.StoreCreateManyInput | Prisma.StoreCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * store createManyAndReturn
+ * Store createManyAndReturn
  */
-export type storeCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the store
+   * Select specific fields to fetch from the Store
    */
-  select?: Prisma.storeSelectCreateManyAndReturn<ExtArgs> | null
+  select?: Prisma.StoreSelectCreateManyAndReturn<ExtArgs> | null
   /**
-   * Omit specific fields from the store
+   * Omit specific fields from the Store
    */
-  omit?: Prisma.storeOmit<ExtArgs> | null
+  omit?: Prisma.StoreOmit<ExtArgs> | null
   /**
-   * The data used to create many stores.
+   * The data used to create many Stores.
    */
-  data: Prisma.storeCreateManyInput | Prisma.storeCreateManyInput[]
+  data: Prisma.StoreCreateManyInput | Prisma.StoreCreateManyInput[]
   skipDuplicates?: boolean
 }
 
 /**
- * store update
+ * Store update
  */
-export type storeUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the store
+   * Select specific fields to fetch from the Store
    */
-  select?: Prisma.storeSelect<ExtArgs> | null
+  select?: Prisma.StoreSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the store
+   * Omit specific fields from the Store
    */
-  omit?: Prisma.storeOmit<ExtArgs> | null
+  omit?: Prisma.StoreOmit<ExtArgs> | null
   /**
-   * The data needed to update a store.
+   * Choose, which related nodes to fetch as well
    */
-  data: Prisma.XOR<Prisma.storeUpdateInput, Prisma.storeUncheckedUpdateInput>
+  include?: Prisma.StoreInclude<ExtArgs> | null
   /**
-   * Choose, which store to update.
+   * The data needed to update a Store.
    */
-  where: Prisma.storeWhereUniqueInput
+  data: Prisma.XOR<Prisma.StoreUpdateInput, Prisma.StoreUncheckedUpdateInput>
+  /**
+   * Choose, which Store to update.
+   */
+  where: Prisma.StoreWhereUniqueInput
 }
 
 /**
- * store updateMany
+ * Store updateMany
  */
-export type storeUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * The data used to update stores.
+   * The data used to update Stores.
    */
-  data: Prisma.XOR<Prisma.storeUpdateManyMutationInput, Prisma.storeUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.StoreUpdateManyMutationInput, Prisma.StoreUncheckedUpdateManyInput>
   /**
-   * Filter which stores to update
+   * Filter which Stores to update
    */
-  where?: Prisma.storeWhereInput
+  where?: Prisma.StoreWhereInput
   /**
-   * Limit how many stores to update.
+   * Limit how many Stores to update.
    */
   limit?: number
 }
 
 /**
- * store updateManyAndReturn
+ * Store updateManyAndReturn
  */
-export type storeUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the store
+   * Select specific fields to fetch from the Store
    */
-  select?: Prisma.storeSelectUpdateManyAndReturn<ExtArgs> | null
+  select?: Prisma.StoreSelectUpdateManyAndReturn<ExtArgs> | null
   /**
-   * Omit specific fields from the store
+   * Omit specific fields from the Store
    */
-  omit?: Prisma.storeOmit<ExtArgs> | null
+  omit?: Prisma.StoreOmit<ExtArgs> | null
   /**
-   * The data used to update stores.
+   * The data used to update Stores.
    */
-  data: Prisma.XOR<Prisma.storeUpdateManyMutationInput, Prisma.storeUncheckedUpdateManyInput>
+  data: Prisma.XOR<Prisma.StoreUpdateManyMutationInput, Prisma.StoreUncheckedUpdateManyInput>
   /**
-   * Filter which stores to update
+   * Filter which Stores to update
    */
-  where?: Prisma.storeWhereInput
+  where?: Prisma.StoreWhereInput
   /**
-   * Limit how many stores to update.
+   * Limit how many Stores to update.
    */
   limit?: number
 }
 
 /**
- * store upsert
+ * Store upsert
  */
-export type storeUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreUpsertArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the store
+   * Select specific fields to fetch from the Store
    */
-  select?: Prisma.storeSelect<ExtArgs> | null
+  select?: Prisma.StoreSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the store
+   * Omit specific fields from the Store
    */
-  omit?: Prisma.storeOmit<ExtArgs> | null
+  omit?: Prisma.StoreOmit<ExtArgs> | null
   /**
-   * The filter to search for the store to update in case it exists.
+   * Choose, which related nodes to fetch as well
    */
-  where: Prisma.storeWhereUniqueInput
+  include?: Prisma.StoreInclude<ExtArgs> | null
   /**
-   * In case the store found by the `where` argument doesn't exist, create a new store with this data.
+   * The filter to search for the Store to update in case it exists.
    */
-  create: Prisma.XOR<Prisma.storeCreateInput, Prisma.storeUncheckedCreateInput>
+  where: Prisma.StoreWhereUniqueInput
   /**
-   * In case the store was found with the provided `where` argument, update it with this data.
+   * In case the Store found by the `where` argument doesn't exist, create a new Store with this data.
    */
-  update: Prisma.XOR<Prisma.storeUpdateInput, Prisma.storeUncheckedUpdateInput>
+  create: Prisma.XOR<Prisma.StoreCreateInput, Prisma.StoreUncheckedCreateInput>
+  /**
+   * In case the Store was found with the provided `where` argument, update it with this data.
+   */
+  update: Prisma.XOR<Prisma.StoreUpdateInput, Prisma.StoreUncheckedUpdateInput>
 }
 
 /**
- * store delete
+ * Store delete
  */
-export type storeDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreDeleteArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the store
+   * Select specific fields to fetch from the Store
    */
-  select?: Prisma.storeSelect<ExtArgs> | null
+  select?: Prisma.StoreSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the store
+   * Omit specific fields from the Store
    */
-  omit?: Prisma.storeOmit<ExtArgs> | null
+  omit?: Prisma.StoreOmit<ExtArgs> | null
   /**
-   * Filter which store to delete.
+   * Choose, which related nodes to fetch as well
    */
-  where: Prisma.storeWhereUniqueInput
+  include?: Prisma.StoreInclude<ExtArgs> | null
+  /**
+   * Filter which Store to delete.
+   */
+  where: Prisma.StoreWhereUniqueInput
 }
 
 /**
- * store deleteMany
+ * Store deleteMany
  */
-export type storeDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type StoreDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Filter which stores to delete
+   * Filter which Stores to delete
    */
-  where?: Prisma.storeWhereInput
+  where?: Prisma.StoreWhereInput
   /**
-   * Limit how many stores to delete.
+   * Limit how many Stores to delete.
    */
   limit?: number
 }
 
 /**
- * store without action
+ * Store.storeMembers
  */
-export type storeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type Store$storeMembersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the store
+   * Select specific fields to fetch from the StoreMember
    */
-  select?: Prisma.storeSelect<ExtArgs> | null
+  select?: Prisma.StoreMemberSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the store
+   * Omit specific fields from the StoreMember
    */
-  omit?: Prisma.storeOmit<ExtArgs> | null
+  omit?: Prisma.StoreMemberOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoreMemberInclude<ExtArgs> | null
+  where?: Prisma.StoreMemberWhereInput
+  orderBy?: Prisma.StoreMemberOrderByWithRelationInput | Prisma.StoreMemberOrderByWithRelationInput[]
+  cursor?: Prisma.StoreMemberWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StoreMemberScalarFieldEnum | Prisma.StoreMemberScalarFieldEnum[]
+}
+
+/**
+ * Store without action
+ */
+export type StoreDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Store
+   */
+  select?: Prisma.StoreSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Store
+   */
+  omit?: Prisma.StoreOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoreInclude<ExtArgs> | null
 }

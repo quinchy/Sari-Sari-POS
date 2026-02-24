@@ -13,18 +13,44 @@ datasource db {
   provider = "postgresql"
 }
 
-model user {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model User {
+  id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   first_name String
-  last_name String
-  email String @unique
-  created_at DateTime @db.Timestamptz(6)
-  updated_at DateTime @db.Timestamptz(6)
+  last_name  String
+  email      String         @unique
+  created_at DateTime       @db.Timestamptz(6)
+  updated_at DateTime       @db.Timestamptz(6)
+
+  storeMembers StoreMember[]
 }
 
-model store {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name String
+model Store {
+  id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String
+  created_at DateTime       @db.Timestamptz(6)
+  updated_at DateTime       @db.Timestamptz(6)
+
+  storeMembers StoreMember[]
+}
+
+model StoreMember {
+  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  userId  String   @db.Uuid
+  storeId String   @db.Uuid
+  role    StoreRole
+
+  user    User     @relation(fields: [userId], references: [id])
+  store   Store    @relation(fields: [storeId], references: [id])
+
   created_at DateTime @db.Timestamptz(6)
   updated_at DateTime @db.Timestamptz(6)
+
+  @@unique([userId, storeId])
+}
+
+enum StoreRole {
+  OWNER
+  ADMIN
+  MEMBER
 }

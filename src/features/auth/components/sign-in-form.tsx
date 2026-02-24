@@ -28,11 +28,8 @@ export function SignInForm() {
     },
   });
 
-  const onSubmit = async (data: SignInFormData) => {
-    try {
-      const response = await signIn(data);
-      console.log("Login successful:", response);
-    } catch (error) {}
+  const onSubmit = (signInData: SignInFormData) => {
+    signIn(signInData);
   };
 
   return (
@@ -90,7 +87,7 @@ export function SignInForm() {
         {isSigningIn ? (
           <>
             <Spinner />
-            Signing In...
+            Signing In
           </>
         ) : (
           "Sign-in"

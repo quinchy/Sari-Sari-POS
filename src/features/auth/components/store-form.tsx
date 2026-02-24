@@ -2,16 +2,9 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useSignUp } from "@/features/auth/hooks/use-auth";
-import {
-  signUpSchema,
-  storeFormSchema,
-} from "@/features/auth/validations/auth";
-import {
-  SignUpData as SignUpFormData,
-  StoreFormData,
-} from "@/features/auth/types/auth";
+import { storeFormSchema } from "@/features/auth/validations/auth";
+import { StoreFormData } from "@/features/auth/types/auth";
 import {
   Field,
   FieldContent,
@@ -21,14 +14,11 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 import { useSignUpStore } from "@/features/auth/store/use-signup-store";
 
 export function StoreForm() {
-  const router = useRouter();
-  const { isSigningUp, signUp, signUpError } = useSignUp();
-  const setStoreDatas = useSignUpStore((state) => state.setStoreDatas);
+  const { isSigningUp, signUp } = useSignUp();
   const accountDatas = useSignUpStore((state) => state.accountDatas);
 
   const form = useForm<StoreFormData>({
@@ -38,24 +28,13 @@ export function StoreForm() {
     },
   });
 
-  const onSubmit = async (datas: StoreFormData) => {
-    setStoreDatas(datas);
-    const finalData = {
+  const onSubmit = (storeDatas: StoreFormData) => {
+    const signUpData = {
       ...accountDatas,
-      ...datas,
+      ...storeDatas,
     };
-    try {
-      const response = await signUp(finalData);
-      toast.success(response.message);
-      router.push("/");
-    } catch (error) {
-      console.log(error);
-    }
+    signUp(signUpData);
   };
-
-  if (signUpError) {
-    toast.error(signUpError.message);
-  }
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">

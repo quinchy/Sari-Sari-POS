@@ -1,5 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { signUpSchema } from "@/features/auth/validations/auth";
+import { userRepository } from "@/repositories/user";
+import { storeRepository } from "@/repositories/store";
+import { storeMemberRepository } from "@/repositories/store-member";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -23,7 +26,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { email, password, firstName, lastName } = parsed.data;
+    const { email, password, firstName, lastName, storeName } = parsed.data;
     const supabase = await createClient();
 
     const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -34,15 +37,35 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (authError) {
+    if (authError || !authData.user) {
       return NextResponse.json(
         {
           success: false,
-          message: `Authentication failed: ${authError.message}`,
+          message: `Authentication failed: ${authError?.message ?? "no user"}`,
         },
         { status: 400 },
       );
     }
+
+    const userId = authData.user.id;
+
+    await userRepository.create({
+      id: userId,
+      firstName,
+      lastName,
+      email,
+    });
+
+    const store = await storeRepository.create({
+      id: userId,
+      name: storeName,
+    });
+
+    await storeMemberRepository.create({
+      userId,
+      storeId: store.id,
+      role: "OWNER",
+    });
 
     return NextResponse.json(
       {
