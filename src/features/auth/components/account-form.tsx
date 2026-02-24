@@ -2,10 +2,8 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useSignUp } from "@/features/auth/hooks/use-auth";
-import { signUpSchema } from "@/features/auth/validations/auth";
-import { SignUpData as SignUpFormData } from "@/features/auth/types/auth";
+import { accountFormSchema } from "@/features/auth/validations/auth";
+import { AccountFormData } from "@/features/auth/types/auth";
 import {
   Field,
   FieldContent,
@@ -16,15 +14,14 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { Spinner } from "@/components/ui/spinner";
+import { useSignUpStore } from "@/features/auth/store/use-signup-store";
 
 export function AccountForm() {
-  const router = useRouter();
-  const { isSigningUp, signUp, signUpError } = useSignUp();
+  const setStep = useSignUpStore((state) => state.setStep);
+  const setAccountValues = useSignUpStore((state) => state.setAccountDatas);
 
-  const form = useForm<SignUpFormData>({
-    resolver: zodResolver(signUpSchema),
+  const form = useForm<AccountFormData>({
+    resolver: zodResolver(accountFormSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -33,24 +30,11 @@ export function AccountForm() {
       lastName: "",
     },
   });
-  const onSubmit = async (data: SignUpFormData) => {
-    try {
-      const response = await signUp({
-        email: data.email,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-        firstName: data.firstName,
-        lastName: data.lastName,
-      });
-      toast.success(response.message);
-      router.push("/sign-in");
-    } catch (error) {
-      console.log(error);
-    }
+
+  const onSubmit = (data: AccountFormData) => {
+    setAccountValues(data);
+    setStep(2);
   };
-  if (signUpError) {
-    toast.error(signUpError.message);
-  }
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
@@ -71,7 +55,6 @@ export function AccountForm() {
                   <Input
                     {...field}
                     type="text"
-                    disabled={isSigningUp}
                     aria-invalid={fieldState.invalid}
                     placeholder="e.g. John"
                   />
@@ -95,7 +78,6 @@ export function AccountForm() {
                   <Input
                     {...field}
                     type="text"
-                    disabled={isSigningUp}
                     aria-invalid={fieldState.invalid}
                     placeholder="e.g. Doe"
                   />
@@ -120,7 +102,6 @@ export function AccountForm() {
                 <Input
                   {...field}
                   type="email"
-                  disabled={isSigningUp}
                   aria-invalid={fieldState.invalid}
                   placeholder="e.g. johndoe@gmail.com"
                 />
@@ -144,7 +125,6 @@ export function AccountForm() {
                 <Input
                   {...field}
                   variant="password"
-                  disabled={isSigningUp}
                   aria-invalid={fieldState.invalid}
                   placeholder="At least 8 characters"
                 />
@@ -168,7 +148,6 @@ export function AccountForm() {
                 <Input
                   {...field}
                   variant="password"
-                  disabled={isSigningUp}
                   aria-invalid={fieldState.invalid}
                   placeholder="Re-enter the password"
                 />
@@ -178,15 +157,8 @@ export function AccountForm() {
         />
       </FieldGroup>
 
-      <Button type="submit" disabled={isSigningUp} className="w-full">
-        {isSigningUp ? (
-          <>
-            <Spinner />
-            Creating...
-          </>
-        ) : (
-          "Create account"
-        )}
+      <Button type="submit" className="w-full">
+        Next
       </Button>
     </form>
   );

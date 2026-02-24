@@ -8,7 +8,7 @@ export const signInSchema = z.object({
     .min(8, "Password must be at least 8 characters"),
 });
 
-export const signUpSchema = z
+export const accountFormSchema = z
   .object({
     email: z.email("Invalid email address"),
     password: z
@@ -23,3 +23,12 @@ export const signUpSchema = z
     error: "Passwords don't match",
     path: ["confirmPassword"],
   });
+
+export const storeFormSchema = z.object({
+  storeName: z.string().min(1, "Store name is required"),
+});
+
+export const signUpSchema = z.object({
+  ...accountFormSchema.shape,
+  ...storeFormSchema.shape,
+});

@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const parsed = signUpSchema.safeParse(body);
-    console.log(body);
+
     if (!parsed.success) {
       const errors = z.flattenError(parsed.error);
       const formattedErrors = Object.values(errors.fieldErrors)

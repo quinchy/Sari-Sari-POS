@@ -36,7 +36,7 @@ function Input({ className, type, variant, ...props }: InputProps) {
         <Button
           type="button"
           variant="ghost"
-          size="icon"
+          size="icon-xs"
           className="absolute right-1 h-8 w-8 text-muted-foreground hover:text-foreground"
           onClick={() => setShowPassword(!showPassword)}
           tabIndex={-1}

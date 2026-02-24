@@ -12,7 +12,7 @@ import {
 
 export default function SignIn() {
   return (
-    <div className="w-full max-w-lg space-y-8">
+    <div className="w-full min-w-sm lg:min-w-lg py-5 space-y-8">
       <CardHeader>
         <CardTitle className="text-3xl font-bold">Welcome back!</CardTitle>
         <CardDescription>
