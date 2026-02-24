@@ -28,7 +28,7 @@ export class UserRepository {
     });
   }
 
-  async delete(id: string): Promise<UserModel> {
+  async delete(id: string): Promise<User> {
     return prisma.user.delete({
       where: { id },
     });
