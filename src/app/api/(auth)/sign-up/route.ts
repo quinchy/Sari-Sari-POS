@@ -1,10 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
 import { signUpSchema } from "@/features/auth/validations/auth";
-import { userRepository } from "@/repositories/user";
-import { storeRepository } from "@/repositories/store";
-import { storeMemberRepository } from "@/repositories/store-member";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+import { formatZodError } from "@/lib/utils";
+import { signUp } from "@/features/auth/services/auth";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,78 +9,36 @@ export async function POST(request: NextRequest) {
     const parsed = signUpSchema.safeParse(body);
 
     if (!parsed.success) {
-      const errors = z.flattenError(parsed.error);
-      const formattedErrors = Object.values(errors.fieldErrors)
-        .flat()
-        .join(", ");
-
       return NextResponse.json(
         {
           success: false,
-          message: `Validation failed: ${formattedErrors}`,
+          message: `Validation failed: ${formatZodError(parsed.error)}`,
         },
         { status: 400 },
       );
     }
 
-    const { email, password, firstName, lastName, storeName } = parsed.data;
-    const supabase = await createClient();
-
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { first_name: firstName, last_name: lastName },
-      },
-    });
-
-    if (authError || !authData.user) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: `Authentication failed: ${authError?.message ?? "no user"}`,
-        },
-        { status: 400 },
-      );
-    }
-
-    const userId = authData.user.id;
-
-    await userRepository.create({
-      id: userId,
-      firstName,
-      lastName,
-      email,
-    });
-
-    const store = await storeRepository.create({
-      id: userId,
-      name: storeName,
-    });
-
-    await storeMemberRepository.create({
-      userId,
-      storeId: store.id,
-      role: "OWNER",
-    });
+    const result = await signUp(parsed.data);
 
     return NextResponse.json(
-      {
-        success: true,
-        message: "Registration successful",
-        data: {
-          user: authData.user,
-        },
-      },
-      { status: 201 },
+      result.success
+        ? {
+            success: true,
+            message: result.message,
+            data: result.data,
+          }
+        : {
+            success: false,
+            message: result.message,
+          },
+      { status: result.status },
     );
-  } catch (err) {
-    console.error(err);
-
+  } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        message: "Internal server error",
+        message:
+          error instanceof Error ? error.message : "Internal server error",
       },
       { status: 500 },
     );

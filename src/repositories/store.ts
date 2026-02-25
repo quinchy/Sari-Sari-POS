@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma/client";
 import { Store } from "@/../prisma/generated/client";
-import { CreateStoreInput, UpdateStoreInput } from "@/types/store";
+import { CreateStoreInput, UpdateStoreInput } from "@/types/domain/store";
 
 export class StoreRepository {
   async create(data: CreateStoreInput & { id: string }): Promise<Store> {

@@ -3,7 +3,7 @@ import { StoreMember } from "@/../prisma/generated/client";
 import {
   CreateStoreMemberInput,
   UpdateStoreMemberInput,
-} from "@/types/store-member";
+} from "@/types/domain/store-member";
 
 export class StoreMemberRepository {
   async create(data: CreateStoreMemberInput): Promise<StoreMember> {
