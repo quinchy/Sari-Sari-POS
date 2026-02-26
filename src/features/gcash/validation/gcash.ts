@@ -18,6 +18,18 @@ export const gcashEarningSchema = z.strictObject({
   }, z.date().optional()),
 });
 
+export const gcashEarningInputSchema = z.strictObject({
+  amount: z
+    .number()
+    .nonnegative("Amount must not be negative")
+    .min(1, "Amount must be above 0")
+    .max(1_000_000, "Amount must not exceed 1,000,000")
+    .refine((n) => Number.isInteger(n * 100), {
+      message: "Amount must have at most 2 decimal places",
+    }),
+  date: z.date().optional(),
+});
+
 export const createGCashEarningSchema = z.strictObject({
   storeId: z.uuid("Invalid store ID format"),
   amount: gcashEarningSchema.shape.amount,

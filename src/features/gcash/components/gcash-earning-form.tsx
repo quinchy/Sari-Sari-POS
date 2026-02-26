@@ -10,10 +10,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FormHeader from "@/components/form-header";
-import { gcashEarningSchema } from "@/features/gcash/validation/gcash";
+import { gcashEarningInputSchema } from "@/features/gcash/validation/gcash";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { GCashEarningData as GCashEarningFormData } from "@/features/gcash/types/gcash";
+import {
+  GCashEarningData as GCashEarningFormData,
+  GCashEarningInputData,
+} from "@/features/gcash/types/gcash";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import {
@@ -33,8 +36,8 @@ export default function GCashEarningForm() {
   const { isCreateGCashEarningPending, createGCashEarning } =
     useCreateGCashEarning();
 
-  const form = useForm<GCashEarningFormData>({
-    resolver: zodResolver(gcashEarningSchema),
+  const form = useForm<GCashEarningInputData>({
+    resolver: zodResolver(gcashEarningInputSchema),
     defaultValues: {
       amount: 0,
       date: undefined,

@@ -14,7 +14,6 @@ import {
 export async function createGCashEarning(
   data: CreateGCashEarningInput,
 ): Promise<Response<{ id: string }>> {
-  // Validate that storeId is provided
   if (!data.storeId) {
     return {
       success: false,
@@ -36,7 +35,6 @@ export async function createGCashEarning(
     const message =
       error instanceof Error ? error.message : "Failed to create GCash earning";
 
-    // Conflict when there's already a record for the store on the same day
     if (message.toLowerCase().includes("already exists")) {
       return {
         success: false,
