@@ -6,7 +6,9 @@ import {
 } from "@/types/domain/gcash-earning";
 
 export class GCashEarningRepository {
-  async create(data: CreateGCashEarningInput): Promise<GCashEarning> {
+  async create(
+    data: CreateGCashEarningInput & { storeId: string },
+  ): Promise<GCashEarning> {
     const targetDate = data.date ? new Date(data.date) : new Date();
     const startOfDay = new Date(targetDate);
     startOfDay.setHours(0, 0, 0, 0);

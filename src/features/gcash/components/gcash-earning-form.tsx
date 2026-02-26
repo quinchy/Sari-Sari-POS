@@ -28,11 +28,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Calendar01FreeIcons } from "@hugeicons/core-free-icons";
 import { useCreateGCashEarning } from "@/features/gcash/hooks/use-gcash-earning";
-import { useGetCurrentUser } from "@/features/auth/hooks/use-auth";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function GCashEarningForm() {
-  const { currentUser } = useGetCurrentUser();
   const { isCreateGCashEarningPending, createGCashEarning } =
     useCreateGCashEarning();
 
@@ -46,7 +44,6 @@ export default function GCashEarningForm() {
 
   const onSubmit = (gcashEarningData: GCashEarningFormData) => {
     createGCashEarning({
-      storeId: currentUser?.currentStoreId ?? "",
       amount: gcashEarningData.amount,
       date: gcashEarningData.date,
     });

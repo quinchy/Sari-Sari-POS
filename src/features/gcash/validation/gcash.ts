@@ -31,9 +31,8 @@ export const gcashEarningInputSchema = z.strictObject({
 });
 
 export const createGCashEarningSchema = z.strictObject({
-  storeId: z.uuid("Invalid store ID format"),
-  amount: gcashEarningSchema.shape.amount,
-  date: gcashEarningSchema.shape.date,
+  amount: gcashEarningInputSchema.shape.amount,
+  date: gcashEarningInputSchema.shape.date,
 });
 
 export const updateGCashEarningSchema = z.strictObject({

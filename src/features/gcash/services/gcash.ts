@@ -4,6 +4,7 @@ import {
   CreateGCashEarningInput,
   UpdateGCashEarningInput,
 } from "@/types/domain/gcash-earning";
+import { getCurrentUser } from "@/features/auth/services/auth";
 
 /**
  * Create a GCash earning record.
@@ -14,7 +15,21 @@ import {
 export async function createGCashEarning(
   data: CreateGCashEarningInput,
 ): Promise<Response<{ id: string }>> {
-  if (!data.storeId) {
+  // Resolve current authenticated user on the server and obtain their storeId
+  const currentUserResult = await getCurrentUser();
+  if (!currentUserResult.success) {
+    // Propagate the auth service response (e.g. not authenticated)
+    return {
+      success: false,
+      status: currentUserResult.status,
+      message: currentUserResult.message,
+    };
+  }
+
+  const user = currentUserResult.data.user;
+  const storeId = user?.currentStoreId ?? null;
+
+  if (!storeId) {
     return {
       success: false,
       status: 400,
@@ -23,7 +38,11 @@ export async function createGCashEarning(
   }
 
   try {
-    const gcashEarning = await gCashEarningRepository.create(data);
+    // Merge server-resolved storeId into the create payload
+    const gcashEarning = await gCashEarningRepository.create({
+      ...data,
+      storeId,
+    });
 
     return {
       success: true,

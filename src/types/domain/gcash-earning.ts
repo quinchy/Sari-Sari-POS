@@ -1,5 +1,4 @@
 export type CreateGCashEarningInput = {
-  storeId: string;
   amount: number;
   date?: Date;
 };
