@@ -53,7 +53,8 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   User: 'User',
   Store: 'Store',
-  StoreMember: 'StoreMember'
+  StoreMember: 'StoreMember',
+  GCashEarning: 'GCashEarning'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -104,6 +105,17 @@ export const StoreMemberScalarFieldEnum = {
 } as const
 
 export type StoreMemberScalarFieldEnum = (typeof StoreMemberScalarFieldEnum)[keyof typeof StoreMemberScalarFieldEnum]
+
+
+export const GCashEarningScalarFieldEnum = {
+  id: 'id',
+  storeId: 'storeId',
+  amount: 'amount',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type GCashEarningScalarFieldEnum = (typeof GCashEarningScalarFieldEnum)[keyof typeof GCashEarningScalarFieldEnum]
 
 
 export const SortOrder = {

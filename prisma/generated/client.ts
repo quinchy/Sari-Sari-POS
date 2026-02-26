@@ -54,3 +54,8 @@ export type Store = Prisma.StoreModel
  * 
  */
 export type StoreMember = Prisma.StoreMemberModel
+/**
+ * Model GCashEarning
+ * 
+ */
+export type GCashEarning = Prisma.GCashEarningModel

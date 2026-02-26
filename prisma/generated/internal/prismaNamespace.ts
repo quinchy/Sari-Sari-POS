@@ -386,7 +386,8 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 export const ModelName = {
   User: 'User',
   Store: 'Store',
-  StoreMember: 'StoreMember'
+  StoreMember: 'StoreMember',
+  GCashEarning: 'GCashEarning'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -402,7 +403,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "store" | "storeMember"
+    modelProps: "user" | "store" | "storeMember" | "gCashEarning"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -628,6 +629,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    GCashEarning: {
+      payload: Prisma.$GCashEarningPayload<ExtArgs>
+      fields: Prisma.GCashEarningFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GCashEarningFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GCashEarningPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GCashEarningFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GCashEarningPayload>
+        }
+        findFirst: {
+          args: Prisma.GCashEarningFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GCashEarningPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GCashEarningFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GCashEarningPayload>
+        }
+        findMany: {
+          args: Prisma.GCashEarningFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GCashEarningPayload>[]
+        }
+        create: {
+          args: Prisma.GCashEarningCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GCashEarningPayload>
+        }
+        createMany: {
+          args: Prisma.GCashEarningCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GCashEarningCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GCashEarningPayload>[]
+        }
+        delete: {
+          args: Prisma.GCashEarningDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GCashEarningPayload>
+        }
+        update: {
+          args: Prisma.GCashEarningUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GCashEarningPayload>
+        }
+        deleteMany: {
+          args: Prisma.GCashEarningDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GCashEarningUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GCashEarningUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GCashEarningPayload>[]
+        }
+        upsert: {
+          args: Prisma.GCashEarningUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GCashEarningPayload>
+        }
+        aggregate: {
+          args: Prisma.GCashEarningAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGCashEarning>
+        }
+        groupBy: {
+          args: Prisma.GCashEarningGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GCashEarningGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GCashEarningCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GCashEarningCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -701,6 +776,17 @@ export const StoreMemberScalarFieldEnum = {
 export type StoreMemberScalarFieldEnum = (typeof StoreMemberScalarFieldEnum)[keyof typeof StoreMemberScalarFieldEnum]
 
 
+export const GCashEarningScalarFieldEnum = {
+  id: 'id',
+  storeId: 'storeId',
+  amount: 'amount',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type GCashEarningScalarFieldEnum = (typeof GCashEarningScalarFieldEnum)[keyof typeof GCashEarningScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -762,6 +848,20 @@ export type EnumStoreRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$Prisma
  * Reference to a field of type 'StoreRole[]'
  */
 export type ListEnumStoreRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StoreRole[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 
@@ -876,6 +976,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   store?: Prisma.StoreOmit
   storeMember?: Prisma.StoreMemberOmit
+  gCashEarning?: Prisma.GCashEarningOmit
 }
 
 /* Types for Logging */

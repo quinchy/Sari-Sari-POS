@@ -246,9 +246,9 @@ export type StoreMemberScalarWhereWithAggregatesInput = {
 
 export type StoreMemberCreateInput = {
   id?: string
-  role: $Enums.StoreRole
-  created_at: Date | string
-  updated_at: Date | string
+  role?: $Enums.StoreRole
+  created_at?: Date | string
+  updated_at?: Date | string
   user: Prisma.UserCreateNestedOneWithoutStoreMembersInput
   store: Prisma.StoreCreateNestedOneWithoutStoreMembersInput
 }
@@ -257,9 +257,9 @@ export type StoreMemberUncheckedCreateInput = {
   id?: string
   userId: string
   storeId: string
-  role: $Enums.StoreRole
-  created_at: Date | string
-  updated_at: Date | string
+  role?: $Enums.StoreRole
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type StoreMemberUpdateInput = {
@@ -284,9 +284,9 @@ export type StoreMemberCreateManyInput = {
   id?: string
   userId: string
   storeId: string
-  role: $Enums.StoreRole
-  created_at: Date | string
-  updated_at: Date | string
+  role?: $Enums.StoreRole
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type StoreMemberUpdateManyMutationInput = {
@@ -437,18 +437,18 @@ export type EnumStoreRoleFieldUpdateOperationsInput = {
 
 export type StoreMemberCreateWithoutUserInput = {
   id?: string
-  role: $Enums.StoreRole
-  created_at: Date | string
-  updated_at: Date | string
+  role?: $Enums.StoreRole
+  created_at?: Date | string
+  updated_at?: Date | string
   store: Prisma.StoreCreateNestedOneWithoutStoreMembersInput
 }
 
 export type StoreMemberUncheckedCreateWithoutUserInput = {
   id?: string
   storeId: string
-  role: $Enums.StoreRole
-  created_at: Date | string
-  updated_at: Date | string
+  role?: $Enums.StoreRole
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type StoreMemberCreateOrConnectWithoutUserInput = {
@@ -491,18 +491,18 @@ export type StoreMemberScalarWhereInput = {
 
 export type StoreMemberCreateWithoutStoreInput = {
   id?: string
-  role: $Enums.StoreRole
-  created_at: Date | string
-  updated_at: Date | string
+  role?: $Enums.StoreRole
+  created_at?: Date | string
+  updated_at?: Date | string
   user: Prisma.UserCreateNestedOneWithoutStoreMembersInput
 }
 
 export type StoreMemberUncheckedCreateWithoutStoreInput = {
   id?: string
   userId: string
-  role: $Enums.StoreRole
-  created_at: Date | string
-  updated_at: Date | string
+  role?: $Enums.StoreRole
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type StoreMemberCreateOrConnectWithoutStoreInput = {
@@ -534,9 +534,9 @@ export type StoreMemberUpdateManyWithWhereWithoutStoreInput = {
 export type StoreMemberCreateManyUserInput = {
   id?: string
   storeId: string
-  role: $Enums.StoreRole
-  created_at: Date | string
-  updated_at: Date | string
+  role?: $Enums.StoreRole
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type StoreMemberUpdateWithoutUserInput = {
@@ -566,9 +566,9 @@ export type StoreMemberUncheckedUpdateManyWithoutUserInput = {
 export type StoreMemberCreateManyStoreInput = {
   id?: string
   userId: string
-  role: $Enums.StoreRole
-  created_at: Date | string
-  updated_at: Date | string
+  role?: $Enums.StoreRole
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type StoreMemberUpdateWithoutStoreInput = {

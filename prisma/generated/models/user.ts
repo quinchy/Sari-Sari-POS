@@ -245,8 +245,8 @@ export type UserCreateInput = {
   first_name: string
   last_name: string
   email: string
-  created_at: Date | string
-  updated_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
   storeMembers?: Prisma.StoreMemberCreateNestedManyWithoutUserInput
 }
 
@@ -255,8 +255,8 @@ export type UserUncheckedCreateInput = {
   first_name: string
   last_name: string
   email: string
-  created_at: Date | string
-  updated_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
   storeMembers?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -285,8 +285,8 @@ export type UserCreateManyInput = {
   first_name: string
   last_name: string
   email: string
-  created_at: Date | string
-  updated_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type UserUpdateManyMutationInput = {
@@ -366,8 +366,8 @@ export type UserCreateWithoutStoreMembersInput = {
   first_name: string
   last_name: string
   email: string
-  created_at: Date | string
-  updated_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type UserUncheckedCreateWithoutStoreMembersInput = {
@@ -375,8 +375,8 @@ export type UserUncheckedCreateWithoutStoreMembersInput = {
   first_name: string
   last_name: string
   email: string
-  created_at: Date | string
-  updated_at: Date | string
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type UserCreateOrConnectWithoutStoreMembersInput = {

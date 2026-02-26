@@ -11,4 +11,5 @@
 export type * from './models/User'
 export type * from './models/Store'
 export type * from './models/StoreMember'
+export type * from './models/GCashEarning'
 export type * from './commonInputTypes'
