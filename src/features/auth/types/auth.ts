@@ -42,3 +42,19 @@ export interface SignOutResponse {
   success: boolean;
   message: string;
 }
+
+export interface CurrentUserResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: {
+      id: string;
+      first_name: string;
+      last_name: string;
+      email: string;
+      currentStoreId: string | null;
+      created_at: Date;
+      updated_at: Date;
+    };
+  };
+}

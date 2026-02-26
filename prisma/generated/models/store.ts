@@ -176,6 +176,7 @@ export type StoreWhereInput = {
   updated_at?: Prisma.DateTimeFilter<"Store"> | Date | string
   storeMembers?: Prisma.StoreMemberListRelationFilter
   gcashEarnings?: Prisma.GCashEarningListRelationFilter
+  currentUsers?: Prisma.UserListRelationFilter
 }
 
 export type StoreOrderByWithRelationInput = {
@@ -185,6 +186,7 @@ export type StoreOrderByWithRelationInput = {
   updated_at?: Prisma.SortOrder
   storeMembers?: Prisma.StoreMemberOrderByRelationAggregateInput
   gcashEarnings?: Prisma.GCashEarningOrderByRelationAggregateInput
+  currentUsers?: Prisma.UserOrderByRelationAggregateInput
 }
 
 export type StoreWhereUniqueInput = Prisma.AtLeast<{
@@ -197,6 +199,7 @@ export type StoreWhereUniqueInput = Prisma.AtLeast<{
   updated_at?: Prisma.DateTimeFilter<"Store"> | Date | string
   storeMembers?: Prisma.StoreMemberListRelationFilter
   gcashEarnings?: Prisma.GCashEarningListRelationFilter
+  currentUsers?: Prisma.UserListRelationFilter
 }, "id">
 
 export type StoreOrderByWithAggregationInput = {
@@ -226,6 +229,7 @@ export type StoreCreateInput = {
   updated_at?: Date | string
   storeMembers?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
   gcashEarnings?: Prisma.GCashEarningCreateNestedManyWithoutStoreInput
+  currentUsers?: Prisma.UserCreateNestedManyWithoutCurrentStoreInput
 }
 
 export type StoreUncheckedCreateInput = {
@@ -235,6 +239,7 @@ export type StoreUncheckedCreateInput = {
   updated_at?: Date | string
   storeMembers?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
   gcashEarnings?: Prisma.GCashEarningUncheckedCreateNestedManyWithoutStoreInput
+  currentUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCurrentStoreInput
 }
 
 export type StoreUpdateInput = {
@@ -244,6 +249,7 @@ export type StoreUpdateInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storeMembers?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
   gcashEarnings?: Prisma.GCashEarningUpdateManyWithoutStoreNestedInput
+  currentUsers?: Prisma.UserUpdateManyWithoutCurrentStoreNestedInput
 }
 
 export type StoreUncheckedUpdateInput = {
@@ -253,6 +259,7 @@ export type StoreUncheckedUpdateInput = {
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storeMembers?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
   gcashEarnings?: Prisma.GCashEarningUncheckedUpdateManyWithoutStoreNestedInput
+  currentUsers?: Prisma.UserUncheckedUpdateManyWithoutCurrentStoreNestedInput
 }
 
 export type StoreCreateManyInput = {
@@ -274,6 +281,11 @@ export type StoreUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StoreNullableScalarRelationFilter = {
+  is?: Prisma.StoreWhereInput | null
+  isNot?: Prisma.StoreWhereInput | null
 }
 
 export type StoreCountOrderByAggregateInput = {
@@ -300,6 +312,22 @@ export type StoreMinOrderByAggregateInput = {
 export type StoreScalarRelationFilter = {
   is?: Prisma.StoreWhereInput
   isNot?: Prisma.StoreWhereInput
+}
+
+export type StoreCreateNestedOneWithoutCurrentUsersInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutCurrentUsersInput, Prisma.StoreUncheckedCreateWithoutCurrentUsersInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutCurrentUsersInput
+  connect?: Prisma.StoreWhereUniqueInput
+}
+
+export type StoreUpdateOneWithoutCurrentUsersNestedInput = {
+  create?: Prisma.XOR<Prisma.StoreCreateWithoutCurrentUsersInput, Prisma.StoreUncheckedCreateWithoutCurrentUsersInput>
+  connectOrCreate?: Prisma.StoreCreateOrConnectWithoutCurrentUsersInput
+  upsert?: Prisma.StoreUpsertWithoutCurrentUsersInput
+  disconnect?: Prisma.StoreWhereInput | boolean
+  delete?: Prisma.StoreWhereInput | boolean
+  connect?: Prisma.StoreWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutCurrentUsersInput, Prisma.StoreUpdateWithoutCurrentUsersInput>, Prisma.StoreUncheckedUpdateWithoutCurrentUsersInput>
 }
 
 export type StoreCreateNestedOneWithoutStoreMembersInput = {
@@ -330,12 +358,65 @@ export type StoreUpdateOneRequiredWithoutGcashEarningsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StoreUpdateToOneWithWhereWithoutGcashEarningsInput, Prisma.StoreUpdateWithoutGcashEarningsInput>, Prisma.StoreUncheckedUpdateWithoutGcashEarningsInput>
 }
 
+export type StoreCreateWithoutCurrentUsersInput = {
+  id?: string
+  name: string
+  created_at?: Date | string
+  updated_at?: Date | string
+  storeMembers?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
+  gcashEarnings?: Prisma.GCashEarningCreateNestedManyWithoutStoreInput
+}
+
+export type StoreUncheckedCreateWithoutCurrentUsersInput = {
+  id?: string
+  name: string
+  created_at?: Date | string
+  updated_at?: Date | string
+  storeMembers?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
+  gcashEarnings?: Prisma.GCashEarningUncheckedCreateNestedManyWithoutStoreInput
+}
+
+export type StoreCreateOrConnectWithoutCurrentUsersInput = {
+  where: Prisma.StoreWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoreCreateWithoutCurrentUsersInput, Prisma.StoreUncheckedCreateWithoutCurrentUsersInput>
+}
+
+export type StoreUpsertWithoutCurrentUsersInput = {
+  update: Prisma.XOR<Prisma.StoreUpdateWithoutCurrentUsersInput, Prisma.StoreUncheckedUpdateWithoutCurrentUsersInput>
+  create: Prisma.XOR<Prisma.StoreCreateWithoutCurrentUsersInput, Prisma.StoreUncheckedCreateWithoutCurrentUsersInput>
+  where?: Prisma.StoreWhereInput
+}
+
+export type StoreUpdateToOneWithWhereWithoutCurrentUsersInput = {
+  where?: Prisma.StoreWhereInput
+  data: Prisma.XOR<Prisma.StoreUpdateWithoutCurrentUsersInput, Prisma.StoreUncheckedUpdateWithoutCurrentUsersInput>
+}
+
+export type StoreUpdateWithoutCurrentUsersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storeMembers?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
+  gcashEarnings?: Prisma.GCashEarningUpdateManyWithoutStoreNestedInput
+}
+
+export type StoreUncheckedUpdateWithoutCurrentUsersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  storeMembers?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
+  gcashEarnings?: Prisma.GCashEarningUncheckedUpdateManyWithoutStoreNestedInput
+}
+
 export type StoreCreateWithoutStoreMembersInput = {
   id?: string
   name: string
   created_at?: Date | string
   updated_at?: Date | string
   gcashEarnings?: Prisma.GCashEarningCreateNestedManyWithoutStoreInput
+  currentUsers?: Prisma.UserCreateNestedManyWithoutCurrentStoreInput
 }
 
 export type StoreUncheckedCreateWithoutStoreMembersInput = {
@@ -344,6 +425,7 @@ export type StoreUncheckedCreateWithoutStoreMembersInput = {
   created_at?: Date | string
   updated_at?: Date | string
   gcashEarnings?: Prisma.GCashEarningUncheckedCreateNestedManyWithoutStoreInput
+  currentUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCurrentStoreInput
 }
 
 export type StoreCreateOrConnectWithoutStoreMembersInput = {
@@ -368,6 +450,7 @@ export type StoreUpdateWithoutStoreMembersInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gcashEarnings?: Prisma.GCashEarningUpdateManyWithoutStoreNestedInput
+  currentUsers?: Prisma.UserUpdateManyWithoutCurrentStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutStoreMembersInput = {
@@ -376,6 +459,7 @@ export type StoreUncheckedUpdateWithoutStoreMembersInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gcashEarnings?: Prisma.GCashEarningUncheckedUpdateManyWithoutStoreNestedInput
+  currentUsers?: Prisma.UserUncheckedUpdateManyWithoutCurrentStoreNestedInput
 }
 
 export type StoreCreateWithoutGcashEarningsInput = {
@@ -384,6 +468,7 @@ export type StoreCreateWithoutGcashEarningsInput = {
   created_at?: Date | string
   updated_at?: Date | string
   storeMembers?: Prisma.StoreMemberCreateNestedManyWithoutStoreInput
+  currentUsers?: Prisma.UserCreateNestedManyWithoutCurrentStoreInput
 }
 
 export type StoreUncheckedCreateWithoutGcashEarningsInput = {
@@ -392,6 +477,7 @@ export type StoreUncheckedCreateWithoutGcashEarningsInput = {
   created_at?: Date | string
   updated_at?: Date | string
   storeMembers?: Prisma.StoreMemberUncheckedCreateNestedManyWithoutStoreInput
+  currentUsers?: Prisma.UserUncheckedCreateNestedManyWithoutCurrentStoreInput
 }
 
 export type StoreCreateOrConnectWithoutGcashEarningsInput = {
@@ -416,6 +502,7 @@ export type StoreUpdateWithoutGcashEarningsInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storeMembers?: Prisma.StoreMemberUpdateManyWithoutStoreNestedInput
+  currentUsers?: Prisma.UserUpdateManyWithoutCurrentStoreNestedInput
 }
 
 export type StoreUncheckedUpdateWithoutGcashEarningsInput = {
@@ -424,6 +511,7 @@ export type StoreUncheckedUpdateWithoutGcashEarningsInput = {
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   storeMembers?: Prisma.StoreMemberUncheckedUpdateManyWithoutStoreNestedInput
+  currentUsers?: Prisma.UserUncheckedUpdateManyWithoutCurrentStoreNestedInput
 }
 
 
@@ -434,11 +522,13 @@ export type StoreUncheckedUpdateWithoutGcashEarningsInput = {
 export type StoreCountOutputType = {
   storeMembers: number
   gcashEarnings: number
+  currentUsers: number
 }
 
 export type StoreCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   storeMembers?: boolean | StoreCountOutputTypeCountStoreMembersArgs
   gcashEarnings?: boolean | StoreCountOutputTypeCountGcashEarningsArgs
+  currentUsers?: boolean | StoreCountOutputTypeCountCurrentUsersArgs
 }
 
 /**
@@ -465,6 +555,13 @@ export type StoreCountOutputTypeCountGcashEarningsArgs<ExtArgs extends runtime.T
   where?: Prisma.GCashEarningWhereInput
 }
 
+/**
+ * StoreCountOutputType without action
+ */
+export type StoreCountOutputTypeCountCurrentUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserWhereInput
+}
+
 
 export type StoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -473,6 +570,7 @@ export type StoreSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   updated_at?: boolean
   storeMembers?: boolean | Prisma.Store$storeMembersArgs<ExtArgs>
   gcashEarnings?: boolean | Prisma.Store$gcashEarningsArgs<ExtArgs>
+  currentUsers?: boolean | Prisma.Store$currentUsersArgs<ExtArgs>
   _count?: boolean | Prisma.StoreCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["store"]>
 
@@ -501,6 +599,7 @@ export type StoreOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
 export type StoreInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   storeMembers?: boolean | Prisma.Store$storeMembersArgs<ExtArgs>
   gcashEarnings?: boolean | Prisma.Store$gcashEarningsArgs<ExtArgs>
+  currentUsers?: boolean | Prisma.Store$currentUsersArgs<ExtArgs>
   _count?: boolean | Prisma.StoreCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StoreIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -511,6 +610,7 @@ export type $StorePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   objects: {
     storeMembers: Prisma.$StoreMemberPayload<ExtArgs>[]
     gcashEarnings: Prisma.$GCashEarningPayload<ExtArgs>[]
+    currentUsers: Prisma.$UserPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -913,6 +1013,7 @@ export interface Prisma__StoreClient<T, Null = never, ExtArgs extends runtime.Ty
   readonly [Symbol.toStringTag]: "PrismaPromise"
   storeMembers<T extends Prisma.Store$storeMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$storeMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StoreMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   gcashEarnings<T extends Prisma.Store$gcashEarningsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$gcashEarningsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GCashEarningPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  currentUsers<T extends Prisma.Store$currentUsersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Store$currentUsersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1379,6 +1480,30 @@ export type Store$gcashEarningsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.GCashEarningScalarFieldEnum | Prisma.GCashEarningScalarFieldEnum[]
+}
+
+/**
+ * Store.currentUsers
+ */
+export type Store$currentUsersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+  orderBy?: Prisma.UserOrderByWithRelationInput | Prisma.UserOrderByWithRelationInput[]
+  cursor?: Prisma.UserWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserScalarFieldEnum | Prisma.UserScalarFieldEnum[]
 }
 
 /**

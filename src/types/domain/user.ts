@@ -8,4 +8,5 @@ export type UpdateUserInput = Partial<{
   firstName: string;
   lastName: string;
   email: string;
+  currentStoreId: string;
 }>;

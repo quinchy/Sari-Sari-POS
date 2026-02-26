@@ -7,6 +7,41 @@ import { storeMemberRepository } from "@/repositories/store-member";
 import { Response as AuthResponse } from "@/types/shared/response";
 import { SignInData, SignUpData } from "@/features/auth/types/auth";
 
+export async function getCurrentUser(): Promise<AuthResponse<{ user: any }>> {
+  const supabase = await createClient();
+
+  const {
+    data: { user: authUser },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError || !authUser) {
+    return {
+      success: false,
+      status: 401,
+      message: "User not authenticated",
+    };
+  }
+
+  // Get the full user data from the database
+  const user = await userRepository.getById(authUser.id);
+
+  if (!user) {
+    return {
+      success: false,
+      status: 404,
+      message: "User not found",
+    };
+  }
+
+  return {
+    success: true,
+    status: 200,
+    message: "User retrieved successfully",
+    data: { user },
+  };
+}
+
 export async function signIn(
   data: SignInData,
 ): Promise<AuthResponse<{ user: any }>> {
@@ -65,7 +100,6 @@ export async function signUp(
   });
 
   const store = await storeRepository.create({
-    id: userId,
     name: storeName,
   });
 
@@ -73,6 +107,10 @@ export async function signUp(
     userId,
     storeId: store.id,
     role: "OWNER",
+  });
+
+  await userRepository.update(userId, {
+    currentStoreId: store.id,
   });
 
   return {

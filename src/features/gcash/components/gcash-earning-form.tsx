@@ -4,7 +4,6 @@ import {
   Field,
   FieldContent,
   FieldError,
-  FieldGroup,
   FieldLabel,
   FieldTitle,
 } from "@/components/ui/field";
@@ -15,17 +14,39 @@ import { gcashEarningSchema } from "@/features/gcash/validation/gcash";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GCashEarningData as GCashEarningFormData } from "@/features/gcash/types/gcash";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Calendar01FreeIcons } from "@hugeicons/core-free-icons";
+import { useCreateGCashEarning } from "@/features/gcash/hooks/use-gcash-earning";
+import { useGetCurrentUser } from "@/features/auth/hooks/use-auth";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function GCashEarningForm() {
+  const { currentUser } = useGetCurrentUser();
+  const { isCreateGCashEarningPending, createGCashEarning } =
+    useCreateGCashEarning();
+
   const form = useForm<GCashEarningFormData>({
     resolver: zodResolver(gcashEarningSchema),
     defaultValues: {
       amount: 0,
+      date: undefined,
     },
   });
 
   const onSubmit = (gcashEarningData: GCashEarningFormData) => {
-    console.log(gcashEarningData);
+    createGCashEarning({
+      storeId: currentUser?.currentStoreId ?? "",
+      amount: gcashEarningData.amount,
+      date: gcashEarningData.date,
+    });
   };
 
   return (
@@ -33,7 +54,7 @@ export default function GCashEarningForm() {
       <header>
         <FormHeader
           title="Add GCash Earning"
-          description="Add your daily GCash Earning for this day."
+          description="Add your daily GCash Earning for this day or other day."
         />
       </header>
       <form
@@ -65,7 +86,67 @@ export default function GCashEarningForm() {
             </Field>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Controller
+          control={form.control}
+          name="date"
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel>
+                <FieldTitle>Date</FieldTitle>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </FieldLabel>
+              <FieldContent>
+                <Popover>
+                  <PopoverTrigger
+                    render={
+                      <Button
+                        variant="outline"
+                        data-empty={!field.value}
+                        className={cn(
+                          "active:scale-100 w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground",
+                          !field.value && "text-muted-foreground",
+                        )}
+                        onBlur={field.onBlur}
+                      >
+                        <HugeiconsIcon
+                          icon={Calendar01FreeIcons}
+                          size={24}
+                          color="currentColor"
+                          strokeWidth={1.5}
+                        />
+                        {field.value
+                          ? format(field.value, "PPP")
+                          : "Pick a date"}
+                      </Button>
+                    }
+                  />
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date > new Date() || date < new Date("1900-01-01")
+                      }
+                    />
+                  </PopoverContent>
+                </Popover>
+              </FieldContent>
+            </Field>
+          )}
+        />
+        <Button type="submit" disabled={isCreateGCashEarningPending}>
+          {isCreateGCashEarningPending ? (
+            <>
+              <Spinner />
+              Submitting
+            </>
+          ) : (
+            "Submit"
+          )}
+        </Button>
       </form>
     </main>
   );

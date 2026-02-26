@@ -1,13 +1,19 @@
 "use client";
 
-import { useMutation } from "@tanstack/react-query";
-import { signIn, signOut, signUp } from "@/features/auth/apis/auth";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  getCurrentUser,
+  signIn,
+  signOut,
+  signUp,
+} from "@/features/auth/apis/auth";
 import { toast } from "sonner";
 import type {
   SignInData as SignInRequest,
   SignInResponse,
   SignUpData as SignUpRequest,
   SignUpResponse,
+  CurrentUserResponse,
 } from "@/features/auth/types/auth";
 import { useRouter } from "next/navigation";
 
@@ -74,5 +80,19 @@ export function useSignOut() {
   return {
     isSigningOut: isPending,
     signOut: mutate,
+  };
+}
+
+export function useGetCurrentUser() {
+  const { isLoading, refetch, data } = useQuery<CurrentUserResponse>({
+    queryKey: ["currentUser"],
+    queryFn: getCurrentUser,
+    retry: false,
+  });
+
+  return {
+    isGettingCurrentUser: isLoading,
+    getCurrentUser: refetch,
+    currentUser: data?.data?.user,
   };
 }

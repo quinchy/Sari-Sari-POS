@@ -3,6 +3,12 @@ import { User } from "@/../prisma/generated/client";
 import { CreateUserInput, UpdateUserInput } from "@/types/domain/user";
 
 export class UserRepository {
+  async getById(id: string): Promise<User | null> {
+    return prisma.user.findUnique({
+      where: { id },
+    });
+  }
+
   async create(data: CreateUserInput & { id: string }): Promise<User> {
     return prisma.user.create({
       data: {
@@ -23,6 +29,7 @@ export class UserRepository {
         first_name: data.firstName,
         last_name: data.lastName,
         email: data.email,
+        currentStoreId: data.currentStoreId,
         updated_at: new Date(),
       },
     });

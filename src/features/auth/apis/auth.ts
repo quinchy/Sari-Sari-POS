@@ -4,9 +4,33 @@ import type {
   SignUpData as SignUpRequest,
   SignUpResponse,
   SignOutResponse,
+  CurrentUserResponse,
 } from "@/features/auth/types/auth";
 
-export type { SignInRequest, SignInResponse, SignUpRequest, SignUpResponse };
+export type {
+  SignInRequest,
+  SignInResponse,
+  SignUpRequest,
+  SignUpResponse,
+  CurrentUserResponse,
+};
+
+export async function getCurrentUser(): Promise<CurrentUserResponse> {
+  const response = await fetch("/api/current-user", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Failed to get current user");
+  }
+
+  return data;
+}
 
 export async function signIn(
   credentials: SignInRequest,

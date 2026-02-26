@@ -3,10 +3,9 @@ import { Store } from "@/../prisma/generated/client";
 import { CreateStoreInput, UpdateStoreInput } from "@/types/domain/store";
 
 export class StoreRepository {
-  async create(data: CreateStoreInput & { id: string }): Promise<Store> {
+  async create(data: CreateStoreInput): Promise<Store> {
     return prisma.store.create({
       data: {
-        id: data.id,
         name: data.name,
         created_at: new Date(),
         updated_at: new Date(),
