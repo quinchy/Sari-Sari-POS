@@ -9,8 +9,8 @@ import {
 export const useCreateGCashEarning = () => {
   const { isPending, mutate } = useMutation({
     mutationFn: createGCashEarning,
-    onSuccess: () => {
-      toast.success("GCash earning created successfully");
+    onSuccess: (data) => {
+      toast.success(data.message);
     },
     onError: (error: Error) => {
       toast.error(error.message);

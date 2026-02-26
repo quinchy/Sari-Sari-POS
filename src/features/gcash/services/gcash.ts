@@ -1,9 +1,9 @@
 import { gCashEarningRepository } from "@/repositories/gcash-earning";
 import { Response } from "@/types/shared/response";
 import {
-  CreateGCashEarningInput,
-  UpdateGCashEarningInput,
-} from "@/types/domain/gcash-earning";
+  CreateGCashEarning as CreateGCashEarningInput,
+  UpdateGCashEarning as UpdateGCashEarningInput,
+} from "@/features/gcash/types/gcash";
 import { getCurrentUser } from "@/features/auth/services/auth";
 
 /**
@@ -15,10 +15,8 @@ import { getCurrentUser } from "@/features/auth/services/auth";
 export async function createGCashEarning(
   data: CreateGCashEarningInput,
 ): Promise<Response<{ id: string }>> {
-  // Resolve current authenticated user on the server and obtain their storeId
   const currentUserResult = await getCurrentUser();
   if (!currentUserResult.success) {
-    // Propagate the auth service response (e.g. not authenticated)
     return {
       success: false,
       status: currentUserResult.status,
@@ -38,7 +36,6 @@ export async function createGCashEarning(
   }
 
   try {
-    // Merge server-resolved storeId into the create payload
     const gcashEarning = await gCashEarningRepository.create({
       ...data,
       storeId,
@@ -76,11 +73,10 @@ export async function createGCashEarning(
  * updated date does not cause a duplicate record for the same store/day.
  */
 export async function updateGCashEarning(
-  id: string,
   data: UpdateGCashEarningInput,
 ): Promise<Response<{ id: string }>> {
   try {
-    const gcashEarning = await gCashEarningRepository.update(id, data);
+    const gcashEarning = await gCashEarningRepository.update(data);
 
     return {
       success: true,

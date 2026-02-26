@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/prisma/client";
 import { GCashEarning } from "@/../prisma/generated/client";
 import {
-  CreateGCashEarningInput,
-  UpdateGCashEarningInput,
-} from "@/types/domain/gcash-earning";
+  CreateGCashEarning as CreateGCashEarningInput,
+  UpdateGCashEarning as UpdateGCashEarningInput,
+} from "@/features/gcash/types/gcash";
 
 export class GCashEarningRepository {
   async create(
@@ -42,10 +42,7 @@ export class GCashEarningRepository {
     });
   }
 
-  async update(
-    id: string,
-    data: UpdateGCashEarningInput,
-  ): Promise<GCashEarning> {
+  async update(data: UpdateGCashEarningInput): Promise<GCashEarning> {
     // If updating with a new date, check for conflicts with other records
     if (data.date) {
       const targetDate = new Date(data.date);
@@ -56,7 +53,7 @@ export class GCashEarningRepository {
 
       // Get the current record to get its storeId
       const currentRecord = await prisma.gCashEarning.findUnique({
-        where: { id },
+        where: { id: data.id },
       });
 
       if (!currentRecord) {
@@ -72,7 +69,7 @@ export class GCashEarningRepository {
             lte: endOfDay,
           },
           id: {
-            not: id, // Exclude the current record
+            not: data.id, // Exclude the current record
           },
         },
       });
@@ -85,7 +82,7 @@ export class GCashEarningRepository {
     }
 
     return prisma.gCashEarning.update({
-      where: { id },
+      where: { id: data.id },
       data: {
         amount: data.amount ?? undefined,
         created_at: data.date ? new Date(data.date) : undefined,

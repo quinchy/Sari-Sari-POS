@@ -10,13 +10,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FormHeader from "@/components/form-header";
-import { gcashEarningInputSchema } from "@/features/gcash/validation/gcash";
+import { gcashEarningSchema } from "@/features/gcash/validation/gcash";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  GCashEarningData as GCashEarningFormData,
-  GCashEarningInputData,
-} from "@/features/gcash/types/gcash";
+import { GCashEarningData as GCashEarningFormData } from "@/features/gcash/types/gcash";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import {
@@ -34,8 +31,8 @@ export default function GCashEarningForm() {
   const { isCreateGCashEarningPending, createGCashEarning } =
     useCreateGCashEarning();
 
-  const form = useForm<GCashEarningInputData>({
-    resolver: zodResolver(gcashEarningInputSchema),
+  const form = useForm<GCashEarningFormData>({
+    resolver: zodResolver(gcashEarningSchema),
     defaultValues: {
       amount: 0,
       date: undefined,
@@ -117,7 +114,7 @@ export default function GCashEarningForm() {
                           strokeWidth={1.5}
                         />
                         {field.value
-                          ? format(field.value, "PPP")
+                          ? format(new Date(field.value), "PPP")
                           : "Pick a date"}
                       </Button>
                     }
@@ -125,8 +122,10 @@ export default function GCashEarningForm() {
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
+                      selected={field.value ? new Date(field.value) : undefined}
+                      onSelect={(d) =>
+                        field.onChange(d ? d.toISOString() : undefined)
+                      }
                       disabled={(date) =>
                         date > new Date() || date < new Date("1900-01-01")
                       }

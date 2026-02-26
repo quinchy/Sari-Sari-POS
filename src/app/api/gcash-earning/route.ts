@@ -68,8 +68,7 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const { id, ...data } = parsed.data;
-    const result = await updateGCashEarning(id, data);
+    const result = await updateGCashEarning(parsed.data);
 
     return NextResponse.json(
       result.success
