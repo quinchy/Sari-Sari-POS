@@ -11,8 +11,8 @@ import { Button } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { RepeatIcon } from "@hugeicons/core-free-icons";
 
-const SKELETON_ROWS = 5;
-const COLUMNS_COUNT = 2;
+const SKELETON_ROWS = 3;
+const COLUMNS_COUNT = 3;
 
 export function TbodyFallback() {
   return (
@@ -22,7 +22,7 @@ export function TbodyFallback() {
           <TableRow key={`skeleton-row-${rowIdx}`}>
             {Array.from({ length: COLUMNS_COUNT }).map((_, colIdx) => (
               <TableCell key={`skeleton-cell-${rowIdx}-${colIdx}`}>
-                <Skeleton className="h-5 w-full" />
+                <Skeleton className="h-11 w-full" />
               </TableCell>
             ))}
           </TableRow>

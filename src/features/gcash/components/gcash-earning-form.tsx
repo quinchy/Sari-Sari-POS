@@ -24,34 +24,75 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Calendar01FreeIcons } from "@hugeicons/core-free-icons";
-import { useCreateGCashEarning } from "@/features/gcash/hooks/use-gcash-earning";
+import {
+  useCreateGCashEarning,
+  useUpdateGCashEarning,
+} from "@/features/gcash/hooks/use-gcash-earning";
 import { Spinner } from "@/components/ui/spinner";
 
-export default function GCashEarningForm() {
+interface GCashEarningFormProps {
+  gcashEarning?: {
+    id: string;
+    amount: number;
+    created_at: string | Date;
+  };
+}
+
+export default function GCashEarningForm({
+  gcashEarning,
+}: GCashEarningFormProps) {
+  const isEditing = !!gcashEarning;
+
   const { isCreateGCashEarningPending, createGCashEarning } =
     useCreateGCashEarning();
+  const { isUpdateGCashEarningPending, updateGCashEarning } =
+    useUpdateGCashEarning();
+
+  const isPending = isEditing
+    ? isUpdateGCashEarningPending
+    : isCreateGCashEarningPending;
 
   const form = useForm<GCashEarningFormData>({
     resolver: zodResolver(gcashEarningSchema),
-    defaultValues: {
-      amount: 0,
-      date: undefined,
-    },
+    defaultValues: isEditing
+      ? {
+          amount: gcashEarning.amount,
+          date: new Date(gcashEarning.created_at).toISOString(),
+        }
+      : {
+          amount: 0,
+          date: undefined,
+        },
   });
 
   const onSubmit = (gcashEarningData: GCashEarningFormData) => {
-    createGCashEarning({
-      amount: gcashEarningData.amount,
-      date: gcashEarningData.date,
-    });
+    if (isEditing) {
+      updateGCashEarning(
+        { id: gcashEarning.id, ...gcashEarningData },
+        {
+          onSuccess: () => {
+            // Sheet will be closed by parent component
+          },
+        },
+      );
+    } else {
+      createGCashEarning({
+        amount: gcashEarningData.amount,
+        date: gcashEarningData.date,
+      });
+    }
   };
 
   return (
     <main className="space-y-5">
       <header>
         <FormHeader
-          title="Add GCash Earning"
-          description="Add your daily GCash Earning for this day or other day."
+          title={isEditing ? "Edit GCash Earning" : "Add GCash Earning"}
+          description={
+            isEditing
+              ? "Edit your GCash Earning details."
+              : "Add your daily GCash Earning for this day or other day."
+          }
         />
       </header>
       <form
@@ -78,6 +119,7 @@ export default function GCashEarningForm() {
                   onBlur={field.onBlur}
                   name={field.name}
                   ref={field.ref}
+                  value={field.value ?? ""}
                 />
               </FieldContent>
             </Field>
@@ -136,12 +178,14 @@ export default function GCashEarningForm() {
             </Field>
           )}
         />
-        <Button type="submit" disabled={isCreateGCashEarningPending}>
-          {isCreateGCashEarningPending ? (
+        <Button type="submit" disabled={isPending}>
+          {isPending ? (
             <>
               <Spinner />
-              Submitting
+              {isEditing ? "Updating..." : "Submitting"}
             </>
+          ) : isEditing ? (
+            "Update"
           ) : (
             "Submit"
           )}

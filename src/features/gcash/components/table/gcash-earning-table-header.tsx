@@ -23,7 +23,7 @@ export function GCashEarningTableHeader() {
       {headerTable.getHeaderGroups().map((hg) => (
         <TableRow key={hg.id}>
           {hg.headers.map((header) => (
-            <TableHead key={header.id}>
+            <TableHead key={header.id} style={{ width: header.getSize() }}>
               {header.isPlaceholder
                 ? null
                 : flexRender(

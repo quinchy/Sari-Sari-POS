@@ -42,7 +42,10 @@ export default function GCashEarningTableBody({
         return (
           <TableRow key={rowData.id}>
             {row.getVisibleCells().map((cell) => (
-              <TableCell key={`${rowData.id}-${cell.id}`}>
+              <TableCell
+                key={`${rowData.id}-${cell.id}`}
+                style={{ width: cell.column.getSize() }}
+              >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </TableCell>
             ))}
