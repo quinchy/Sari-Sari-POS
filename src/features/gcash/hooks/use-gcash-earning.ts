@@ -1,4 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useMutation,
+  useSuspenseQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   createGCashEarning,
@@ -71,7 +75,7 @@ export const useDeleteGCashEarning = () => {
 };
 
 export const useGetGCashEarning = () => {
-  const { data, isPending, isError, error } = useQuery({
+  const { data, isError, error } = useSuspenseQuery({
     queryKey: ["gcash-earnings"],
     queryFn: getGCashEarning,
     select: (data) => data.data ?? [],
@@ -83,7 +87,6 @@ export const useGetGCashEarning = () => {
 
   return {
     gcashEarnings: data,
-    isGetGCashEarningPending: isPending,
     isGetGCashEarningError: isError,
     getGCashEarningError: error,
   };
