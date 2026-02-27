@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  useSuspenseQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   createGCashEarning,
@@ -18,11 +14,12 @@ export const useCreateGCashEarning = () => {
     mutationFn: createGCashEarning,
     onSuccess: (data) => {
       toast.success(data.message);
-      // Invalidate the gcash-earnings query to refetch fresh data
-      queryClient.invalidateQueries({ queryKey: ["gcash-earnings"] });
     },
     onError: (error: Error) => {
       toast.error(error.message);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["gcash-earnings"] });
     },
   });
 
@@ -39,11 +36,12 @@ export const useUpdateGCashEarning = () => {
     mutationFn: updateGCashEarning,
     onSuccess: () => {
       toast.success("GCash earning updated successfully");
-      // Invalidate the gcash-earnings query to refetch fresh data
-      queryClient.invalidateQueries({ queryKey: ["gcash-earnings"] });
     },
     onError: () => {
       toast.error("Failed to update GCash earning");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["gcash-earnings"] });
     },
   });
 
@@ -60,11 +58,12 @@ export const useDeleteGCashEarning = () => {
     mutationFn: deleteGCashEarning,
     onSuccess: () => {
       toast.success("GCash earning deleted successfully");
-      // Invalidate the gcash-earnings query to refetch fresh data
-      queryClient.invalidateQueries({ queryKey: ["gcash-earnings"] });
     },
     onError: () => {
       toast.error("Failed to delete GCash earning");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["gcash-earnings"] });
     },
   });
 
@@ -75,19 +74,21 @@ export const useDeleteGCashEarning = () => {
 };
 
 export const useGetGCashEarning = () => {
-  const { data, isError, error } = useSuspenseQuery({
+  const { data, isPending, isError, error, refetch } = useQuery({
     queryKey: ["gcash-earnings"],
     queryFn: getGCashEarning,
     select: (data) => data.data ?? [],
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
-    refetchOnWindowFocus: false,
+    staleTime: 0,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: true,
     refetchOnReconnect: true,
   });
 
   return {
-    gcashEarnings: data,
-    isGetGCashEarningError: isError,
-    getGCashEarningError: error,
+    gcashEarnings: data || [],
+    isGCashEarningsLoading: isPending,
+    isGCashEarningsError: isError,
+    gcashEarningsError: error,
+    refetchGCashEarnings: refetch,
   };
 };

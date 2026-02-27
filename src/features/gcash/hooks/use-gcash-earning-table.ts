@@ -8,10 +8,10 @@ import {
 } from "@/features/gcash/lib/gcash-earning-table-columns";
 
 export function useGCashEarningTable() {
-  const { gcashEarnings } = useGetGCashEarning(); // suspense hook lives here ✅
+  const { gcashEarnings } = useGetGCashEarning();
 
   const table = useReactTable<GCashEarning>({
-    data: gcashEarnings,
+    data: gcashEarnings ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
   });

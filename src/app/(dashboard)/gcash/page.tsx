@@ -1,6 +1,6 @@
 import AppHeader from "@/components/app-header";
 import GCashToolbar from "@/features/gcash/components/gcash-toolbar";
-import GCashEarningTable from "@/features/gcash/components/gcash-earning-table";
+import GCashEarningTable from "@/features/gcash/components/table/gcash-earning-table";
 
 export default function GCashPage() {
   return (

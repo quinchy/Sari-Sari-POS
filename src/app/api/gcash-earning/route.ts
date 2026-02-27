@@ -26,38 +26,31 @@ export async function GET() {
 
     if (!result.success) {
       return NextResponse.json(
-        {
-          success: false,
-          message: result.message,
-        },
+        { success: false, message: result.message },
         { status: result.status },
       );
     }
 
-    const storeId = (result as any).storeId;
+    const storeId = result.storeId;
+    if (!storeId) {
+      return NextResponse.json(
+        { success: false, message: "Missing storeId" },
+        { status: 500 },
+      );
+    }
 
-    // Try to get from Redis cache
     const cached = await getCachedGCashEarnings(storeId);
     if (cached) {
       return NextResponse.json(
-        {
-          success: true,
-          message: result.message,
-          data: cached,
-        },
+        { success: true, message: result.message, data: cached },
         { status: 200 },
       );
     }
 
-    // Cache miss: store fresh data in Redis
-    await setCachedGCashEarnings(storeId, result.data, 300); // 5 minutes TTL
+    await setCachedGCashEarnings(storeId, result.data ?? [], 300);
 
     return NextResponse.json(
-      {
-        success: true,
-        message: result.message,
-        data: result.data,
-      },
+      { success: true, message: result.message, data: result.data ?? [] },
       { status: 200 },
     );
   } catch (error) {
@@ -75,8 +68,8 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-
     const parsed = createGCashEarningSchema.safeParse(body);
+
     if (!parsed.success) {
       return NextResponse.json(
         {
@@ -89,22 +82,14 @@ export async function POST(request: NextRequest) {
 
     const result = await createGCashEarning(parsed.data);
 
-    // Invalidate Redis cache on successful creation
-    if (result.success && (result as any).storeId) {
-      await invalidateGCashEarningsCache((result as any).storeId);
+    if (result.success && result.storeId) {
+      await invalidateGCashEarningsCache(result.storeId);
     }
 
     return NextResponse.json(
       result.success
-        ? {
-            success: true,
-            message: result.message,
-            data: result.data,
-          }
-        : {
-            success: false,
-            message: result.message,
-          },
+        ? { success: true, message: result.message, data: result.data }
+        : { success: false, message: result.message },
       { status: result.status },
     );
   } catch (error) {
@@ -122,8 +107,8 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-
     const parsed = updateGCashEarningSchema.safeParse(body);
+
     if (!parsed.success) {
       return NextResponse.json(
         {
@@ -136,30 +121,14 @@ export async function PUT(request: NextRequest) {
 
     const result = await updateGCashEarning(parsed.data);
 
-    // Invalidate Redis cache on successful update
-    if (result.success) {
-      // Get the updated record's storeId to invalidate correct cache
-      const { gCashEarningRepository } =
-        await import("@/repositories/gcash-earning");
-      const updatedRecord = await gCashEarningRepository.getByStoreId(
-        parsed.data.id,
-      );
-      if (updatedRecord && updatedRecord.length > 0) {
-        await invalidateGCashEarningsCache(updatedRecord[0].storeId);
-      }
+    if (result.success && result.storeId) {
+      await invalidateGCashEarningsCache(result.storeId);
     }
 
     return NextResponse.json(
       result.success
-        ? {
-            success: true,
-            message: result.message,
-            data: result.data,
-          }
-        : {
-            success: false,
-            message: result.message,
-          },
+        ? { success: true, message: result.message, data: result.data }
+        : { success: false, message: result.message },
       { status: result.status },
     );
   } catch (error) {
@@ -177,8 +146,8 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const body = await request.json();
-
     const parsed = deleteGCashEarningSchema.safeParse(body);
+
     if (!parsed.success) {
       return NextResponse.json(
         {
@@ -191,23 +160,14 @@ export async function DELETE(request: NextRequest) {
 
     const result = await deleteGCashEarning(parsed.data.id);
 
-    // Invalidate Redis cache on successful delete
-    if (result.success) {
-      // Note: For delete, we don't have easy access to the storeId
-      // You may want to enhance the service to return storeId on delete as well
+    if (result.success && result.storeId) {
+      await invalidateGCashEarningsCache(result.storeId);
     }
 
     return NextResponse.json(
       result.success
-        ? {
-            success: true,
-            message: result.message,
-            data: result.data,
-          }
-        : {
-            success: false,
-            message: result.message,
-          },
+        ? { success: true, message: result.message, data: result.data }
+        : { success: false, message: result.message },
       { status: result.status },
     );
   } catch (error) {

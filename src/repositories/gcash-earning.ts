@@ -103,6 +103,12 @@ export class GCashEarningRepository {
       orderBy: { created_at: "desc" },
     });
   }
+
+  async getById(id: string): Promise<GCashEarning | null> {
+    return prisma.gCashEarning.findUnique({
+      where: { id },
+    });
+  }
 }
 
 export const gCashEarningRepository = new GCashEarningRepository();
