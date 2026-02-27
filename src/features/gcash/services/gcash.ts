@@ -15,7 +15,7 @@ import { getCurrentUser } from "@/features/auth/services/auth";
  */
 export async function createGCashEarning(
   data: CreateGCashEarningInput,
-): Promise<Response<{ id: string }>> {
+): Promise<Response<{ id: string }> & { storeId?: string }> {
   const currentUserResult = await getCurrentUser();
   if (!currentUserResult.success) {
     return {
@@ -47,7 +47,8 @@ export async function createGCashEarning(
       status: 201,
       message: "GCash earning created successfully",
       data: { id: gcashEarning.id },
-    };
+      storeId,
+    } as Response<{ id: string }> & { storeId: string };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Failed to create GCash earning";

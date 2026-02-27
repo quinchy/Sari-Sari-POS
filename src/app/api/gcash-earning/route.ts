@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Redis } from "@upstash/redis";
 import {
   createGCashEarningSchema,
   updateGCashEarningSchema,
@@ -12,14 +11,14 @@ import {
   getGCashEarning,
 } from "@/features/gcash/services/gcash";
 import { formatZodError } from "@/lib/utils";
+import {
+  getCachedGCashEarnings,
+  setCachedGCashEarnings,
+  invalidateGCashEarningsCache,
+} from "@/lib/cache/redis";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
-
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
 
 export async function GET() {
   try {
@@ -36,10 +35,9 @@ export async function GET() {
     }
 
     const storeId = (result as any).storeId;
-    const cacheKey = `gcash-earnings:${storeId}`;
 
-    // try cache
-    const cached = await redis.get<typeof result.data>(cacheKey);
+    // Try to get from Redis cache
+    const cached = await getCachedGCashEarnings(storeId);
     if (cached) {
       return NextResponse.json(
         {
@@ -51,8 +49,9 @@ export async function GET() {
       );
     }
 
-    // cache miss: store fresh
-    await redis.set(cacheKey, result.data, { ex: 300 }); // TTL 5 minutes
+    // Cache miss: store fresh data in Redis
+    await setCachedGCashEarnings(storeId, result.data, 300); // 5 minutes TTL
+
     return NextResponse.json(
       {
         success: true,
@@ -90,10 +89,9 @@ export async function POST(request: NextRequest) {
 
     const result = await createGCashEarning(parsed.data);
 
-    // Invalidate cache on create
+    // Invalidate Redis cache on successful creation
     if (result.success && (result as any).storeId) {
-      const cacheKey = `gcash-earnings:${(result as any).storeId}`;
-      await redis.del(cacheKey);
+      await invalidateGCashEarningsCache((result as any).storeId);
     }
 
     return NextResponse.json(
@@ -138,7 +136,7 @@ export async function PUT(request: NextRequest) {
 
     const result = await updateGCashEarning(parsed.data);
 
-    // Invalidate cache on update
+    // Invalidate Redis cache on successful update
     if (result.success) {
       // Get the updated record's storeId to invalidate correct cache
       const { gCashEarningRepository } =
@@ -147,8 +145,7 @@ export async function PUT(request: NextRequest) {
         parsed.data.id,
       );
       if (updatedRecord && updatedRecord.length > 0) {
-        const cacheKey = `gcash-earnings:${updatedRecord[0].storeId}`;
-        await redis.del(cacheKey);
+        await invalidateGCashEarningsCache(updatedRecord[0].storeId);
       }
     }
 
@@ -194,11 +191,10 @@ export async function DELETE(request: NextRequest) {
 
     const result = await deleteGCashEarning(parsed.data.id);
 
-    // Invalidate cache on delete
+    // Invalidate Redis cache on successful delete
     if (result.success) {
-      // Note: We'd need to track which store the deleted record belonged to
-      // For now, we'll invalidate on a pattern (if Redis supports it)
-      // Or accept that cache may have a brief stale entry
+      // Note: For delete, we don't have easy access to the storeId
+      // You may want to enhance the service to return storeId on delete as well
     }
 
     return NextResponse.json(

@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   createGCashEarning,
@@ -8,10 +8,14 @@ import {
 } from "@/features/gcash/apis/gcash";
 
 export const useCreateGCashEarning = () => {
+  const queryClient = useQueryClient();
+
   const { isPending, mutate } = useMutation({
     mutationFn: createGCashEarning,
     onSuccess: (data) => {
       toast.success(data.message);
+      // Invalidate the gcash-earnings query to refetch fresh data
+      queryClient.invalidateQueries({ queryKey: ["gcash-earnings"] });
     },
     onError: (error: Error) => {
       toast.error(error.message);
@@ -25,10 +29,14 @@ export const useCreateGCashEarning = () => {
 };
 
 export const useUpdateGCashEarning = () => {
+  const queryClient = useQueryClient();
+
   const { isPending, mutate } = useMutation({
     mutationFn: updateGCashEarning,
     onSuccess: () => {
       toast.success("GCash earning updated successfully");
+      // Invalidate the gcash-earnings query to refetch fresh data
+      queryClient.invalidateQueries({ queryKey: ["gcash-earnings"] });
     },
     onError: () => {
       toast.error("Failed to update GCash earning");
@@ -42,10 +50,14 @@ export const useUpdateGCashEarning = () => {
 };
 
 export const useDeleteGCashEarning = () => {
+  const queryClient = useQueryClient();
+
   const { isPending, mutate } = useMutation({
     mutationFn: deleteGCashEarning,
     onSuccess: () => {
       toast.success("GCash earning deleted successfully");
+      // Invalidate the gcash-earnings query to refetch fresh data
+      queryClient.invalidateQueries({ queryKey: ["gcash-earnings"] });
     },
     onError: () => {
       toast.error("Failed to delete GCash earning");
