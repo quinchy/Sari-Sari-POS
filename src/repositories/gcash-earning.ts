@@ -96,6 +96,13 @@ export class GCashEarningRepository {
       where: { id },
     });
   }
+
+  async getByStoreId(storeId: string): Promise<GCashEarning[]> {
+    return prisma.gCashEarning.findMany({
+      where: { storeId },
+      orderBy: { created_at: "desc" },
+    });
+  }
 }
 
 export const gCashEarningRepository = new GCashEarningRepository();

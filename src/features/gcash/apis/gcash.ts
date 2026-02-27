@@ -2,7 +2,29 @@ import {
   CreateGCashEarning,
   DeleteGCashEarning,
   UpdateGCashEarning,
+  GCashEarningResponse,
 } from "@/features/gcash/types/gcash";
+
+export const getGCashEarning = async (): Promise<{
+  success: boolean;
+  message: string;
+  data?: GCashEarningResponse[];
+}> => {
+  const response = await fetch("/api/gcash-earning", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error(result.message || "Failed to fetch GCash earnings");
+  }
+
+  return result;
+};
 
 export const createGCashEarning = async (data: CreateGCashEarning) => {
   const response = await fetch("/api/gcash-earning", {

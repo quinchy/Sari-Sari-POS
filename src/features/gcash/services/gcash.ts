@@ -3,6 +3,7 @@ import { Response } from "@/types/shared/response";
 import {
   CreateGCashEarning as CreateGCashEarningInput,
   UpdateGCashEarning as UpdateGCashEarningInput,
+  GCashEarningResponse,
 } from "@/features/gcash/types/gcash";
 import { getCurrentUser } from "@/features/auth/services/auth";
 
@@ -137,6 +138,64 @@ export async function deleteGCashEarning(id: string): Promise<Response<null>> {
         message: "GCash earning record not found",
       };
     }
+
+    return {
+      success: false,
+      status: 500,
+      message,
+    };
+  }
+}
+
+/**
+ * Get all GCash earning records for the current user's store.
+ */
+export async function getGCashEarning(): Promise<
+  Response<GCashEarningResponse[] & { storeId?: string }>
+> {
+  const currentUserResult = await getCurrentUser();
+  if (!currentUserResult.success) {
+    return {
+      success: false,
+      status: currentUserResult.status,
+      message: currentUserResult.message,
+    };
+  }
+
+  const user = currentUserResult.data.user;
+  const storeId = user?.currentStoreId ?? null;
+
+  if (!storeId) {
+    return {
+      success: false,
+      status: 400,
+      message: "You don't have a current store. Please create a store first.",
+    };
+  }
+
+  try {
+    const gcashEarnings = await gCashEarningRepository.getByStoreId(storeId);
+
+    const mappedEarnings = gcashEarnings.map((earning) => ({
+      id: earning.id,
+      storeId: earning.storeId,
+      amount: earning.amount.toNumber(),
+      created_at: earning.created_at,
+      updated_at: earning.updated_at,
+    }));
+
+    return {
+      success: true,
+      status: 200,
+      message: "GCash earnings retrieved successfully",
+      data: mappedEarnings,
+      storeId,
+    } as Response<GCashEarningResponse[]> & { storeId: string };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Failed to retrieve GCash earnings";
 
     return {
       success: false,

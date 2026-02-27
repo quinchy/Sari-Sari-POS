@@ -1,9 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   createGCashEarning,
   deleteGCashEarning,
   updateGCashEarning,
+  getGCashEarning,
 } from "@/features/gcash/apis/gcash";
 
 export const useCreateGCashEarning = () => {
@@ -54,5 +55,24 @@ export const useDeleteGCashEarning = () => {
   return {
     isDeleteGCashEarningPending: isPending,
     deleteGCashEarning: mutate,
+  };
+};
+
+export const useGetGCashEarning = () => {
+  const { data, isPending, isError, error } = useQuery({
+    queryKey: ["gcash-earnings"],
+    queryFn: getGCashEarning,
+    select: (data) => data.data ?? [],
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes (formerly cacheTime)
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+  });
+
+  return {
+    gcashEarnings: data,
+    isGetGCashEarningPending: isPending,
+    isGetGCashEarningError: isError,
+    getGCashEarningError: error,
   };
 };
