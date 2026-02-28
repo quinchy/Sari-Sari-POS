@@ -104,7 +104,7 @@ export function GCashEarningActionCell({
             <AlertDialogAction
               onClick={handleDelete}
               disabled={isDeleteGCashEarningPending}
-              className="bg-red-500 hover:bg-red-600"
+              variant="destructive"
             >
               {isDeleteGCashEarningPending ? (
                 <>

@@ -1,16 +1,30 @@
 "use client";
 
 import { FallbackProvider } from "@/providers/fallback-provider";
-import { GCashEarningTableHeader } from "@/features/gcash/components/table/gcash-earning-table-header";
+import {
+  useReactTable,
+  getCoreRowModel,
+  flexRender,
+} from "@tanstack/react-table";
+import {
+  columns,
+  type GCashEarning,
+} from "@/features/gcash/lib/gcash-earning-table-columns";
+import {
+  Table,
+  TableHead,
+  TableHeader,
+  TableRow,
+  TableBody,
+  TableCell,
+  TableFooter,
+} from "@/components/ui/table";
 import {
   TBodyLoading,
   TBodyError,
   TBodyNoData,
 } from "@/components/table-fallback";
-import { Table } from "@/components/ui/table";
 import { useGetGCashEarning } from "@/features/gcash/hooks/use-gcash-earning";
-import GCashEarningTableBody from "@/features/gcash/components/table/gcash-earning-table-body";
-import GCashEarningTableFooter from "@/features/gcash/components/table/gcash-earning-table-footer";
 
 export default function GCashEarningTable() {
   const {
@@ -20,10 +34,32 @@ export default function GCashEarningTable() {
     isGCashEarningsEmpty,
     refetchGCashEarnings,
   } = useGetGCashEarning();
+  const gcashEarningTable = useReactTable<GCashEarning>({
+    data: gcashEarnings,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
+  const total = gcashEarnings.length;
+  const rows = gcashEarningTable.getRowModel().rows;
 
   return (
     <Table>
-      <GCashEarningTableHeader />
+      <TableHeader>
+        {gcashEarningTable.getHeaderGroups().map((hg) => (
+          <TableRow key={hg.id}>
+            {hg.headers.map((header) => (
+              <TableHead key={header.id} style={{ width: header.getSize() }}>
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+              </TableHead>
+            ))}
+          </TableRow>
+        ))}
+      </TableHeader>
       <FallbackProvider
         isPending={isGCashEarningsLoading}
         isError={isGCashEarningsError}
@@ -45,8 +81,30 @@ export default function GCashEarningTable() {
           />
         }
       >
-        <GCashEarningTableBody data={gcashEarnings} />
-        <GCashEarningTableFooter data={gcashEarnings} />
+        <TableBody>
+          {rows.map((row) => {
+            const rowData = row.original as GCashEarning;
+            return (
+              <TableRow key={rowData.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell
+                    key={`${rowData.id}-${cell.id}`}
+                    style={{ width: cell.column.getSize() }}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            );
+          })}
+        </TableBody>
+        <TableFooter>
+          <TableRow>
+            <TableCell colSpan={columns.length} className="first:border-b-0">
+              Total records: {total}
+            </TableCell>
+          </TableRow>
+        </TableFooter>
       </FallbackProvider>
     </Table>
   );
