@@ -3,10 +3,10 @@
 import { FallbackProvider } from "@/providers/fallback-provider";
 import { GCashEarningTableHeader } from "@/features/gcash/components/table/gcash-earning-table-header";
 import {
-  TbodyFallback,
-  TbodyError,
-  TbodyNoData,
-} from "@/features/gcash/components/table/gcash-earning-table-fallback";
+  TBodyLoading,
+  TBodyError,
+  TBodyNoData,
+} from "@/components/table-fallback";
 import { Table } from "@/components/ui/table";
 import { useGetGCashEarning } from "@/features/gcash/hooks/use-gcash-earning";
 import GCashEarningTableBody from "@/features/gcash/components/table/gcash-earning-table-body";
@@ -17,23 +17,33 @@ export default function GCashEarningTable() {
     gcashEarnings,
     isGCashEarningsLoading,
     isGCashEarningsError,
+    isGCashEarningsEmpty,
     refetchGCashEarnings,
   } = useGetGCashEarning();
-
-  const isLoading = isGCashEarningsLoading;
-  const isError = isGCashEarningsError;
-  const isEmpty = gcashEarnings.length === 0;
 
   return (
     <Table>
       <GCashEarningTableHeader />
       <FallbackProvider
-        isPending={isLoading}
-        isError={isError}
-        isEmpty={isEmpty}
-        loadingFallback={<TbodyFallback />}
-        errorFallback={<TbodyError resetAction={refetchGCashEarnings} />}
-        noDataFallback={<TbodyNoData />}
+        isPending={isGCashEarningsLoading}
+        isError={isGCashEarningsError}
+        isEmpty={isGCashEarningsEmpty}
+        loadingFallback={<TBodyLoading columnsCount={3} rowsCount={7} />}
+        errorFallback={
+          <TBodyError
+            title="Failed to load GCash Earning"
+            description="An error occured on retrieving GCash Earning. Please try again."
+            columnsCount={3}
+            resetAction={refetchGCashEarnings}
+          />
+        }
+        noDataFallback={
+          <TBodyNoData
+            title="No GCash Earning Data found"
+            description="Add a GCash Earning Data to get started."
+            columnsCount={3}
+          />
+        }
       >
         <GCashEarningTableBody data={gcashEarnings} />
         <GCashEarningTableFooter data={gcashEarnings} />

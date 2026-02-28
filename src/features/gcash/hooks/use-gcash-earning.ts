@@ -74,10 +74,17 @@ export const useDeleteGCashEarning = () => {
 };
 
 export const useGetGCashEarning = () => {
-  const { data, isPending, isError, error, refetch } = useQuery({
+  const {
+    data = [],
+    isPending,
+    isError,
+    error,
+    refetch,
+    isSuccess,
+  } = useQuery({
     queryKey: ["gcash-earnings"],
     queryFn: getGCashEarning,
-    select: (data) => data.data ?? [],
+    select: (res) => res.data ?? [],
     staleTime: 0,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: true,
@@ -88,6 +95,7 @@ export const useGetGCashEarning = () => {
     gcashEarnings: data || [],
     isGCashEarningsLoading: isPending,
     isGCashEarningsError: isError,
+    isGCashEarningsEmpty: isSuccess && data.length === 0,
     gcashEarningsError: error,
     refetchGCashEarnings: refetch,
   };

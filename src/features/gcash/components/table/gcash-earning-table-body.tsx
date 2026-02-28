@@ -1,5 +1,3 @@
-"use client";
-
 import { flexRender } from "@tanstack/react-table";
 import { useReactTable, getCoreRowModel } from "@tanstack/react-table";
 import {
@@ -8,13 +6,11 @@ import {
 } from "@/features/gcash/lib/gcash-earning-table-columns";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 
-interface GCashEarningTableBodyProps {
-  data: GCashEarning[];
-}
-
 export default function GCashEarningTableBody({
   data,
-}: GCashEarningTableBodyProps) {
+}: {
+  data: GCashEarning[];
+}) {
   const table = useReactTable<GCashEarning>({
     data,
     columns,
@@ -22,18 +18,6 @@ export default function GCashEarningTableBody({
   });
 
   const rows = table.getRowModel().rows;
-
-  if (rows.length === 0) {
-    return (
-      <TableBody>
-        <TableRow>
-          <TableCell colSpan={columns.length} className="text-center py-4">
-            No GCash earnings found.
-          </TableCell>
-        </TableRow>
-      </TableBody>
-    );
-  }
 
   return (
     <TableBody>

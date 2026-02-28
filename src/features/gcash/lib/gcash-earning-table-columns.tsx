@@ -1,4 +1,3 @@
-// gcash-earning-table-columns.tsx
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "@/lib/utils";
 import { GCashEarningActionCell } from "@/features/gcash/components/table/gcash-earning-action-cell";

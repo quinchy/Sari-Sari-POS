@@ -1,18 +1,14 @@
-"use client";
-
 import {
   columns,
   type GCashEarning,
 } from "@/features/gcash/lib/gcash-earning-table-columns";
 import { TableCell, TableRow, TableFooter } from "@/components/ui/table";
 
-interface GCashEarningTableFooterProps {
-  data: GCashEarning[];
-}
-
 export default function GCashEarningTableFooter({
   data,
-}: GCashEarningTableFooterProps) {
+}: {
+  data: GCashEarning[];
+}) {
   const total = data.length;
 
   return (
