@@ -8,12 +8,19 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
     <div
       data-slot="table-container"
-      className="relative w-full rounded-md border h-[calc(100svh-12rem)] flex flex-col"
+      style={{ ["--table-footer-h" as any]: "60px" }}
+      className="relative w-full rounded-md border border-foreground/25 overflow-hidden h-[calc(100svh-12rem)] flex flex-col"
     >
-      <div className="w-full overflow-x-auto overflow-y-auto flex-1">
+      <div
+        data-slot="table-container-scroll"
+        className="w-full overflow-x-auto overflow-y-auto flex-1 rounded-md"
+      >
         <table
           data-slot="table"
-          className={cn("w-full caption-bottom text-sm", className)}
+          className={cn(
+            "w-full caption-bottom text-sm border-separate border-spacing-0",
+            className,
+          )}
           {...props}
         />
       </div>
@@ -25,7 +32,11 @@ function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead
       data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
+      className={cn(
+        "sticky top-0 z-9999 bg-card",
+        "[&_th]:border-b [&_th]:border-foreground/25",
+        className,
+      )}
       {...props}
     />
   );
@@ -45,8 +56,9 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   return (
     <tfoot
       data-slot="table-footer"
+      data-table-footer
       className={cn(
-        "absolute bottom-0 w-full border-t font-medium [&>tr]:last:border-b-0",
+        "absolute bottom-0 w-full bg-card rounded-b-md border-t border-t-foreground/25 font-medium [&>tr]:last:border-b-0",
         className,
       )}
       {...props}
@@ -83,8 +95,8 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
     <td
       data-slot="table-cell"
       className={cn(
-        "p-2 align-middle whitespace-nowrap",
-        "border-l border-b first:border-l-0",
+        "p-2 align-middle whitespace-nowrap my-auto",
+        "border-l border-b first:border-l-0 border-dashed",
         className,
       )}
       {...props}

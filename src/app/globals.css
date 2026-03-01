@@ -159,3 +159,28 @@ input:-webkit-autofill:focus {
         0 0 0 3.5px color-mix(in srgb, var(--ring) 40%, transparent),
         0 0 0 1000px #fff inset !important;
 }
+
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+    border-left: 1px solid rgb(from var(--foreground) r g b / 0.25); /* “border” */
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgb(from var(--foreground) r g b / 0.35);
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+[data-slot="table-container"]:has([data-table-footer])
+    [data-slot="table-container-scroll"] {
+    padding-bottom: var(--table-footer-h, 64px);
+}

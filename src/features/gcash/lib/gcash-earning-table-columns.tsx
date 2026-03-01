@@ -1,14 +1,9 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDate } from "@/lib/utils";
 import { GCashEarningActionCell } from "@/features/gcash/components/table/gcash-earning-action-cell";
+import { GCashEarningColumn } from "@/features/gcash/types/gcash";
 
-export type GCashEarning = {
-  id: string;
-  created_at: string | Date;
-  amount: number;
-};
-
-export const columns: ColumnDef<GCashEarning>[] = [
+export const columns: ColumnDef<GCashEarningColumn>[] = [
   {
     accessorKey: "created_at",
     header: () => <div className="text-left w-fit">Date</div>,

@@ -78,3 +78,7 @@ model GCashEarning {
   @@index([storeId, created_at])
   @@index([created_at])
 }
+
+model Product {
+  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+}

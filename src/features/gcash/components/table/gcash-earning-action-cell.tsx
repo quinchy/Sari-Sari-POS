@@ -26,12 +26,12 @@ import {
   MoreVertical,
 } from "@hugeicons/core-free-icons";
 import { useDeleteGCashEarning } from "@/features/gcash/hooks/use-gcash-earning";
-import type { GCashEarning } from "@/features/gcash/lib/gcash-earning-table-columns";
+import { GCashEarningColumn } from "@/features/gcash/types/gcash";
 import { Spinner } from "@/components/ui/spinner";
 import GCashEarningForm from "@/features/gcash/components/gcash-earning-form";
 
 interface GCashEarningActionCellProps {
-  gcashEarning: GCashEarning;
+  gcashEarning: GCashEarningColumn;
 }
 
 export function GCashEarningActionCell({

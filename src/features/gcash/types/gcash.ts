@@ -19,3 +19,9 @@ export type GCashEarningResponse = {
   created_at: Date;
   updated_at: Date;
 };
+
+export type GCashEarningColumn = {
+  id: string;
+  created_at: string | Date;
+  amount: number;
+};

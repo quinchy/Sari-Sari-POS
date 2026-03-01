@@ -6,10 +6,8 @@ import {
   getCoreRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import {
-  columns,
-  type GCashEarning,
-} from "@/features/gcash/lib/gcash-earning-table-columns";
+import { columns } from "@/features/gcash/lib/gcash-earning-table-columns";
+import { GCashEarningColumn } from "@/features/gcash/types/gcash";
 import {
   Table,
   TableHead,
@@ -19,6 +17,15 @@ import {
   TableCell,
   TableFooter,
 } from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import {
   TBodyLoading,
   TBodyError,
@@ -34,7 +41,7 @@ export default function GCashEarningTable() {
     isGCashEarningsEmpty,
     refetchGCashEarnings,
   } = useGetGCashEarning();
-  const gcashEarningTable = useReactTable<GCashEarning>({
+  const gcashEarningTable = useReactTable<GCashEarningColumn>({
     data: gcashEarnings,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -64,7 +71,7 @@ export default function GCashEarningTable() {
         isPending={isGCashEarningsLoading}
         isError={isGCashEarningsError}
         isEmpty={isGCashEarningsEmpty}
-        loadingFallback={<TBodyLoading columnsCount={3} rowsCount={7} />}
+        loadingFallback={<TBodyLoading columnsCount={3} />}
         errorFallback={
           <TBodyError
             title="Failed to load GCash Earning"
@@ -83,7 +90,7 @@ export default function GCashEarningTable() {
       >
         <TableBody>
           {rows.map((row) => {
-            const rowData = row.original as GCashEarning;
+            const rowData = row.original as GCashEarningColumn;
             return (
               <TableRow key={rowData.id}>
                 {row.getVisibleCells().map((cell) => (
@@ -99,9 +106,39 @@ export default function GCashEarningTable() {
           })}
         </TableBody>
         <TableFooter>
-          <TableRow>
-            <TableCell colSpan={columns.length} className="first:border-b-0">
-              Total records: {total}
+          <TableRow className="flex justify-between w-full">
+            <TableCell colSpan={columns.length} className="border-b-0">
+              <p className="text-muted-foreground">
+                Showing{" "}
+                <span className="font-bold text-foreground">{total}</span>{" "}
+                {total > 1 ? "records" : "record"} of GCash Earning
+              </p>
+            </TableCell>
+            <TableCell className="border-b-0 border-l-0">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious href="#" />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">1</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" isActive>
+                      2
+                    </PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">3</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext href="#" />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             </TableCell>
           </TableRow>
         </TableFooter>

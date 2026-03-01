@@ -67,14 +67,7 @@ export default function GCashEarningForm({
 
   const onSubmit = (gcashEarningData: GCashEarningFormData) => {
     if (isEditing) {
-      updateGCashEarning(
-        { id: gcashEarning.id, ...gcashEarningData },
-        {
-          onSuccess: () => {
-            // Sheet will be closed by parent component
-          },
-        },
-      );
+      updateGCashEarning({ id: gcashEarning.id, ...gcashEarningData });
     } else {
       createGCashEarning({
         amount: gcashEarningData.amount,

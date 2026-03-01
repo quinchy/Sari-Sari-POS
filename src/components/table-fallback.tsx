@@ -13,10 +13,10 @@ import { RepeatIcon } from "@hugeicons/core-free-icons";
 
 export function TBodyLoading({
   columnsCount = 2,
-  rowsCount = 2,
+  rowsCount = 15,
 }: {
-  columnsCount: number;
-  rowsCount: number;
+  columnsCount?: number;
+  rowsCount?: number;
 }) {
   return (
     <>
@@ -34,7 +34,7 @@ export function TBodyLoading({
       <TableFooter>
         <TableRow>
           <TableCell colSpan={columnsCount} className="first:border-b-0">
-            <Skeleton className="h-5 w-32" />
+            <Skeleton className="h-11 w-32" />
           </TableCell>
         </TableRow>
       </TableFooter>
