@@ -239,12 +239,17 @@ export async function getGCashEarningByMonth(
     );
 
     const chartData: GCashEarningChartData[] = earnings.map((earning) => {
-      const date = new Date(earning.created_at);
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, "0");
-      const day = date.getDate().toString().padStart(2, "0");
+      // Convert to Asia/Manila timezone (UTC+8) to match local time
+      const dateStr = new Date(earning.created_at).toLocaleString("en-US", {
+        timeZone: "Asia/Manila",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+      // Format from "M/D/YYYY, HH:MM:SS AM/PM" to "YYYY-MM-DD"
+      const [mm, dd, yyyy] = dateStr.split(",")[0].split("/");
       return {
-        date: `${year}-${month}-${day}`,
+        date: `${yyyy}-${mm}-${dd}`,
         amount: earning.amount.toNumber(),
       };
     });
