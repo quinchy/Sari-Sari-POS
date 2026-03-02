@@ -174,8 +174,12 @@ export class GCashEarningRepository {
     year: number,
     month: number,
   ): Promise<GCashEarning[]> {
-    const startDate = new Date(year, month - 1, 1);
-    const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+    // Use Asia/Manila timezone (UTC+8) to match how dates are stored
+    // Start of month in UTC+8
+    const startDate = new Date(`${year}-${month.toString().padStart(2, "0")}-01T00:00:00+08:00`);
+    // End of month in UTC+8 (last day, 23:59:59.999)
+    const lastDay = new Date(year, month, 0).getDate();
+    const endDate = new Date(`${year}-${month.toString().padStart(2, "0")}-${lastDay.toString().padStart(2, "0")}T23:59:59.999+08:00`);
 
     return prisma.gCashEarning.findMany({
       where: {
