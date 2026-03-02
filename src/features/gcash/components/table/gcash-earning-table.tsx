@@ -36,7 +36,7 @@ export default function GCashEarningTable() {
     isGCashEarningsEmpty,
     refetchGCashEarnings,
     pagination,
-  } = useGetGCashEarning(pageIndex + 1);
+  } = useGetGCashEarning({ page: pageIndex + 1 });
 
   const gcashEarningTable = useReactTable<GCashEarningColumn>({
     data: gcashEarnings,

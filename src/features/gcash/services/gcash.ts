@@ -4,6 +4,7 @@ import {
   CreateGCashEarning as CreateGCashEarningInput,
   UpdateGCashEarning as UpdateGCashEarningInput,
   GCashEarningResponse,
+  GCashEarningChartData,
 } from "@/features/gcash/types/gcash";
 import { getCurrentUser } from "@/features/auth/services/auth";
 
@@ -195,6 +196,64 @@ export async function getGCashEarning(
       limit: result.limit,
       total: result.total,
       totalPages: result.totalPages,
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Failed to retrieve GCash earnings";
+
+    return { success: false, status: 500, message };
+  }
+}
+
+export async function getGCashEarningByMonth(
+  year: number,
+  month: number,
+): Promise<Response<GCashEarningChartData[]>> {
+  const currentUserResult = await getCurrentUser();
+  if (!currentUserResult.success) {
+    return {
+      success: false,
+      status: currentUserResult.status,
+      message: currentUserResult.message,
+    };
+  }
+
+  const user = currentUserResult.data.user;
+  const storeId = user?.currentStoreId ?? null;
+
+  if (!storeId) {
+    return {
+      success: false,
+      status: 400,
+      message: "You don't have a current store. Please create a store first.",
+    };
+  }
+
+  try {
+    const earnings = await gCashEarningRepository.getByStoreIdAndMonth(
+      storeId,
+      year,
+      month,
+    );
+
+    const chartData: GCashEarningChartData[] = earnings.map((earning) => {
+      const date = new Date(earning.created_at);
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      return {
+        date: `${year}-${month}-${day}`,
+        amount: earning.amount.toNumber(),
+      };
+    });
+
+    return {
+      success: true,
+      status: 200,
+      message: "GCash earnings retrieved successfully",
+      data: chartData,
     };
   } catch (error) {
     const message =

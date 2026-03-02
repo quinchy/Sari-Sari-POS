@@ -9,6 +9,7 @@ import {
   getGCashEarning,
 } from "@/features/gcash/apis/gcash";
 import { keepPreviousData } from "@tanstack/react-query";
+import { GCashEarningResponse, GCashEarningChartData } from "@/features/gcash/types/gcash";
 
 export const useCreateGCashEarning = () => {
   const queryClient = useQueryClient();
@@ -76,29 +77,72 @@ export const useDeleteGCashEarning = () => {
   };
 };
 
-export const useGetGCashEarning = (page: number = 1) => {
+interface UseGetGCashEarningParams {
+  page?: number;
+  limit?: number;
+  year?: number;
+  month?: number;
+}
+
+export type { UseGetGCashEarningParams };
+
+export const useGetGCashEarning = (params: UseGetGCashEarningParams = {}) => {
+  const { page = 1, limit = 15, year, month } = params;
+
+  const isChartQuery = year !== undefined && month !== undefined;
+
   const { data, isPending, isError, error, refetch, isSuccess } = useQuery({
-    queryKey: ["gcash-earnings", page],
-    queryFn: () => getGCashEarning(page, 15),
+    queryKey: isChartQuery
+      ? ["gcash-earnings-by-month", year, month]
+      : ["gcash-earnings", page],
+    queryFn: () => getGCashEarning(params),
     staleTime: 0,
-    gcTime: 1000 * 60 * 10,
-    refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
-    placeholderData: keepPreviousData,
+    gcTime: isChartQuery ? undefined : 1000 * 60 * 10,
+    refetchOnWindowFocus: isChartQuery ? false : true,
+    refetchOnReconnect: isChartQuery ? false : true,
+    placeholderData: isChartQuery ? undefined : keepPreviousData,
   });
 
-  const gcashEarnings = data?.data ?? [];
+  // For chart query (monthly data)
+  if (isChartQuery) {
+    const chartData = (data?.data as GCashEarningChartData[]) ?? [];
+    return {
+      gcashEarnings: [],
+      chartData,
+      isGCashEarningsLoading: isPending,
+      isChartLoading: isPending,
+      isGCashEarningsError: isError,
+      isChartError: isError,
+      isGCashEarningsEmpty: false,
+      isChartEmpty: isSuccess && chartData.length === 0,
+      gcashEarningsError: error,
+      refetchGCashEarnings: refetch,
+      refetchChartData: refetch,
+      pagination: {
+        page: 1,
+        limit: 15,
+        total: 0,
+        totalPages: 0,
+      },
+    };
+  }
+
+  // For paginated query
+  const gcashEarnings = (data?.data as GCashEarningResponse[]) ?? [];
   const pagination = data?.pagination;
-  const isGCashEarningsLoading = isPending;
-  const isGCashEarningsEmpty = isSuccess && gcashEarnings.length === 0;
 
   return {
     gcashEarnings,
-    isGCashEarningsLoading,
+    chartData: [],
+    isGCashEarningsLoading: isPending,
+    isChartLoading: false,
     isGCashEarningsError: isError,
-    isGCashEarningsEmpty,
+    isChartError: false,
+    isGCashEarningsEmpty: isSuccess && gcashEarnings.length === 0,
+    isChartEmpty: false,
     gcashEarningsError: error,
     refetchGCashEarnings: refetch,
+    refetchChartData: refetch,
     pagination: pagination ?? {
       page: 1,
       limit: 15,

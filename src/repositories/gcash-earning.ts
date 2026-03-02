@@ -168,6 +168,26 @@ export class GCashEarningRepository {
       totalPages,
     };
   }
+
+  async getByStoreIdAndMonth(
+    storeId: string,
+    year: number,
+    month: number,
+  ): Promise<GCashEarning[]> {
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+
+    return prisma.gCashEarning.findMany({
+      where: {
+        storeId,
+        created_at: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      orderBy: { created_at: "asc" },
+    });
+  }
 }
 
 export const gCashEarningRepository = new GCashEarningRepository();

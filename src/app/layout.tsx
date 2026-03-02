@@ -18,7 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${publicSans.variable} antialiased`}>
+    <html
+      lang="en"
+      className={`${publicSans.variable} antialiased overflow-x-hidden`}
+    >
       <body>
         <QueryProvider>
           <TooltipProvider>{children}</TooltipProvider>

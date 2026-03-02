@@ -20,8 +20,18 @@ export type GCashEarningResponse = {
   updated_at: Date;
 };
 
+export type GCashEarningChartData = {
+  date: string;
+  amount: number;
+};
+
 export type GCashEarningColumn = {
   id: string;
   created_at: string | Date;
+  amount: number;
+};
+
+export type GCashEarningChartData = {
+  date: string;
   amount: number;
 };

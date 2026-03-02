@@ -3,15 +3,22 @@ import {
   DeleteGCashEarning,
   UpdateGCashEarning,
   GCashEarningResponse,
+  GCashEarningChartData,
 } from "@/features/gcash/types/gcash";
 
+interface GetGCashEarningParams {
+  page?: number;
+  limit?: number;
+  year?: number;
+  month?: number;
+}
+
 export const getGCashEarning = async (
-  page: number = 1,
-  limit: number = 15,
+  params: GetGCashEarningParams = {},
 ): Promise<{
   success: boolean;
   message: string;
-  data?: GCashEarningResponse[];
+  data?: GCashEarningResponse[] | GCashEarningChartData[];
   pagination?: {
     page: number;
     limit: number;
@@ -19,11 +26,30 @@ export const getGCashEarning = async (
     totalPages: number;
   };
 }> => {
-  const params = new URLSearchParams();
-  params.set("page", page.toString());
-  params.set("limit", limit.toString());
+  const urlParams = new URLSearchParams();
 
-  const response = await fetch(`/api/gcash-earning?${params.toString()}`, {
+  // Pagination params
+  if (params.page !== undefined) {
+    urlParams.set("page", params.page.toString());
+  }
+  if (params.limit !== undefined) {
+    urlParams.set("limit", params.limit.toString());
+  }
+
+  // Chart params
+  if (params.year !== undefined) {
+    urlParams.set("year", params.year.toString());
+  }
+  if (params.month !== undefined) {
+    urlParams.set("month", params.month.toString());
+  }
+
+  // Determine endpoint based on chart params
+  const endpoint = params.year !== undefined && params.month !== undefined
+    ? "/api/gcash-earning/chart"
+    : "/api/gcash-earning";
+
+  const response = await fetch(`${endpoint}?${urlParams.toString()}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
