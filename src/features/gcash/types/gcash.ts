@@ -30,8 +30,3 @@ export type GCashEarningColumn = {
   created_at: string | Date;
   amount: number;
 };
-
-export type GCashEarningChartData = {
-  date: string;
-  amount: number;
-};

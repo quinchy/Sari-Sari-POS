@@ -47,20 +47,20 @@ export default function TablePagination({
       }
 
       if (pageIndex <= 2) {
-        // At the beginning: show 1, 2, 3, 4
+        // At the beginning: show 1, 2, 3, 4, ..., 25
         return {
           firstPages: [0, 1, 2, 3],
           middlePages: [],
-          lastPages: [],
+          lastPages: [totalPages - 1],
           showStartEllipsis: false,
           showEndEllipsis: true,
         };
       }
 
       if (pageIndex >= totalPages - 3) {
-        // At the end: show last 4 pages
+        // At the end: show 1, ..., 22, 23, 24, 25
         return {
-          firstPages: [],
+          firstPages: [0],
           middlePages: [],
           lastPages: [
             totalPages - 4,
