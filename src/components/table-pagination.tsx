@@ -34,45 +34,69 @@ export default function TablePagination({
   const canPreviousPage = pageIndex > 0;
   const canNextPage = pageIndex < totalPages - 1;
 
-  const { visiblePages, showStartEllipsis, showEndEllipsis } = useMemo(() => {
-    if (totalPages <= 4) {
-      return {
-        visiblePages: Array.from({ length: totalPages }, (_, i) => i),
-        showStartEllipsis: false,
-        showEndEllipsis: false,
-      };
-    }
+  const { firstPages, middlePages, lastPages, showStartEllipsis, showEndEllipsis } =
+    useMemo(() => {
+      if (totalPages <= 4) {
+        return {
+          firstPages: Array.from({ length: totalPages }, (_, i) => i),
+          middlePages: [],
+          lastPages: [],
+          showStartEllipsis: false,
+          showEndEllipsis: false,
+        };
+      }
 
-    if (pageIndex <= 2) {
-      // At the beginning: show 1, 2, 3, 4
+      if (pageIndex <= 2) {
+        // At the beginning: show 1, 2, 3, 4
+        return {
+          firstPages: [0, 1, 2, 3],
+          middlePages: [],
+          lastPages: [],
+          showStartEllipsis: false,
+          showEndEllipsis: true,
+        };
+      }
+
+      if (pageIndex >= totalPages - 3) {
+        // At the end: show last 4 pages
+        return {
+          firstPages: [],
+          middlePages: [],
+          lastPages: [
+            totalPages - 4,
+            totalPages - 3,
+            totalPages - 2,
+            totalPages - 1,
+          ],
+          showStartEllipsis: true,
+          showEndEllipsis: false,
+        };
+      }
+
+      // In the middle: show first page, ellipsis, middle pages, ellipsis, last page
       return {
-        visiblePages: [0, 1, 2, 3],
-        showStartEllipsis: false,
+        firstPages: [0],
+        middlePages: [pageIndex - 1, pageIndex, pageIndex + 1],
+        lastPages: [totalPages - 1],
+        showStartEllipsis: true,
         showEndEllipsis: true,
       };
-    }
+    }, [pageIndex, totalPages]);
 
-    if (pageIndex >= totalPages - 3) {
-      // At the end: show last 4 pages
-      return {
-        visiblePages: [
-          totalPages - 4,
-          totalPages - 3,
-          totalPages - 2,
-          totalPages - 1,
-        ],
-        showStartEllipsis: true,
-        showEndEllipsis: false,
-      };
-    }
-
-    // In the middle: show current page with ellipsis on both sides
-    return {
-      visiblePages: [0, pageIndex - 1, pageIndex, pageIndex + 1, totalPages - 1],
-      showStartEllipsis: true,
-      showEndEllipsis: true,
-    };
-  }, [pageIndex, totalPages]);
+  const renderPageLink = (page: number) => (
+    <PaginationItem key={page}>
+      <PaginationLink
+        href="#"
+        onClick={(e) => {
+          e.preventDefault();
+          onPageChange(page);
+        }}
+        isActive={pageIndex === page}
+      >
+        {page + 1}
+      </PaginationLink>
+    </PaginationItem>
+  );
 
   // Calculate showing from and to
   const showingFrom = totalPages > 0 ? pageIndex * limit + 1 : 0;
@@ -107,30 +131,19 @@ export default function TablePagination({
                 aria-disabled={!canPreviousPage}
               />
             </PaginationItem>
+            {firstPages.map(renderPageLink)}
             {showStartEllipsis && (
               <PaginationItem>
                 <PaginationEllipsis />
               </PaginationItem>
             )}
-            {visiblePages.map((page) => (
-              <PaginationItem key={page}>
-                <PaginationLink
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    onPageChange(page);
-                  }}
-                  isActive={pageIndex === page}
-                >
-                  {page + 1}
-                </PaginationLink>
-              </PaginationItem>
-            ))}
+            {middlePages.map(renderPageLink)}
             {showEndEllipsis && (
               <PaginationItem>
                 <PaginationEllipsis />
               </PaginationItem>
             )}
+            {lastPages.map(renderPageLink)}
             <PaginationItem>
               <PaginationNext
                 href="#"
