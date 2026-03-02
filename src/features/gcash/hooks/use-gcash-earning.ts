@@ -1,3 +1,5 @@
+"use client";
+
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
@@ -6,6 +8,7 @@ import {
   updateGCashEarning,
   getGCashEarning,
 } from "@/features/gcash/apis/gcash";
+import { keepPreviousData } from "@tanstack/react-query";
 
 export const useCreateGCashEarning = () => {
   const queryClient = useQueryClient();
@@ -73,30 +76,34 @@ export const useDeleteGCashEarning = () => {
   };
 };
 
-export const useGetGCashEarning = () => {
-  const {
-    data = [],
-    isPending,
-    isError,
-    error,
-    refetch,
-    isSuccess,
-  } = useQuery({
-    queryKey: ["gcash-earnings"],
-    queryFn: getGCashEarning,
-    select: (res) => res.data ?? [],
+export const useGetGCashEarning = (page: number = 1) => {
+  const { data, isPending, isError, error, refetch, isSuccess } = useQuery({
+    queryKey: ["gcash-earnings", page],
+    queryFn: () => getGCashEarning(page, 15),
     staleTime: 0,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
+    placeholderData: keepPreviousData,
   });
 
+  const gcashEarnings = data?.data ?? [];
+  const pagination = data?.pagination;
+  const isGCashEarningsLoading = isPending;
+  const isGCashEarningsEmpty = isSuccess && gcashEarnings.length === 0;
+
   return {
-    gcashEarnings: data || [],
-    isGCashEarningsLoading: isPending,
+    gcashEarnings,
+    isGCashEarningsLoading,
     isGCashEarningsError: isError,
-    isGCashEarningsEmpty: isSuccess && data.length === 0,
+    isGCashEarningsEmpty,
     gcashEarningsError: error,
     refetchGCashEarnings: refetch,
+    pagination: pagination ?? {
+      page: 1,
+      limit: 15,
+      total: 0,
+      totalPages: 0,
+    },
   };
 };

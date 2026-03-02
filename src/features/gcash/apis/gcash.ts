@@ -5,12 +5,25 @@ import {
   GCashEarningResponse,
 } from "@/features/gcash/types/gcash";
 
-export const getGCashEarning = async (): Promise<{
+export const getGCashEarning = async (
+  page: number = 1,
+  limit: number = 15,
+): Promise<{
   success: boolean;
   message: string;
   data?: GCashEarningResponse[];
+  pagination?: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }> => {
-  const response = await fetch("/api/gcash-earning", {
+  const params = new URLSearchParams();
+  params.set("page", page.toString());
+  params.set("limit", limit.toString());
+
+  const response = await fetch(`/api/gcash-earning?${params.toString()}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

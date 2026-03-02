@@ -136,8 +136,17 @@ export async function deleteGCashEarning(
   }
 }
 
-export async function getGCashEarning(): Promise<
-  Response<GCashEarningResponse[]> & { storeId?: string }
+export async function getGCashEarning(
+  page: number = 1,
+  limit: number = 15,
+): Promise<
+  Response<GCashEarningResponse[]> & {
+    storeId?: string;
+    page?: number;
+    limit?: number;
+    total?: number;
+    totalPages?: number;
+  }
 > {
   const currentUserResult = await getCurrentUser();
   if (!currentUserResult.success) {
@@ -160,9 +169,13 @@ export async function getGCashEarning(): Promise<
   }
 
   try {
-    const gcashEarnings = await gCashEarningRepository.getByStoreId(storeId);
+    const result = await gCashEarningRepository.getByStoreIdPageable(
+      storeId,
+      page,
+      limit,
+    );
 
-    const mappedEarnings: GCashEarningResponse[] = gcashEarnings.map(
+    const mappedEarnings: GCashEarningResponse[] = result.data.map(
       (earning) => ({
         id: earning.id,
         storeId: earning.storeId,
@@ -178,6 +191,10 @@ export async function getGCashEarning(): Promise<
       message: "GCash earnings retrieved successfully",
       data: mappedEarnings,
       storeId,
+      page: result.page,
+      limit: result.limit,
+      total: result.total,
+      totalPages: result.totalPages,
     };
   } catch (error) {
     const message =

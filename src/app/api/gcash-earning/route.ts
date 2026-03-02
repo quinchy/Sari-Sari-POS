@@ -10,19 +10,56 @@ import {
   deleteGCashEarning,
   getGCashEarning,
 } from "@/features/gcash/services/gcash";
+import { getCurrentUser } from "@/features/auth/services/auth";
 import { formatZodError } from "@/lib/utils";
 import {
   getCachedGCashEarnings,
   setCachedGCashEarnings,
   invalidateGCashEarningsCache,
+  getGCashEarningsCacheKey,
 } from "@/lib/cache/redis";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const result = await getGCashEarning();
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get("page") ?? "1", 10);
+    const limit = parseInt(searchParams.get("limit") ?? "15", 10);
+
+    // Get current user to determine storeId (so cache key is per-store)
+    const currentUserResult = await getCurrentUser();
+    if (!currentUserResult.success) {
+      return NextResponse.json(
+        { success: false, message: currentUserResult.message },
+        { status: currentUserResult.status },
+      );
+    }
+
+    const user = currentUserResult.data.user;
+    const storeId = user?.currentStoreId ?? null;
+
+    if (!storeId) {
+      return NextResponse.json(
+        { success: false, message: "Missing storeId" },
+        { status: 400 },
+      );
+    }
+
+    // Build cache key and try reading from cache first (pass storeId, page, limit)
+    const cacheKey = getGCashEarningsCacheKey(storeId, page, limit);
+    const cached = await getCachedGCashEarnings<any>(storeId, page, limit);
+    if (cached) {
+      // cached is expected to be the full payload we return below
+      return NextResponse.json(cached, {
+        status: 200,
+        headers: { "X-Cache": "HIT", "X-Cache-Key": cacheKey },
+      });
+    }
+
+    // Fetch from DB/service if no cache
+    const result = await getGCashEarning(page, limit);
 
     if (!result.success) {
       return NextResponse.json(
@@ -31,28 +68,22 @@ export async function GET() {
       );
     }
 
-    const storeId = result.storeId;
-    if (!storeId) {
-      return NextResponse.json(
-        { success: false, message: "Missing storeId" },
-        { status: 500 },
-      );
-    }
+    const payload = {
+      success: true,
+      message: result.message,
+      data: result.data ?? [],
+      pagination: {
+        page: result.page,
+        limit: result.limit,
+        total: result.total,
+        totalPages: result.totalPages,
+      },
+    };
 
-    const cached = await getCachedGCashEarnings(storeId);
-    if (cached) {
-      return NextResponse.json(
-        { success: true, message: result.message, data: cached },
-        { status: 200 },
-      );
-    }
+    // Store the payload in cache for subsequent requests (store per-page)
+    await setCachedGCashEarnings(storeId, payload, page, limit);
 
-    await setCachedGCashEarnings(storeId, result.data ?? [], 300);
-
-    return NextResponse.json(
-      { success: true, message: result.message, data: result.data ?? [] },
-      { status: 200 },
-    );
+    return NextResponse.json(payload, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       {

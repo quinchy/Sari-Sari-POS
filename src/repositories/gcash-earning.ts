@@ -109,6 +109,65 @@ export class GCashEarningRepository {
       where: { id },
     });
   }
+
+  async getByStoreIdPaginated(
+    storeId: string,
+    cursor?: string,
+    limit: number = 15,
+  ): Promise<{
+    data: GCashEarning[];
+    nextCursor: string | null;
+    hasMore: boolean;
+  }> {
+    const items = await prisma.gCashEarning.findMany({
+      where: { storeId },
+      orderBy: { created_at: "desc" },
+      take: limit + 1, // Fetch one extra to determine if there's more data
+      cursor: cursor ? { id: cursor } : undefined,
+      skip: cursor ? 1 : 0, // Skip the cursor item if cursor is provided
+    });
+
+    const hasMore = items.length > limit;
+    const data = hasMore ? items.slice(0, -1) : items;
+    const nextCursor = hasMore ? (data[data.length - 1]?.id ?? null) : null;
+
+    return { data, nextCursor, hasMore };
+  }
+  async getByStoreIdPageable(
+    storeId: string,
+    page: number = 1,
+    limit: number = 15,
+  ): Promise<{
+    data: GCashEarning[];
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  }> {
+    const skip = (page - 1) * limit;
+
+    const [data, total] = await Promise.all([
+      prisma.gCashEarning.findMany({
+        where: { storeId },
+        orderBy: { created_at: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.gCashEarning.count({
+        where: { storeId },
+      }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data,
+      page,
+      limit,
+      total,
+      totalPages,
+    };
+  }
 }
 
 export const gCashEarningRepository = new GCashEarningRepository();

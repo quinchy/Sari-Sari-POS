@@ -1,12 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  TableBody,
-  TableCell,
-  TableRow,
-  TableFooter,
-} from "@/components/ui/table";
+import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { RepeatIcon } from "@hugeicons/core-free-icons";
@@ -31,13 +26,6 @@ export function TBodyLoading({
           </TableRow>
         ))}
       </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={columnsCount} className="first:border-b-0">
-            <Skeleton className="h-11 w-32" />
-          </TableCell>
-        </TableRow>
-      </TableFooter>
     </>
   );
 }
