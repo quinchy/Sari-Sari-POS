@@ -7,9 +7,14 @@ import {
   deleteGCashEarning,
   updateGCashEarning,
   getGCashEarning,
+  getGCashEarningTotal,
+  getGCashEarningExtreme,
 } from "@/features/gcash/apis/gcash";
 import { keepPreviousData } from "@tanstack/react-query";
-import { GCashEarningResponse, GCashEarningChartData } from "@/features/gcash/types/gcash";
+import {
+  GCashEarningResponse,
+  GCashEarningChartData,
+} from "@/features/gcash/types/gcash";
 
 export const useCreateGCashEarning = () => {
   const queryClient = useQueryClient();
@@ -23,7 +28,18 @@ export const useCreateGCashEarning = () => {
       toast.error(error.message);
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["gcash-earnings"] });
+      queryClient.invalidateQueries({
+        queryKey: ["gcash-earnings"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gcash-earnings-by-month"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gcash-earnings-total"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gcash-earnings-extreme"],
+      });
     },
   });
 
@@ -45,7 +61,18 @@ export const useUpdateGCashEarning = () => {
       toast.error("Failed to update GCash earning");
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["gcash-earnings"] });
+      queryClient.invalidateQueries({
+        queryKey: ["gcash-earnings"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gcash-earnings-by-month"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gcash-earnings-total"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gcash-earnings-extreme"],
+      });
     },
   });
 
@@ -67,7 +94,18 @@ export const useDeleteGCashEarning = () => {
       toast.error("Failed to delete GCash earning");
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["gcash-earnings"] });
+      queryClient.invalidateQueries({
+        queryKey: ["gcash-earnings"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gcash-earnings-by-month"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gcash-earnings-total"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["gcash-earnings-extreme"],
+      });
     },
   });
 
@@ -97,9 +135,9 @@ export const useGetGCashEarning = (params: UseGetGCashEarningParams = {}) => {
       : ["gcash-earnings", page],
     queryFn: () => getGCashEarning(params),
     staleTime: 0,
-    gcTime: isChartQuery ? undefined : 1000 * 60 * 10,
-    refetchOnWindowFocus: isChartQuery ? false : true,
-    refetchOnReconnect: isChartQuery ? false : true,
+    gcTime: 1000 * 60 * 10,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
     placeholderData: isChartQuery ? undefined : keepPreviousData,
   });
 
@@ -149,5 +187,39 @@ export const useGetGCashEarning = (params: UseGetGCashEarningParams = {}) => {
       total: 0,
       totalPages: 0,
     },
+  };
+};
+
+export const useGetGCashEarningTotal = () => {
+  const { data, isPending, isError, error, refetch, isSuccess } = useQuery({
+    queryKey: ["gcash-earnings-total"],
+    queryFn: () => getGCashEarningTotal(),
+  });
+
+  return {
+    total: data ?? 0,
+    isTotalLoading: isPending,
+    isTotalError: isError,
+    totalError: error,
+    refetchTotal: refetch,
+    isTotalEmpty: isSuccess && data === 0,
+  };
+};
+
+export const useGetGCashEarningExtreme = (type: "highest" | "lowest") => {
+  const { data, isPending, isError, error, refetch, isSuccess } = useQuery({
+    queryKey: ["gcash-earnings-extreme", type],
+    queryFn: () => getGCashEarningExtreme(type),
+  });
+
+  const extremeData = data?.id ? data : { id: "", amount: 0, created_at: "" };
+
+  return {
+    extreme: extremeData,
+    isExtremeLoading: isPending,
+    isExtremeError: isError,
+    extremeError: error,
+    refetchExtreme: refetch,
+    isExtremeEmpty: isSuccess && !data?.id,
   };
 };

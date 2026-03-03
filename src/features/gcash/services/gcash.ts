@@ -269,3 +269,101 @@ export async function getGCashEarningByMonth(
     return { success: false, status: 500, message };
   }
 }
+
+export async function getGCashEarningTotal(): Promise<Response<number>> {
+  const currentUserResult = await getCurrentUser();
+  if (!currentUserResult.success) {
+    return {
+      success: false,
+      status: currentUserResult.status,
+      message: currentUserResult.message,
+    };
+  }
+
+  const user = currentUserResult.data.user;
+  const storeId = user?.currentStoreId ?? null;
+
+  if (!storeId) {
+    return {
+      success: false,
+      status: 400,
+      message: "You don't have a current store. Please create a store first.",
+    };
+  }
+
+  try {
+    const total = await gCashEarningRepository.getTotalByStoreId(storeId);
+
+    return {
+      success: true,
+      status: 200,
+      message: "GCash earnings total retrieved successfully",
+      data: total,
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "Failed to retrieve GCash earnings total";
+
+    return { success: false, status: 500, message };
+  }
+}
+
+export async function getGCashEarningExtreme(
+  type: "highest" | "lowest",
+): Promise<Response<{ id: string; amount: number; created_at: Date }>> {
+  const currentUserResult = await getCurrentUser();
+  if (!currentUserResult.success) {
+    return {
+      success: false,
+      status: currentUserResult.status,
+      message: currentUserResult.message,
+    };
+  }
+
+  const user = currentUserResult.data.user;
+  const storeId = user?.currentStoreId ?? null;
+
+  if (!storeId) {
+    return {
+      success: false,
+      status: 400,
+      message: "You don't have a current store. Please create a store first.",
+    };
+  }
+
+  try {
+    const earning =
+      type === "highest"
+        ? await gCashEarningRepository.getHighestByStoreId(storeId)
+        : await gCashEarningRepository.getLowestByStoreId(storeId);
+
+    if (!earning) {
+      return {
+        success: true,
+        status: 200,
+        message: `No GCash earnings found`,
+        data: { id: "", amount: 0, created_at: new Date() },
+      };
+    }
+
+    return {
+      success: true,
+      status: 200,
+      message: `GCash ${type === "highest" ? "highest" : "lowest"} earning retrieved successfully`,
+      data: {
+        id: earning.id,
+        amount: earning.amount.toNumber(),
+        created_at: earning.created_at,
+      },
+    };
+  } catch (error) {
+    const message =
+      error instanceof Error
+        ? error.message
+        : `Failed to retrieve GCash ${type} earning`;
+
+    return { success: false, status: 500, message };
+  }
+}

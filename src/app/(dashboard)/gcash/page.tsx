@@ -2,6 +2,7 @@ import AppHeader from "@/components/app-header";
 import { GCashEarningChart } from "@/features/gcash/components/gcash-earning-chart";
 import GCashToolbar from "@/features/gcash/components/gcash-toolbar";
 import GCashEarningTable from "@/features/gcash/components/table/gcash-earning-table";
+import GCashEarningAnalytics from "@/features/gcash/components/gcash-earning-analytics";
 
 export default function GCashPage() {
   return (
@@ -11,6 +12,7 @@ export default function GCashPage() {
         description="Monitor and manage your GCash fee revenue with daily summaries and detailed records."
       />
       <GCashToolbar />
+      <GCashEarningAnalytics />
       <GCashEarningChart />
       <GCashEarningTable />
     </main>

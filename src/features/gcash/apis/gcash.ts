@@ -44,16 +44,12 @@ export const getGCashEarning = async (
     urlParams.set("month", params.month.toString());
   }
 
-  // Determine endpoint based on chart params
-  const endpoint = params.year !== undefined && params.month !== undefined
-    ? "/api/gcash-earning/chart"
-    : "/api/gcash-earning";
-
-  const response = await fetch(`${endpoint}?${urlParams.toString()}`, {
+  const response = await fetch(`/api/gcash-earning?${urlParams.toString()}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
+    cache: "no-store",
   });
 
   const result = await response.json();
@@ -117,4 +113,44 @@ export const deleteGCashEarning = async (data: DeleteGCashEarning) => {
   }
 
   return result;
+};
+
+export const getGCashEarningTotal = async (): Promise<number> => {
+  const response = await fetch("/api/gcash-earning/total", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: "no-store",
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error(result.message || "Failed to fetch GCash earnings total");
+  }
+
+  return result.data;
+};
+
+export const getGCashEarningExtreme = async (
+  type: "highest" | "lowest",
+): Promise<{ id: string; amount: number; created_at: string }> => {
+  const response = await fetch(`/api/gcash-earning/extreme?type=${type}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    cache: "no-store",
+  });
+
+  const result = await response.json();
+
+  if (!response.ok || !result.success) {
+    throw new Error(
+      result.message || `Failed to fetch GCash ${type} earning`,
+    );
+  }
+
+  return result.data;
 };

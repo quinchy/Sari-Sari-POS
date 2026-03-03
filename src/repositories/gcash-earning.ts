@@ -192,6 +192,35 @@ export class GCashEarningRepository {
       orderBy: { created_at: "asc" },
     });
   }
+
+  async getTotalByStoreId(storeId: string): Promise<number> {
+    const result = await prisma.gCashEarning.aggregate({
+      where: { storeId },
+      _sum: { amount: true },
+    });
+    return result._sum.amount?.toNumber() ?? 0;
+  }
+
+  async getHighestByStoreId(storeId: string): Promise<GCashEarning | null> {
+    return prisma.gCashEarning.findFirst({
+      where: { storeId },
+      orderBy: { amount: "desc" },
+    });
+  }
+
+  async getLowestByStoreId(storeId: string): Promise<GCashEarning | null> {
+    const earnings = await prisma.gCashEarning.findMany({
+      where: { storeId },
+      orderBy: { amount: "asc" },
+    });
+
+    // Filter out null and 0 values in memory
+    const validEarnings = earnings.filter(
+      (e) => e.amount !== null && e.amount.toNumber() > 0,
+    );
+
+    return validEarnings[0] || null;
+  }
 }
 
 export const gCashEarningRepository = new GCashEarningRepository();

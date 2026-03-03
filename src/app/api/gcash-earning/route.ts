@@ -18,6 +18,7 @@ import {
   setCachedGCashEarnings,
   invalidateGCashEarningsCache,
   getGCashEarningsCacheKey,
+  invalidateAllGCashEarningsCache,
 } from "@/lib/cache/redis";
 
 export const dynamic = "force-dynamic";
@@ -28,6 +29,8 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") ?? "1", 10);
     const limit = parseInt(searchParams.get("limit") ?? "15", 10);
+    const year = searchParams.get("year");
+    const month = searchParams.get("month");
 
     // Get current user to determine storeId (so cache key is per-store)
     const currentUserResult = await getCurrentUser();
@@ -45,6 +48,30 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(
         { success: false, message: "Missing storeId" },
         { status: 400 },
+      );
+    }
+
+    // If year and month are provided, return chart data (no caching for chart)
+    if (year && month) {
+      const result = await getGCashEarningByMonth(
+        parseInt(year, 10),
+        parseInt(month, 10),
+      );
+
+      if (!result.success) {
+        return NextResponse.json(
+          { success: false, message: result.message },
+          { status: result.status },
+        );
+      }
+
+      return NextResponse.json(
+        {
+          success: true,
+          message: result.message,
+          data: result.data ?? [],
+        },
+        { status: 200 },
       );
     }
 
@@ -115,7 +142,7 @@ export async function POST(request: NextRequest) {
     const result = await createGCashEarning(parsed.data);
 
     if (result.success && result.storeId) {
-      await invalidateGCashEarningsCache(result.storeId);
+      await invalidateAllGCashEarningsCache(result.storeId);
     }
 
     return NextResponse.json(
@@ -154,7 +181,7 @@ export async function PUT(request: NextRequest) {
     const result = await updateGCashEarning(parsed.data);
 
     if (result.success && result.storeId) {
-      await invalidateGCashEarningsCache(result.storeId);
+      await invalidateAllGCashEarningsCache(result.storeId);
     }
 
     return NextResponse.json(
@@ -193,7 +220,7 @@ export async function DELETE(request: NextRequest) {
     const result = await deleteGCashEarning(parsed.data.id);
 
     if (result.success && result.storeId) {
-      await invalidateGCashEarningsCache(result.storeId);
+      await invalidateAllGCashEarningsCache(result.storeId);
     }
 
     return NextResponse.json(

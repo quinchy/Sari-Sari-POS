@@ -124,3 +124,98 @@ export const setCachedGCashEarnings = async <T>(
     // Ignore cache set errors; they should not block the main request flow.
   }
 };
+
+// Cache key for total earnings
+export const getGCashEarningsTotalCacheKey = (storeId: string): string => {
+  return `gcash-earnings-total:${storeId}`;
+};
+
+// Cache key for extreme earnings (highest/lowest)
+export const getGCashEarningsExtremeCacheKey = (
+  storeId: string,
+  type: "highest" | "lowest",
+): string => {
+  return `gcash-earnings-extreme:${storeId}:${type}`;
+};
+
+// Get cached total earnings
+export const getCachedGCashEarningsTotal = async (
+  storeId: string,
+): Promise<number | null> => {
+  const cacheKey = getGCashEarningsTotalCacheKey(storeId);
+  const raw = await redis.get<string | null>(cacheKey);
+
+  if (raw == null) {
+    return null;
+  }
+
+  try {
+    const parsed = JSON.parse(raw);
+    return typeof parsed === "number" ? parsed : null;
+  } catch {
+    return null;
+  }
+};
+
+// Set cached total earnings
+export const setCachedGCashEarningsTotal = async (
+  storeId: string,
+  total: number,
+  ttlSeconds: number = 300,
+): Promise<void> => {
+  const cacheKey = getGCashEarningsTotalCacheKey(storeId);
+  try {
+    await redis.set(cacheKey, JSON.stringify(total), { ex: ttlSeconds });
+  } catch {
+    // Ignore cache errors
+  }
+};
+
+// Get cached extreme earnings
+export const getCachedGCashEarningsExtreme = async (
+  storeId: string,
+  type: "highest" | "lowest",
+): Promise<{ id: string; amount: number; created_at: Date } | null> => {
+  const cacheKey = getGCashEarningsExtremeCacheKey(storeId, type);
+  const raw = await redis.get<string | null>(cacheKey);
+
+  if (raw == null) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(raw) as { id: string; amount: number; created_at: Date };
+  } catch {
+    return null;
+  }
+};
+
+// Set cached extreme earnings
+export const setCachedGCashEarningsExtreme = async (
+  storeId: string,
+  type: "highest" | "lowest",
+  data: { id: string; amount: number; created_at: Date },
+  ttlSeconds: number = 300,
+): Promise<void> => {
+  const cacheKey = getGCashEarningsExtremeCacheKey(storeId, type);
+  try {
+    await redis.set(cacheKey, JSON.stringify(data), { ex: ttlSeconds });
+  } catch {
+    // Ignore cache errors
+  }
+};
+
+/**
+ * Invalidate all GCash earnings cache including total and extreme
+ */
+export const invalidateAllGCashEarningsCache = async (
+  storeId: string,
+): Promise<void> => {
+  // Delete base and paginated keys
+  await invalidateGCashEarningsCache(storeId);
+
+  // Delete total and extreme keys
+  await redis.del(getGCashEarningsTotalCacheKey(storeId));
+  await redis.del(getGCashEarningsExtremeCacheKey(storeId, "highest"));
+  await redis.del(getGCashEarningsExtremeCacheKey(storeId, "lowest"));
+};

@@ -68,7 +68,11 @@ export function GCashEarningChart() {
   const selectedMonthLabel =
     MONTHS.find((m) => m.value === selectedMonth)?.label ?? "";
 
-  const { chartData, isChartLoading: isLoading, isChartEmpty: isEmpty } = useGetGCashEarning({
+  const {
+    chartData,
+    isChartLoading: isLoading,
+    isChartEmpty: isEmpty,
+  } = useGetGCashEarning({
     year: parseInt(selectedYear),
     month: parseInt(selectedMonth),
   });
@@ -82,7 +86,7 @@ export function GCashEarningChart() {
   // Fill in missing days with 0 amount
   const filledChartData = useMemo(() => {
     const dataMap = new Map(chartData.map((d) => [d.date, d.amount]));
-    const result = [];
+    const result: { date: string; amount: number }[] = [];
 
     for (let day = 1; day <= daysInMonth; day++) {
       const dateStr = `${selectedYear}-${selectedMonth.padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
@@ -92,7 +96,8 @@ export function GCashEarningChart() {
       });
     }
 
-    return result;
+    // Create new array reference to ensure re-render
+    return [...result];
   }, [chartData, daysInMonth, selectedYear, selectedMonth]);
 
   const totalAmount = useMemo(
