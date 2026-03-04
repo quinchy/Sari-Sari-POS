@@ -4,14 +4,8 @@ import {
   UpdateGCashEarning,
   GCashEarningResponse,
   GCashEarningChartData,
+  GetGCashEarningParams,
 } from "@/features/gcash/types/gcash";
-
-interface GetGCashEarningParams {
-  page?: number;
-  limit?: number;
-  year?: number;
-  month?: number;
-}
 
 export const getGCashEarning = async (
   params: GetGCashEarningParams = {},

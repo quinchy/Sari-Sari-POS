@@ -1,12 +1,4 @@
-import { Redis } from "@upstash/redis";
-
-/**
- * Initialize Redis client for caching operations
- */
-export const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+import { redis } from "@/lib/redis/client";
 
 /**
  * Generate cache key for GCash earnings by store and optional pagination.

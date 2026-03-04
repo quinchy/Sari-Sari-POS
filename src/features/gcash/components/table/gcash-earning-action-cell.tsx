@@ -26,13 +26,9 @@ import {
   MoreVertical,
 } from "@hugeicons/core-free-icons";
 import { useDeleteGCashEarning } from "@/features/gcash/hooks/use-gcash-earning";
-import { GCashEarningColumn } from "@/features/gcash/types/gcash";
+import { GCashEarningColumn, GCashEarningActionCellProps } from "@/features/gcash/types/gcash";
 import { Spinner } from "@/components/ui/spinner";
 import GCashEarningForm from "@/features/gcash/components/gcash-earning-form";
-
-interface GCashEarningActionCellProps {
-  gcashEarning: GCashEarningColumn;
-}
 
 export function GCashEarningActionCell({
   gcashEarning,

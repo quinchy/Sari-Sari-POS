@@ -1,16 +1,20 @@
 import { z } from "zod";
 import {
-  createGCashEarningSchema,
-  deleteGCashEarningSchema,
   gcashEarningSchema,
+  createGCashEarningSchema,
   updateGCashEarningSchema,
-} from "@/features/gcash/validation/gcash";
+  deleteGCashEarningSchema,
+} from "../validation/gcash";
+
+// ============= Inferred Types =============
 
 export type GCashEarningData = z.infer<typeof gcashEarningSchema>;
 
 export type CreateGCashEarning = z.input<typeof createGCashEarningSchema>;
 export type UpdateGCashEarning = z.input<typeof updateGCashEarningSchema>;
 export type DeleteGCashEarning = z.input<typeof deleteGCashEarningSchema>;
+
+// ============= Response Types =============
 
 export type GCashEarningResponse = {
   id: string;
@@ -30,3 +34,35 @@ export type GCashEarningColumn = {
   created_at: string | Date;
   amount: number;
 };
+
+// ============= API Params =============
+
+export interface GetGCashEarningParams {
+  page?: number;
+  limit?: number;
+  year?: number;
+  month?: number;
+}
+
+// ============= Hook Params =============
+
+export interface UseGetGCashEarningParams {
+  page?: number;
+  limit?: number;
+  year?: number;
+  month?: number;
+}
+
+// ============= Component Props =============
+
+export interface GCashEarningFormProps {
+  gcashEarning?: {
+    id: string;
+    amount: number;
+    created_at: string | Date;
+  };
+}
+
+export interface GCashEarningActionCellProps {
+  gcashEarning: GCashEarningColumn;
+}

@@ -4,7 +4,7 @@ import { getCurrentUser } from "@/features/auth/services/auth";
 import {
   getCachedGCashEarningsTotal,
   setCachedGCashEarningsTotal,
-} from "@/lib/cache/redis";
+} from "@/features/gcash/lib/gcash-redis";
 
 export async function GET() {
   try {

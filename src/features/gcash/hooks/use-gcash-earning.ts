@@ -14,6 +14,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import {
   GCashEarningResponse,
   GCashEarningChartData,
+  UseGetGCashEarningParams,
 } from "@/features/gcash/types/gcash";
 
 export const useCreateGCashEarning = () => {
@@ -114,13 +115,6 @@ export const useDeleteGCashEarning = () => {
     deleteGCashEarning: mutate,
   };
 };
-
-interface UseGetGCashEarningParams {
-  page?: number;
-  limit?: number;
-  year?: number;
-  month?: number;
-}
 
 export type { UseGetGCashEarningParams };
 

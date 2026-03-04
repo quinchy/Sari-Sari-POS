@@ -10,10 +10,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import FormHeader from "@/components/form-header";
-import { gcashEarningSchema } from "@/features/gcash/validation/gcash";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { GCashEarningData as GCashEarningFormData } from "@/features/gcash/types/gcash";
+import {
+  GCashEarningData as GCashEarningFormData,
+  GCashEarningFormProps,
+  gcashEarningSchema,
+} from "@/features/gcash/types/gcash";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import {
@@ -29,14 +30,6 @@ import {
   useUpdateGCashEarning,
 } from "@/features/gcash/hooks/use-gcash-earning";
 import { Spinner } from "@/components/ui/spinner";
-
-interface GCashEarningFormProps {
-  gcashEarning?: {
-    id: string;
-    amount: number;
-    created_at: string | Date;
-  };
-}
 
 export default function GCashEarningForm({
   gcashEarning,

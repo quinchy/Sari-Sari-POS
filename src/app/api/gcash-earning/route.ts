@@ -19,7 +19,7 @@ import {
   invalidateGCashEarningsCache,
   getGCashEarningsCacheKey,
   invalidateAllGCashEarningsCache,
-} from "@/lib/cache/redis";
+} from "@/features/gcash/lib/gcash-redis";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
