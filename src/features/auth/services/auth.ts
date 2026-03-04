@@ -1,6 +1,4 @@
-import { z } from "zod";
 import { createClient } from "@/lib/supabase/server";
-import { signUpSchema } from "@/features/auth/validations/auth";
 import { userRepository } from "@/repositories/user";
 import { storeRepository } from "@/repositories/store";
 import { storeMemberRepository } from "@/repositories/store-member";

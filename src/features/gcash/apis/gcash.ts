@@ -6,6 +6,7 @@ import {
   GCashEarningChartData,
   GetGCashEarningParams,
 } from "@/features/gcash/types/gcash";
+import { Pagination } from "@/types/shared/pagination";
 
 export const getGCashEarning = async (
   params: GetGCashEarningParams = {},
@@ -13,12 +14,7 @@ export const getGCashEarning = async (
   success: boolean;
   message: string;
   data?: GCashEarningResponse[] | GCashEarningChartData[];
-  pagination?: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
-  };
+  pagination?: Pagination;
 }> => {
   const urlParams = new URLSearchParams();
 
@@ -141,9 +137,7 @@ export const getGCashEarningExtreme = async (
   const result = await response.json();
 
   if (!response.ok || !result.success) {
-    throw new Error(
-      result.message || `Failed to fetch GCash ${type} earning`,
-    );
+    throw new Error(result.message || `Failed to fetch GCash ${type} earning`);
   }
 
   return result.data;

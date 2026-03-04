@@ -11,4 +11,4 @@ export type FailureResponse = {
   message: string;
 };
 
-export type Response<T = unknown> = SuccessResponse<T> | FailureResponse;
+export type Response<T> = SuccessResponse<T> | FailureResponse;

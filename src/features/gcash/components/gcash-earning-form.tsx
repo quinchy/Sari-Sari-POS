@@ -13,8 +13,8 @@ import FormHeader from "@/components/form-header";
 import {
   GCashEarningData as GCashEarningFormData,
   GCashEarningFormProps,
-  gcashEarningSchema,
 } from "@/features/gcash/types/gcash";
+import { gcashEarningSchema } from "../validation/gcash";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import {
@@ -30,6 +30,8 @@ import {
   useUpdateGCashEarning,
 } from "@/features/gcash/hooks/use-gcash-earning";
 import { Spinner } from "@/components/ui/spinner";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default function GCashEarningForm({
   gcashEarning,

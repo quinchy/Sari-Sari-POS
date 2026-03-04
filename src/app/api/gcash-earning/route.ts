@@ -16,7 +16,6 @@ import { formatZodError } from "@/lib/utils";
 import {
   getCachedGCashEarnings,
   setCachedGCashEarnings,
-  invalidateGCashEarningsCache,
   getGCashEarningsCacheKey,
   invalidateAllGCashEarningsCache,
 } from "@/features/gcash/lib/gcash-redis";
@@ -34,6 +33,7 @@ export async function GET(request: NextRequest) {
 
     // Get current user to determine storeId (so cache key is per-store)
     const currentUserResult = await getCurrentUser();
+    
     if (!currentUserResult.success) {
       return NextResponse.json(
         { success: false, message: currentUserResult.message },
