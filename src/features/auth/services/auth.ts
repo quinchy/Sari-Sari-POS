@@ -4,8 +4,9 @@ import { storeRepository } from "@/repositories/store";
 import { storeMemberRepository } from "@/repositories/store-member";
 import { Response as AuthResponse } from "@/types/shared/response";
 import { SignInData, SignUpData } from "@/features/auth/types/auth";
+import { User } from "@/../prisma/generated/client";
 
-export async function getCurrentUser(): Promise<AuthResponse<{ user: any }>> {
+export async function getCurrentUser(): Promise<AuthResponse<{ user: User }>> {
   const supabase = await createClient();
 
   const {

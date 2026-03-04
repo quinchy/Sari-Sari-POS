@@ -18,7 +18,7 @@ export const getGCashEarning = async (
 }> => {
   const urlParams = new URLSearchParams();
 
-  // Pagination params
+  // Pagination params - only add if defined
   if (params.page !== undefined) {
     urlParams.set("page", params.page.toString());
   }
@@ -26,7 +26,7 @@ export const getGCashEarning = async (
     urlParams.set("limit", params.limit.toString());
   }
 
-  // Chart params
+  // Chart params - only add if defined
   if (params.year !== undefined) {
     urlParams.set("year", params.year.toString());
   }

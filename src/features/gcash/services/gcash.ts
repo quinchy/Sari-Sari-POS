@@ -138,10 +138,12 @@ export async function deleteGCashEarning(
 }
 
 export async function getGCashEarning(
-  page: number = 1,
-  limit: number = 15,
+  page?: number,
+  limit?: number,
+  year?: number,
+  month?: number,
 ): Promise<
-  Response<GCashEarningResponse[]> & {
+  Response<GCashEarningResponse[] | GCashEarningChartData[]> & {
     storeId?: string;
     page?: number;
     limit?: number;
@@ -170,13 +172,74 @@ export async function getGCashEarning(
   }
 
   try {
-    const result = await gCashEarningRepository.getByStoreIdPageable(
-      storeId,
-      page,
-      limit,
-    );
+    // If year and month are provided, return chart data for that specific month
+    if (year !== undefined && month !== undefined) {
+      const earnings = await gCashEarningRepository.getByStoreIdAndMonth(
+        storeId,
+        year,
+        month,
+      );
 
-    const mappedEarnings: GCashEarningResponse[] = result.data.map(
+      const chartData: GCashEarningChartData[] = earnings.map((earning) => {
+        // Convert to Asia/Manila timezone (UTC+8) to match local time
+        const dateStr = new Date(earning.created_at).toLocaleString("en-US", {
+          timeZone: "Asia/Manila",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        });
+        // Format from "M/D/YYYY, HH:MM:SS AM/PM" to "YYYY-MM-DD"
+        const [mm, dd, yyyy] = dateStr.split(",")[0].split("/");
+        return {
+          date: `${yyyy}-${mm}-${dd}`,
+          amount: earning.amount.toNumber(),
+        };
+      });
+
+      return {
+        success: true,
+        status: 200,
+        message: "GCash earnings retrieved successfully",
+        data: chartData,
+        storeId,
+      };
+    }
+
+    // If page and limit are provided, return paginated list
+    if (page !== undefined && limit !== undefined) {
+      const result = await gCashEarningRepository.getByStoreIdPageable(
+        storeId,
+        page,
+        limit,
+      );
+
+      const mappedEarnings: GCashEarningResponse[] = result.data.map(
+        (earning) => ({
+          id: earning.id,
+          storeId: earning.storeId,
+          amount: earning.amount.toNumber(),
+          created_at: earning.created_at,
+          updated_at: earning.updated_at,
+        }),
+      );
+
+      return {
+        success: true,
+        status: 200,
+        message: "GCash earnings retrieved successfully",
+        data: mappedEarnings,
+        storeId,
+        page: result.page,
+        limit: result.limit,
+        total: result.total,
+        totalPages: result.totalPages,
+      };
+    }
+
+    // No params: return all data (unpaginated)
+    const allEarnings = await gCashEarningRepository.getByStoreId(storeId);
+
+    const mappedEarnings: GCashEarningResponse[] = allEarnings.map(
       (earning) => ({
         id: earning.id,
         storeId: earning.storeId,
@@ -192,73 +255,7 @@ export async function getGCashEarning(
       message: "GCash earnings retrieved successfully",
       data: mappedEarnings,
       storeId,
-      page: result.page,
-      limit: result.limit,
-      total: result.total,
-      totalPages: result.totalPages,
-    };
-  } catch (error) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Failed to retrieve GCash earnings";
-
-    return { success: false, status: 500, message };
-  }
-}
-
-export async function getGCashEarningByMonth(
-  year: number,
-  month: number,
-): Promise<Response<GCashEarningChartData[]>> {
-  const currentUserResult = await getCurrentUser();
-  if (!currentUserResult.success) {
-    return {
-      success: false,
-      status: currentUserResult.status,
-      message: currentUserResult.message,
-    };
-  }
-
-  const user = currentUserResult.data.user;
-  const storeId = user?.currentStoreId ?? null;
-
-  if (!storeId) {
-    return {
-      success: false,
-      status: 400,
-      message: "You don't have a current store. Please create a store first.",
-    };
-  }
-
-  try {
-    const earnings = await gCashEarningRepository.getByStoreIdAndMonth(
-      storeId,
-      year,
-      month,
-    );
-
-    const chartData: GCashEarningChartData[] = earnings.map((earning) => {
-      // Convert to Asia/Manila timezone (UTC+8) to match local time
-      const dateStr = new Date(earning.created_at).toLocaleString("en-US", {
-        timeZone: "Asia/Manila",
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-      });
-      // Format from "M/D/YYYY, HH:MM:SS AM/PM" to "YYYY-MM-DD"
-      const [mm, dd, yyyy] = dateStr.split(",")[0].split("/");
-      return {
-        date: `${yyyy}-${mm}-${dd}`,
-        amount: earning.amount.toNumber(),
-      };
-    });
-
-    return {
-      success: true,
-      status: 200,
-      message: "GCash earnings retrieved successfully",
-      data: chartData,
+      total: mappedEarnings.length,
     };
   } catch (error) {
     const message =

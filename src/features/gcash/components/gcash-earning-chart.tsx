@@ -68,9 +68,9 @@ export function GCashEarningChart() {
     MONTHS.find((m) => m.value === selectedMonth)?.label ?? "";
 
   const {
-    chartData,
-    isChartLoading: isLoading,
-    isChartEmpty: isEmpty,
+    gcashEarnings,
+    isGCashEarningsLoading: isLoading,
+    isGCashEarningsEmpty: isEmpty,
   } = useGetGCashEarning({
     year: parseInt(selectedYear),
     month: parseInt(selectedMonth),
@@ -84,7 +84,7 @@ export function GCashEarningChart() {
 
   // Fill in missing days with 0 amount
   const filledChartData = useMemo(() => {
-    const dataMap = new Map(chartData.map((d) => [d.date, d.amount]));
+    const dataMap = new Map(gcashEarnings.map((d: any) => [d.date, d.amount]));
     const result: { date: string; amount: number }[] = [];
 
     for (let day = 1; day <= daysInMonth; day++) {
@@ -97,7 +97,7 @@ export function GCashEarningChart() {
 
     // Create new array reference to ensure re-render
     return [...result];
-  }, [chartData, daysInMonth, selectedYear, selectedMonth]);
+  }, [gcashEarnings, daysInMonth, selectedYear, selectedMonth]);
 
   const totalAmount = useMemo(
     () => filledChartData.reduce((acc, curr) => acc + curr.amount, 0),

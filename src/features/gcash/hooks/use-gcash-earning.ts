@@ -33,9 +33,6 @@ export const useCreateGCashEarning = () => {
         queryKey: ["gcash-earnings"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["gcash-earnings-by-month"],
-      });
-      queryClient.invalidateQueries({
         queryKey: ["gcash-earnings-total"],
       });
       queryClient.invalidateQueries({
@@ -64,9 +61,6 @@ export const useUpdateGCashEarning = () => {
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: ["gcash-earnings"],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["gcash-earnings-by-month"],
       });
       queryClient.invalidateQueries({
         queryKey: ["gcash-earnings-total"],
@@ -99,9 +93,6 @@ export const useDeleteGCashEarning = () => {
         queryKey: ["gcash-earnings"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["gcash-earnings-by-month"],
-      });
-      queryClient.invalidateQueries({
         queryKey: ["gcash-earnings-total"],
       });
       queryClient.invalidateQueries({
@@ -116,66 +107,29 @@ export const useDeleteGCashEarning = () => {
   };
 };
 
-export type { UseGetGCashEarningParams };
-
 export const useGetGCashEarning = (params: UseGetGCashEarningParams = {}) => {
-  const { page = 1, limit = 15, year, month } = params;
-
-  const isChartQuery = year !== undefined && month !== undefined;
+  const { page, limit, year, month } = params;
 
   const { data, isPending, isError, error, refetch, isSuccess } = useQuery({
-    queryKey: isChartQuery
-      ? ["gcash-earnings-by-month", year, month]
-      : ["gcash-earnings", page],
+    queryKey: ["gcash-earnings", params],
     queryFn: () => getGCashEarning(params),
     staleTime: 0,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
-    placeholderData: isChartQuery ? undefined : keepPreviousData,
+    placeholderData: page && limit ? keepPreviousData : undefined,
   });
 
-  // For chart query (monthly data)
-  if (isChartQuery) {
-    const chartData = (data?.data as GCashEarningChartData[]) ?? [];
-    return {
-      gcashEarnings: [],
-      chartData,
-      isGCashEarningsLoading: isPending,
-      isChartLoading: isPending,
-      isGCashEarningsError: isError,
-      isChartError: isError,
-      isGCashEarningsEmpty: false,
-      isChartEmpty: isSuccess && chartData.length === 0,
-      gcashEarningsError: error,
-      refetchGCashEarnings: refetch,
-      refetchChartData: refetch,
-      pagination: {
-        page: 1,
-        limit: 15,
-        total: 0,
-        totalPages: 0,
-      },
-    };
-  }
-
-  // For paginated query
-  const gcashEarnings = (data?.data as GCashEarningResponse[]) ?? [];
-  const pagination = data?.pagination;
+  const gcashEarnings = (data?.data ?? []) as GCashEarningResponse[];
 
   return {
     gcashEarnings,
-    chartData: [],
     isGCashEarningsLoading: isPending,
-    isChartLoading: false,
     isGCashEarningsError: isError,
-    isChartError: false,
     isGCashEarningsEmpty: isSuccess && gcashEarnings.length === 0,
-    isChartEmpty: false,
     gcashEarningsError: error,
     refetchGCashEarnings: refetch,
-    refetchChartData: refetch,
-    pagination: pagination ?? {
+    pagination: data?.pagination ?? {
       page: 1,
       limit: 15,
       total: 0,

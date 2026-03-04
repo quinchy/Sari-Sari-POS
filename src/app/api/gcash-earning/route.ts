@@ -9,7 +9,6 @@ import {
   updateGCashEarning,
   deleteGCashEarning,
   getGCashEarning,
-  getGCashEarningByMonth,
 } from "@/features/gcash/services/gcash";
 import { getCurrentUser } from "@/features/auth/services/auth";
 import { formatZodError } from "@/lib/utils";
@@ -26,14 +25,20 @@ export const revalidate = 0;
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const page = parseInt(searchParams.get("page") ?? "1", 10);
-    const limit = parseInt(searchParams.get("limit") ?? "15", 10);
+    const page = searchParams.get("page");
+    const limit = searchParams.get("limit");
     const year = searchParams.get("year");
     const month = searchParams.get("month");
 
+    // Parse params - all optional now
+    const pageNum = page ? parseInt(page, 10) : undefined;
+    const limitNum = limit ? parseInt(limit, 10) : undefined;
+    const yearNum = year ? parseInt(year, 10) : undefined;
+    const monthNum = month ? parseInt(month, 10) : undefined;
+
     // Get current user to determine storeId (so cache key is per-store)
     const currentUserResult = await getCurrentUser();
-    
+
     if (!currentUserResult.success) {
       return NextResponse.json(
         { success: false, message: currentUserResult.message },
@@ -52,11 +57,9 @@ export async function GET(request: NextRequest) {
     }
 
     // If year and month are provided, return chart data (no caching for chart)
-    if (year && month) {
-      const result = await getGCashEarningByMonth(
-        parseInt(year, 10),
-        parseInt(month, 10),
-      );
+    if (yearNum !== undefined && monthNum !== undefined) {
+      const result = await getGCashEarning
+        (undefined, undefined, yearNum, monthNum);
 
       if (!result.success) {
         return NextResponse.json(
@@ -75,19 +78,45 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Build cache key and try reading from cache first (pass storeId, page, limit)
-    const cacheKey = getGCashEarningsCacheKey(storeId, page, limit);
-    const cached = await getCachedGCashEarnings<any>(storeId, page, limit);
-    if (cached) {
-      // cached is expected to be the full payload we return below
-      return NextResponse.json(cached, {
-        status: 200,
-        headers: { "X-Cache": "HIT", "X-Cache-Key": cacheKey },
-      });
+    // If page and limit are provided, return paginated data (with caching)
+    if (pageNum !== undefined && limitNum !== undefined) {
+      const cacheKey = getGCashEarningsCacheKey(storeId, pageNum, limitNum);
+      const cached = await getCachedGCashEarnings<any>(storeId, pageNum, limitNum);
+      if (cached) {
+        return NextResponse.json(cached, {
+          status: 200,
+          headers: { "X-Cache": "HIT", "X-Cache-Key": cacheKey },
+        });
+      }
+
+      const result = await getGCashEarning(pageNum, limitNum);
+
+      if (!result.success) {
+        return NextResponse.json(
+          { success: false, message: result.message },
+          { status: result.status },
+        );
+      }
+
+      const payload = {
+        success: true,
+        message: result.message,
+        data: result.data ?? [],
+        pagination: {
+          page: result.page,
+          limit: result.limit,
+          total: result.total,
+          totalPages: result.totalPages,
+        },
+      };
+
+      await setCachedGCashEarnings(storeId, payload, pageNum, limitNum);
+
+      return NextResponse.json(payload, { status: 200 });
     }
 
-    // Fetch from DB/service if no cache
-    const result = await getGCashEarning(page, limit);
+    // No params: return all data (no pagination, no caching)
+    const result = await getGCashEarning();
 
     if (!result.success) {
       return NextResponse.json(
@@ -96,22 +125,20 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const payload = {
-      success: true,
-      message: result.message,
-      data: result.data ?? [],
-      pagination: {
-        page: result.page,
-        limit: result.limit,
-        total: result.total,
-        totalPages: result.totalPages,
+    return NextResponse.json(
+      {
+        success: true,
+        message: result.message,
+        data: result.data ?? [],
+        pagination: {
+          page: 1,
+          limit: result.total ?? 0,
+          total: result.total ?? 0,
+          totalPages: 1,
+        },
       },
-    };
-
-    // Store the payload in cache for subsequent requests (store per-page)
-    await setCachedGCashEarnings(storeId, payload, page, limit);
-
-    return NextResponse.json(payload, { status: 200 });
+      { status: 200 },
+    );
   } catch (error) {
     return NextResponse.json(
       {
