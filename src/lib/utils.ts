@@ -24,3 +24,16 @@ export function formatDate(date: string | Date): string {
     day: "numeric",
   });
 }
+
+export function toManilaDateString(date: string | Date): string {
+  const dateStr = new Date(date).toLocaleString("en-US", {
+    timeZone: "Asia/Manila",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const [mm, dd, yyyy] = dateStr.split(",")[0].split("/");
+
+  return `${yyyy}-${mm}-${dd}`;
+}

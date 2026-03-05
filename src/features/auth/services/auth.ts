@@ -22,7 +22,6 @@ export async function getCurrentUser(): Promise<AuthResponse<{ user: User }>> {
     };
   }
 
-  // Get the full user data from the database
   const user = await userRepository.getById(authUser.id);
 
   if (!user) {

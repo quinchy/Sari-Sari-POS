@@ -7,6 +7,13 @@ import {
   GCashEarningChartData,
 } from "@/features/gcash/types/gcash";
 import { getCurrentUser } from "@/features/auth/services/auth";
+import { GetGCashEarningParams } from "@/features/gcash/types/gcash";
+import { toManilaDateString } from "@/lib/utils";
+import {
+  getCachedGCashEarnings,
+  setCachedGCashEarnings,
+  buildGCashEarningsCacheKey,
+} from "@/features/gcash/lib/gcash-redis";
 
 export async function createGCashEarning(
   data: CreateGCashEarningInput,
@@ -138,10 +145,7 @@ export async function deleteGCashEarning(
 }
 
 export async function getGCashEarning(
-  page?: number,
-  limit?: number,
-  year?: number,
-  month?: number,
+  params: GetGCashEarningParams = {},
 ): Promise<
   Response<GCashEarningResponse[] | GCashEarningChartData[]> & {
     storeId?: string;
@@ -151,29 +155,52 @@ export async function getGCashEarning(
     totalPages?: number;
   }
 > {
-  const currentUserResult = await getCurrentUser();
-  if (!currentUserResult.success) {
+  const { page, limit, year, month } = params;
+
+  const currentUser = await getCurrentUser();
+
+  const errorCurrentUser = !currentUser.success;
+
+  if (errorCurrentUser) {
     return {
-      success: false,
-      status: currentUserResult.status,
-      message: currentUserResult.message,
+      success: currentUser.success,
+      status: currentUser.status,
+      message: currentUser.message,
     };
   }
 
-  const user = currentUserResult.data.user;
+  const user = currentUser.data.user;
   const storeId = user?.currentStoreId ?? null;
+  const noStoreIdFound = !storeId;
 
-  if (!storeId) {
+  if (noStoreIdFound) {
     return {
       success: false,
       status: 400,
-      message: "You don't have a current store. Please create a store first.",
+      message:
+        "You don't have a store selected. Please select or create a store first.",
     };
   }
 
+  const isFilterByMonthAndYear = year !== undefined && month !== undefined;
+  const isPaginated = page !== undefined && limit !== undefined;
+
+  const cacheKey = buildGCashEarningsCacheKey(storeId, {
+    page,
+    limit,
+    year,
+    month,
+  });
+
   try {
-    // If year and month are provided, return chart data for that specific month
-    if (year !== undefined && month !== undefined) {
+    const cached = await getCachedGCashEarnings<any>(cacheKey);
+    const isCached = !!cached;
+
+    if (isCached) {
+      return cached;
+    }
+
+    if (isFilterByMonthAndYear) {
       const earnings = await gCashEarningRepository.getByStoreIdAndMonth(
         storeId,
         year,
@@ -181,32 +208,31 @@ export async function getGCashEarning(
       );
 
       const chartData: GCashEarningChartData[] = earnings.map((earning) => {
-        // Convert to Asia/Manila timezone (UTC+8) to match local time
-        const dateStr = new Date(earning.created_at).toLocaleString("en-US", {
-          timeZone: "Asia/Manila",
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        });
-        // Format from "M/D/YYYY, HH:MM:SS AM/PM" to "YYYY-MM-DD"
-        const [mm, dd, yyyy] = dateStr.split(",")[0].split("/");
+        const date = toManilaDateString(earning.created_at);
+
         return {
-          date: `${yyyy}-${mm}-${dd}`,
+          date,
           amount: earning.amount.toNumber(),
         };
       });
 
-      return {
+      const payload = {
         success: true,
         status: 200,
         message: "GCash earnings retrieved successfully",
         data: chartData,
         storeId,
       };
+
+      await setCachedGCashEarnings(payload, storeId, {
+        year,
+        month,
+      });
+
+      return payload;
     }
 
-    // If page and limit are provided, return paginated list
-    if (page !== undefined && limit !== undefined) {
+    if (isPaginated) {
       const result = await gCashEarningRepository.getByStoreIdPageable(
         storeId,
         page,
@@ -223,7 +249,7 @@ export async function getGCashEarning(
         }),
       );
 
-      return {
+      const payload = {
         success: true,
         status: 200,
         message: "GCash earnings retrieved successfully",
@@ -234,9 +260,15 @@ export async function getGCashEarning(
         total: result.total,
         totalPages: result.totalPages,
       };
+
+      await setCachedGCashEarnings(payload, storeId, {
+        page,
+        limit,
+      });
+
+      return payload;
     }
 
-    // No params: return all data (unpaginated)
     const allEarnings = await gCashEarningRepository.getByStoreId(storeId);
 
     const mappedEarnings: GCashEarningResponse[] = allEarnings.map(
@@ -249,7 +281,7 @@ export async function getGCashEarning(
       }),
     );
 
-    return {
+    const payload = {
       success: true,
       status: 200,
       message: "GCash earnings retrieved successfully",
@@ -257,6 +289,10 @@ export async function getGCashEarning(
       storeId,
       total: mappedEarnings.length,
     };
+
+    await setCachedGCashEarnings(payload, storeId);
+
+    return payload;
   } catch (error) {
     const message =
       error instanceof Error

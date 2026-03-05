@@ -42,7 +42,7 @@ export interface GetGCashEarningParams {
   limit?: number;
   year?: number;
   month?: number;
-}
+} 
 
 // ============= Hook Params =============
 

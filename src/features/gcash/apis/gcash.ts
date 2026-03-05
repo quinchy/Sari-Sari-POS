@@ -18,15 +18,12 @@ export const getGCashEarning = async (
 }> => {
   const urlParams = new URLSearchParams();
 
-  // Pagination params - only add if defined
   if (params.page !== undefined) {
     urlParams.set("page", params.page.toString());
   }
   if (params.limit !== undefined) {
     urlParams.set("limit", params.limit.toString());
   }
-
-  // Chart params - only add if defined
   if (params.year !== undefined) {
     urlParams.set("year", params.year.toString());
   }
@@ -45,7 +42,7 @@ export const getGCashEarning = async (
   const result = await response.json();
 
   if (!response.ok || !result.success) {
-    throw new Error(result.message || "Failed to fetch GCash earnings");
+    throw new Error(result.message);
   }
 
   return result;

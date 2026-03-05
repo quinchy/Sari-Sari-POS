@@ -108,7 +108,8 @@ export const useDeleteGCashEarning = () => {
 };
 
 export const useGetGCashEarning = (params: UseGetGCashEarningParams = {}) => {
-  const { page, limit, year, month } = params;
+  const { page, limit } = params;
+  const isPaginated = page && limit;
 
   const { data, isPending, isError, error, refetch, isSuccess } = useQuery({
     queryKey: ["gcash-earnings", params],
@@ -117,7 +118,7 @@ export const useGetGCashEarning = (params: UseGetGCashEarningParams = {}) => {
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: true,
     refetchOnReconnect: true,
-    placeholderData: page && limit ? keepPreviousData : undefined,
+    placeholderData: isPaginated ? keepPreviousData : undefined,
   });
 
   const gcashEarnings = (data?.data ?? []) as GCashEarningResponse[];

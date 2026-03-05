@@ -1,0 +1,16 @@
+
+# GCASH Earning Feature
+
+COMPONENTS
+
+APIS
+
+HOOKS
+
+SERVICES
+
+LIB
+
+TYPES
+
+VALIDATION
