@@ -85,11 +85,18 @@ export const invalidateGCashEarningsCache = async (
   const pagesToClear = 10;
   const defaultLimit = 15;
 
+  // Clear paginated keys
   const pageKeys = Array.from({ length: pagesToClear }, (_, i) =>
     buildGCashEarningsCacheKey(storeId, { page: i + 1, limit: defaultLimit }),
   );
 
-  await Promise.all(pageKeys.map((k) => redis.del(k)));
+  // Clear chart keys (year/month filtered)
+  const currentYear = new Date().getFullYear();
+  const chartKeys = Array.from({ length: 12 }, (_, i) =>
+    buildGCashEarningsCacheKey(storeId, { year: currentYear, month: i + 1 }),
+  );
+
+  await Promise.all([...pageKeys, ...chartKeys].map((k) => redis.del(k)));
 };
 
 /*

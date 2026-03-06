@@ -8,7 +8,7 @@ export default function AuthLayout({
       <main className="lg:grid lg:grid-cols-2">
         <div className="hidden bg-muted lg:flex flex-col items-center justify-center w-full h-dvh text-center gap-4">
           <h1 className="font-jaro text-primary text-8xl select-none">
-            SariSariPOS
+            Qwenta
           </h1>
           <section className="space-y-2">
             <h2 className="font-jaro text-secondary text-5xl selection-secondary">

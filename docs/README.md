@@ -1,4 +1,4 @@
-# SariSariPOS Documentation
+# Qwenta Documentation
 
 ## Getting Started
 

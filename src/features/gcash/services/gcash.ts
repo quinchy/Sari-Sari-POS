@@ -13,6 +13,10 @@ import {
   setCachedGCashEarnings,
   buildGCashEarningsCacheKey,
   invalidateAllGCashEarningsCache,
+  getCachedGCashEarningsTotal,
+  setCachedGCashEarningsTotal,
+  getCachedGCashEarningsExtreme,
+  setCachedGCashEarningsExtreme,
 } from "@/features/gcash/lib/gcash-redis";
 import {
   createGCashEarningSchema,
@@ -360,9 +364,11 @@ export async function getGCashEarning(
 
 export async function getGCashEarningTotal(): Promise<Response<number>> {
   const currentUserResult = await getCurrentUser();
-  if (!currentUserResult.success) {
+  const failedToGetCurrentUser = !currentUserResult.success;
+
+  if (failedToGetCurrentUser) {
     return {
-      success: false,
+      success: currentUserResult.success,
       status: currentUserResult.status,
       message: currentUserResult.message,
     };
@@ -370,8 +376,9 @@ export async function getGCashEarningTotal(): Promise<Response<number>> {
 
   const user = currentUserResult.data.user;
   const storeId = user?.currentStoreId ?? null;
+  const noStoreIdFound = !storeId;
 
-  if (!storeId) {
+  if (noStoreIdFound) {
     return {
       success: false,
       status: 400,
@@ -380,7 +387,21 @@ export async function getGCashEarningTotal(): Promise<Response<number>> {
   }
 
   try {
+    const cached = await getCachedGCashEarningsTotal(storeId);
+    const isCached = cached !== null;
+
+    if (isCached) {
+      return {
+        success: true,
+        status: 200,
+        message: "GCash earnings total retrieved successfully",
+        data: cached,
+      };
+    }
+
     const total = await gCashEarningRepository.getTotalByStoreId(storeId);
+
+    await setCachedGCashEarningsTotal(storeId, total);
 
     return {
       success: true,
@@ -402,9 +423,11 @@ export async function getGCashEarningExtreme(
   type: "highest" | "lowest",
 ): Promise<Response<{ id: string; amount: number; created_at: Date }>> {
   const currentUserResult = await getCurrentUser();
-  if (!currentUserResult.success) {
+  const failedToGetCurrentUser = !currentUserResult.success;
+
+  if (failedToGetCurrentUser) {
     return {
-      success: false,
+      success: currentUserResult.success,
       status: currentUserResult.status,
       message: currentUserResult.message,
     };
@@ -412,8 +435,9 @@ export async function getGCashEarningExtreme(
 
   const user = currentUserResult.data.user;
   const storeId = user?.currentStoreId ?? null;
+  const noStoreIdFound = !storeId;
 
-  if (!storeId) {
+  if (noStoreIdFound) {
     return {
       success: false,
       status: 400,
@@ -422,29 +446,47 @@ export async function getGCashEarningExtreme(
   }
 
   try {
+    const cached = await getCachedGCashEarningsExtreme(storeId, type);
+    const isCached = cached !== null;
+
+    if (isCached) {
+      return {
+        success: true,
+        status: 200,
+        message: `GCash ${type} earning retrieved successfully`,
+        data: cached,
+      };
+    }
+
     const earning =
       type === "highest"
         ? await gCashEarningRepository.getHighestByStoreId(storeId)
         : await gCashEarningRepository.getLowestByStoreId(storeId);
 
-    if (!earning) {
+    const noEarningFound = !earning;
+
+    if (noEarningFound) {
       return {
         success: true,
         status: 200,
-        message: `No GCash earnings found`,
+        message: "No GCash earnings found",
         data: { id: "", amount: 0, created_at: new Date() },
       };
     }
 
+    const extremeData = {
+      id: earning.id,
+      amount: earning.amount.toNumber(),
+      created_at: earning.created_at,
+    };
+
+    await setCachedGCashEarningsExtreme(storeId, type, extremeData);
+
     return {
       success: true,
       status: 200,
-      message: `GCash ${type === "highest" ? "highest" : "lowest"} earning retrieved successfully`,
-      data: {
-        id: earning.id,
-        amount: earning.amount.toNumber(),
-        created_at: earning.created_at,
-      },
+      message: `GCash ${type} earning retrieved successfully`,
+      data: extremeData,
     };
   } catch (error) {
     const message =

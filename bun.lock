@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "sari-sari-pos",
+      "name": "qwenta",
       "dependencies": {
         "@base-ui/react": "^1.2.0",
         "@hookform/resolvers": "^5.2.2",

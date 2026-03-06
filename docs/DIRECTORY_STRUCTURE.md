@@ -7,7 +7,7 @@ Complete reference of all directories and files in the project.
 ## Root Directory
 
 ```
-sari-sari-pos/
+qwenta/
 ├── .env.example           # Environment variables template
 ├── .gitignore
 ├── docs/                  # Documentation

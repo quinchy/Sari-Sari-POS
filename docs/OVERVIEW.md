@@ -1,6 +1,6 @@
-# SariSariPOS - Point of Sale for Sari Sari Stores
+# Qwenta - Point of Sale for Sari Sari Stores
 
-SariSariPOS is a modern Point of Sale (POS) application designed specifically for Sari Sari stores (small retail shops in the Philippines). It helps store owners track their GCash earnings, manage product inventory, and analyze sales performance.
+Qwenta is a modern Point of Sale (POS) application designed specifically for Sari Sari stores (small retail shops in the Philippines). It helps store owners track their GCash earnings, manage product inventory, and analyze sales performance.
 
 ## Tech Stack
 

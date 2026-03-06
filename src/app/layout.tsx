@@ -8,7 +8,7 @@ import "./globals.css";
 const publicSans = Public_Sans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Sari-Sari POS",
+  title: "Qwenta",
   description: "POS System for Sari Sari Store",
 };
 
