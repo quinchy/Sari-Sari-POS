@@ -4,24 +4,42 @@ import {
   CreateGCashEarning as CreateGCashEarningInput,
   UpdateGCashEarning as UpdateGCashEarningInput,
   GCashEarningResponse,
-  GCashEarningChartData,
 } from "@/features/gcash/types/gcash";
 import { getCurrentUser } from "@/features/auth/services/auth";
 import { GetGCashEarningParams } from "@/features/gcash/types/gcash";
-import { toManilaDateString } from "@/lib/utils";
+import { formatZodError } from "@/lib/utils";
 import {
   getCachedGCashEarnings,
   setCachedGCashEarnings,
   buildGCashEarningsCacheKey,
+  invalidateAllGCashEarningsCache,
 } from "@/features/gcash/lib/gcash-redis";
+import {
+  createGCashEarningSchema,
+  updateGCashEarningSchema,
+  deleteGCashEarningSchema,
+} from "@/features/gcash/validation/gcash";
 
 export async function createGCashEarning(
   data: CreateGCashEarningInput,
 ): Promise<Response<{ id: string }> & { storeId?: string }> {
-  const currentUserResult = await getCurrentUser();
-  if (!currentUserResult.success) {
+  const parsed = createGCashEarningSchema.safeParse(data);
+  const validationFailed = !parsed.success;
+
+  if (validationFailed) {
     return {
       success: false,
+      status: 400,
+      message: `Validation failed: ${formatZodError(parsed.error)}`,
+    };
+  }
+
+  const currentUserResult = await getCurrentUser();
+  const failedToGetCurrentUser = !currentUserResult.success;
+
+  if (failedToGetCurrentUser) {
+    return {
+      success: currentUserResult.success,
       status: currentUserResult.status,
       message: currentUserResult.message,
     };
@@ -29,8 +47,9 @@ export async function createGCashEarning(
 
   const user = currentUserResult.data.user;
   const storeId = user?.currentStoreId ?? null;
+  const noStoreIdFound = !storeId;
 
-  if (!storeId) {
+  if (noStoreIdFound) {
     return {
       success: false,
       status: 400,
@@ -40,9 +59,11 @@ export async function createGCashEarning(
 
   try {
     const gcashEarning = await gCashEarningRepository.create({
-      ...data,
+      ...parsed.data,
       storeId,
     });
+
+    await invalidateAllGCashEarningsCache(storeId);
 
     return {
       success: true,
@@ -55,7 +76,9 @@ export async function createGCashEarning(
     const message =
       error instanceof Error ? error.message : "Failed to create GCash earning";
 
-    if (message.toLowerCase().includes("already exists")) {
+    const isDuplicateEntry = message.toLowerCase().includes("already exists");
+
+    if (isDuplicateEntry) {
       return {
         success: false,
         status: 409,
@@ -70,21 +93,36 @@ export async function createGCashEarning(
 export async function updateGCashEarning(
   data: UpdateGCashEarningInput,
 ): Promise<Response<{ id: string }> & { storeId?: string }> {
+  const parsed = updateGCashEarningSchema.safeParse(data);
+  const validationFailed = !parsed.success;
+
+  if (validationFailed) {
+    return {
+      success: false,
+      status: 400,
+      message: `Validation failed: ${formatZodError(parsed.error)}`,
+    };
+  }
+
   try {
-    const gcashEarning = await gCashEarningRepository.update(data);
+    const gcashEarning = await gCashEarningRepository.update(parsed.data);
+
+    await invalidateAllGCashEarningsCache(gcashEarning.storeId);
 
     return {
       success: true,
       status: 200,
       message: "GCash earning updated successfully",
       data: { id: gcashEarning.id },
-      storeId: gcashEarning.storeId, // ✅ return storeId for cache invalidation
+      storeId: gcashEarning.storeId,
     };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Failed to update GCash earning";
 
-    if (message.toLowerCase().includes("not found")) {
+    const isNotFound = message.toLowerCase().includes("not found");
+
+    if (isNotFound) {
       return {
         success: false,
         status: 404,
@@ -92,7 +130,9 @@ export async function updateGCashEarning(
       };
     }
 
-    if (message.toLowerCase().includes("already exists")) {
+    const isDuplicateEntry = message.toLowerCase().includes("already exists");
+
+    if (isDuplicateEntry) {
       return {
         success: false,
         status: 409,
@@ -106,12 +146,24 @@ export async function updateGCashEarning(
 }
 
 export async function deleteGCashEarning(
-  id: string,
+  data: { id: string },
 ): Promise<Response<{ id: string }> & { storeId?: string }> {
+  const parsed = deleteGCashEarningSchema.safeParse(data);
+  const validationFailed = !parsed.success;
+
+  if (validationFailed) {
+    return {
+      success: false,
+      status: 400,
+      message: `Validation failed: ${formatZodError(parsed.error)}`,
+    };
+  }
+
   try {
-    // ✅ fetch storeId before delete (so we can invalidate correct key)
-    const existing = await gCashEarningRepository.getById(id);
-    if (!existing) {
+    const existing = await gCashEarningRepository.getById(parsed.data.id);
+    const recordNotFound = !existing;
+
+    if (recordNotFound) {
       return {
         success: false,
         status: 404,
@@ -119,20 +171,24 @@ export async function deleteGCashEarning(
       };
     }
 
-    await gCashEarningRepository.delete(id);
+    await gCashEarningRepository.delete(parsed.data.id);
+
+    await invalidateAllGCashEarningsCache(existing.storeId);
 
     return {
       success: true,
       status: 200,
       message: "GCash earning deleted successfully",
-      data: { id },
+      data: { id: parsed.data.id },
       storeId: existing.storeId,
     };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Failed to delete GCash earning";
 
-    if (message.toLowerCase().includes("not found")) {
+    const isNotFound = message.toLowerCase().includes("not found");
+
+    if (isNotFound) {
       return {
         success: false,
         status: 404,
@@ -147,7 +203,7 @@ export async function deleteGCashEarning(
 export async function getGCashEarning(
   params: GetGCashEarningParams = {},
 ): Promise<
-  Response<GCashEarningResponse[] | GCashEarningChartData[]> & {
+  Response<GCashEarningResponse[]> & {
     storeId?: string;
     page?: number;
     limit?: number;
@@ -207,20 +263,19 @@ export async function getGCashEarning(
         month,
       );
 
-      const chartData: GCashEarningChartData[] = earnings.map((earning) => {
-        const date = toManilaDateString(earning.created_at);
-
-        return {
-          date,
-          amount: earning.amount.toNumber(),
-        };
-      });
+      const mappedEarnings: GCashEarningResponse[] = earnings.map((earning) => ({
+        id: earning.id,
+        storeId: earning.storeId,
+        amount: earning.amount.toNumber(),
+        created_at: earning.created_at,
+        updated_at: earning.updated_at,
+      }));
 
       const payload = {
         success: true,
         status: 200,
         message: "GCash earnings retrieved successfully",
-        data: chartData,
+        data: mappedEarnings,
         storeId,
       };
 

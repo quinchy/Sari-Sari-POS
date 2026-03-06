@@ -1,6 +1,10 @@
 import { redis } from "@/lib/redis/client";
 import { GetGCashEarningParams } from "../types/gcash";
 
+/*
+  GCash Earning Caching
+*/
+
 export const buildGCashEarningsCacheKey = (
   storeId: string,
   opts: GetGCashEarningParams = {},
@@ -57,13 +61,20 @@ export const setCachedGCashEarnings = async <T>(
 
 export const invalidateGCashEarningsCache = async (
   storeId: string,
-  page?: number,
-  limit?: number,
+  opts: GetGCashEarningParams = {},
 ): Promise<void> => {
-  const hasPagination = page != null || limit != null;
+  const { page, limit, year, month } = opts;
 
-  if (hasPagination) {
-    const cacheKey = buildGCashEarningsCacheKey(storeId, page, limit);
+  const hasSpecificFilters =
+    page != null || limit != null || year != null || month != null;
+
+  if (hasSpecificFilters) {
+    const cacheKey = buildGCashEarningsCacheKey(storeId, {
+      page,
+      limit,
+      year,
+      month,
+    });
     await redis.del(cacheKey);
     return;
   }
@@ -75,18 +86,20 @@ export const invalidateGCashEarningsCache = async (
   const defaultLimit = 15;
 
   const pageKeys = Array.from({ length: pagesToClear }, (_, i) =>
-    buildGCashEarningsCacheKey(storeId, i + 1, defaultLimit),
+    buildGCashEarningsCacheKey(storeId, { page: i + 1, limit: defaultLimit }),
   );
 
   await Promise.all(pageKeys.map((k) => redis.del(k)));
 };
 
-// Cache key for total earnings
+/*
+  GCash Earning Analytics - Total, Lowest, Highest Caching
+*/
+
 export const getGCashEarningsTotalCacheKey = (storeId: string): string => {
   return `gcash-earnings-total:${storeId}`;
 };
 
-// Cache key for extreme earnings (highest/lowest)
 export const getGCashEarningsExtremeCacheKey = (
   storeId: string,
   type: "highest" | "lowest",
@@ -146,7 +159,6 @@ export const getCachedGCashEarningsExtreme = async (
   }
 };
 
-// Set cached extreme earnings
 export const setCachedGCashEarningsExtreme = async (
   storeId: string,
   type: "highest" | "lowest",
@@ -161,9 +173,6 @@ export const setCachedGCashEarningsExtreme = async (
   }
 };
 
-/**
- * Invalidate all GCash earnings cache including total and extreme
- */
 export const invalidateAllGCashEarningsCache = async (
   storeId: string,
 ): Promise<void> => {

@@ -24,7 +24,7 @@ export type GCashEarningResponse = {
   updated_at: Date;
 };
 
-export type GCashEarningChartData = {
+export type GCashEarningChartResponse = {
   date: string;
   amount: number;
 };

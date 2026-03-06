@@ -1,17 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-  createGCashEarningSchema,
-  updateGCashEarningSchema,
-  deleteGCashEarningSchema,
-} from "@/features/gcash/validation/gcash";
-import {
   createGCashEarning,
   updateGCashEarning,
   deleteGCashEarning,
   getGCashEarning,
 } from "@/features/gcash/services/gcash";
-import { formatZodError } from "@/lib/utils";
-import { invalidateAllGCashEarningsCache } from "@/features/gcash/lib/gcash-redis";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -74,29 +67,27 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const parsed = createGCashEarningSchema.safeParse(body);
 
-    if (!parsed.success) {
+    const createdGCashEarning = await createGCashEarning(body);
+    const createdGCashEarningError = !createdGCashEarning.success;
+
+    if (createdGCashEarningError) {
       return NextResponse.json(
         {
-          success: false,
-          message: `Validation failed: ${formatZodError(parsed.error)}`,
+          success: createdGCashEarning.success,
+          message: createdGCashEarning.message,
         },
-        { status: 400 },
+        { status: createdGCashEarning.status },
       );
     }
 
-    const result = await createGCashEarning(parsed.data);
-
-    if (result.success && result.storeId) {
-      await invalidateAllGCashEarningsCache(result.storeId);
-    }
-
     return NextResponse.json(
-      result.success
-        ? { success: true, message: result.message, data: result.data }
-        : { success: false, message: result.message },
-      { status: result.status },
+      {
+        success: createdGCashEarning.success,
+        message: createdGCashEarning.message,
+        data: createdGCashEarning.data,
+      },
+      { status: createdGCashEarning.status },
     );
   } catch (error) {
     return NextResponse.json(
@@ -113,29 +104,27 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json();
-    const parsed = updateGCashEarningSchema.safeParse(body);
 
-    if (!parsed.success) {
+    const updatedGCashEarning = await updateGCashEarning(body);
+    const updatedGCashEarningError = !updatedGCashEarning.success;
+
+    if (updatedGCashEarningError) {
       return NextResponse.json(
         {
-          success: false,
-          message: `Validation failed: ${formatZodError(parsed.error)}`,
+          success: updatedGCashEarning.success,
+          message: updatedGCashEarning.message,
         },
-        { status: 400 },
+        { status: updatedGCashEarning.status },
       );
     }
 
-    const result = await updateGCashEarning(parsed.data);
-
-    if (result.success && result.storeId) {
-      await invalidateAllGCashEarningsCache(result.storeId);
-    }
-
     return NextResponse.json(
-      result.success
-        ? { success: true, message: result.message, data: result.data }
-        : { success: false, message: result.message },
-      { status: result.status },
+      {
+        success: updatedGCashEarning.success,
+        message: updatedGCashEarning.message,
+        data: updatedGCashEarning.data,
+      },
+      { status: updatedGCashEarning.status },
     );
   } catch (error) {
     return NextResponse.json(
@@ -152,29 +141,27 @@ export async function PUT(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const body = await request.json();
-    const parsed = deleteGCashEarningSchema.safeParse(body);
 
-    if (!parsed.success) {
+    const deletedGCashEarning = await deleteGCashEarning({ id: body.id });
+    const deletedGCashEarningError = !deletedGCashEarning.success;
+
+    if (deletedGCashEarningError) {
       return NextResponse.json(
         {
-          success: false,
-          message: `Validation failed: ${formatZodError(parsed.error)}`,
+          success: deletedGCashEarning.success,
+          message: deletedGCashEarning.message,
         },
-        { status: 400 },
+        { status: deletedGCashEarning.status },
       );
     }
 
-    const result = await deleteGCashEarning(parsed.data.id);
-
-    if (result.success && result.storeId) {
-      await invalidateAllGCashEarningsCache(result.storeId);
-    }
-
     return NextResponse.json(
-      result.success
-        ? { success: true, message: result.message, data: result.data }
-        : { success: false, message: result.message },
-      { status: result.status },
+      {
+        success: deletedGCashEarning.success,
+        message: deletedGCashEarning.message,
+        data: deletedGCashEarning.data,
+      },
+      { status: deletedGCashEarning.status },
     );
   } catch (error) {
     return NextResponse.json(

@@ -3,7 +3,6 @@ import {
   DeleteGCashEarning,
   UpdateGCashEarning,
   GCashEarningResponse,
-  GCashEarningChartData,
   GetGCashEarningParams,
 } from "@/features/gcash/types/gcash";
 import { Pagination } from "@/types/shared/pagination";
@@ -13,7 +12,7 @@ export const getGCashEarning = async (
 ): Promise<{
   success: boolean;
   message: string;
-  data?: GCashEarningResponse[] | GCashEarningChartData[];
+  data?: GCashEarningResponse[];
   pagination?: Pagination;
 }> => {
   const urlParams = new URLSearchParams();

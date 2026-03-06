@@ -13,7 +13,6 @@ import {
 import { keepPreviousData } from "@tanstack/react-query";
 import {
   GCashEarningResponse,
-  GCashEarningChartData,
   UseGetGCashEarningParams,
 } from "@/features/gcash/types/gcash";
 
