@@ -84,7 +84,12 @@ export function GCashEarningChart() {
 
   // Fill in missing days with 0 amount
   const filledChartData = useMemo(() => {
-    const dataMap = new Map(gcashEarnings.map((d: any) => [d.date, d.amount]));
+    const toDateString = (date: Date | string) => {
+      const d = new Date(date);
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    };
+
+    const dataMap = new Map(gcashEarnings.map((d) => [toDateString(d.created_at), d.amount]));
     const result: { date: string; amount: number }[] = [];
 
     for (let day = 1; day <= daysInMonth; day++) {
