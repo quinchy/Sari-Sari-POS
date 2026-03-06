@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SariSariPOS
+
+A modern Point of Sale (POS) application for Sari Sari stores (small retail shops in the Philippines). Track GCash earnings, manage product inventory, and analyze sales performance.
+
+## Features
+
+- **Authentication** - User sign-up, sign-in, and session management
+- **Account & Store Management** - Create and manage multiple stores
+- **GCash Earning Tracking** - Record, view, and visualize daily GCash earnings
+- **Analytics Dashboard** - View total, highest, and lowest earnings
+- **Product Inventory** - Manage product stock (coming soon)
+
+## Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Database**: PostgreSQL (Supabase)
+- **ORM**: Prisma
+- **Caching**: Redis (Upstash)
+- **Auth**: Supabase Auth
+- **UI**: Shadcn/UI + Tailwind CSS
+- **State**: TanStack Query + Zustand
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+
+# Run database migrations
+npx prisma migrate dev
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project Structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/
+├── app/              # Next.js App Router (pages + API routes)
+├── features/         # Feature modules (auth, gcash, products)
+├── components/       # Shared UI components
+├── repositories/     # Database access layer
+├── lib/             # Utilities (Prisma, Redis, Supabase clients)
+└── types/           # Shared TypeScript types
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Documentation
 
-## Learn More
+For detailed documentation, see the [docs](./docs) folder:
 
-To learn more about Next.js, take a look at the following resources:
+- [Overview](./docs/OVERVIEW.md) - Project introduction
+- [Architecture](./docs/ARCHITECTURE.md) - System design and patterns
+- [Feature Docs](./docs/FEATURES/) - Detailed feature documentation
+- [API Reference](./docs/API_REFERENCE.md) - API endpoints
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
