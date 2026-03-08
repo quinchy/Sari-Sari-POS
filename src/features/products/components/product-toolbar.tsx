@@ -1,20 +1,12 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { PlusSignCircleIcon } from "@hugeicons/core-free-icons";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import ProductForm from "@/features/products/components/product-form";
-import { Input } from "@/components/ui/input";
 
-export default function ProductsToolbar() {
+export default function ProductToolbar() {
   return (
-    <section className="flex justify-between">
-      <Input
-        placeholder="Search products..."
-        variant="search"
-        className="min-w-sm"
-      />
+    <section className="flex justify-end">
       <Sheet>
         <SheetTrigger
           render={
@@ -24,7 +16,7 @@ export default function ProductsToolbar() {
                 size={24}
                 strokeWidth={2}
               />
-              Add Products
+              Add Product
             </Button>
           }
         />
