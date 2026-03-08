@@ -21,10 +21,10 @@ import {
   TBodyLoading,
   TBodyError,
   TBodyNoData,
-} from "@/components/table-fallback";
-import TablePagination from "@/components/table-pagination";
+} from "@/components/layout/table-fallback";
+import TablePagination from "@/components/layout/table-pagination";
 import { useGetGCashEarning } from "@/features/gcash/hooks/use-gcash-earning";
-import { FallbackProvider } from "@/components/fallback-provider";
+import { FallbackProvider } from "@/providers/fallback-provider";
 
 export default function GCashEarningTable() {
   const [pageIndex, setPageIndex] = useState(0);

@@ -54,7 +54,9 @@ export const ModelName = {
   User: 'User',
   Store: 'Store',
   StoreMember: 'StoreMember',
-  GCashEarning: 'GCashEarning'
+  GCashEarning: 'GCashEarning',
+  Product: 'Product',
+  ProductAlias: 'ProductAlias'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -117,6 +119,42 @@ export const GCashEarningScalarFieldEnum = {
 } as const
 
 export type GCashEarningScalarFieldEnum = (typeof GCashEarningScalarFieldEnum)[keyof typeof GCashEarningScalarFieldEnum]
+
+
+export const ProductScalarFieldEnum = {
+  id: 'id',
+  storeId: 'storeId',
+  createdById: 'createdById',
+  thumbnail: 'thumbnail',
+  name: 'name',
+  description: 'description',
+  sku: 'sku',
+  barcode: 'barcode',
+  brand: 'brand',
+  category: 'category',
+  unit: 'unit',
+  size: 'size',
+  cost_price: 'cost_price',
+  selling_price: 'selling_price',
+  stock: 'stock',
+  min_stock: 'min_stock',
+  is_active: 'is_active',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
+
+
+export const ProductAliasScalarFieldEnum = {
+  id: 'id',
+  productId: 'productId',
+  name: 'name',
+  created_at: 'created_at',
+  updated_at: 'updated_at'
+} as const
+
+export type ProductAliasScalarFieldEnum = (typeof ProductAliasScalarFieldEnum)[keyof typeof ProductAliasScalarFieldEnum]
 
 
 export const SortOrder = {

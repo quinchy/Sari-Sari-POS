@@ -1,4 +1,4 @@
-import AppHeader from "@/components/app-header";
+import AppHeader from "@/components/layout/app-header";
 import { GCashEarningChart } from "@/features/gcash/components/gcash-earning-chart";
 import GCashToolbar from "@/features/gcash/components/gcash-toolbar";
 import GCashEarningTable from "@/features/gcash/components/table/gcash-earning-table";

@@ -1,4 +1,4 @@
-import AppHeader from "@/components/app-header";
+import AppHeader from "@/components/layout/app-header";
 import ProductsToolbar from "@/features/products/components/products-toolbar";
 
 export default function ProductsPage() {

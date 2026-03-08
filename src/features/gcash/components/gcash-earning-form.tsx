@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import FormHeader from "@/components/form-header";
+import FormHeader from "@/components/layout/form-header";
 import {
   GCashEarningData as GCashEarningFormData,
   GCashEarningFormProps,

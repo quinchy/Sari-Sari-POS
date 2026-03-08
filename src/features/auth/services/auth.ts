@@ -5,6 +5,12 @@ import { storeMemberRepository } from "@/repositories/store-member";
 import { Response as AuthResponse } from "@/types/shared/response";
 import { SignInData, SignUpData } from "@/features/auth/types/auth";
 import { User } from "@/../prisma/generated/client";
+import { signInSchema, signUpSchema } from "@/features/auth/validations/auth";
+import { formatZodError } from "@/lib/utils";
+import {
+  getCachedCurrentUser,
+  setCachedCurrentUser,
+} from "@/features/auth/lib/auth-redis";
 
 export async function getCurrentUser(): Promise<AuthResponse<{ user: User }>> {
   const supabase = await createClient();
@@ -14,7 +20,9 @@ export async function getCurrentUser(): Promise<AuthResponse<{ user: User }>> {
     error: authError,
   } = await supabase.auth.getUser();
 
-  if (authError || !authUser) {
+  const failedToGetAuthUser = authError || !authUser;
+
+  if (failedToGetAuthUser) {
     return {
       success: false,
       status: 401,
@@ -22,9 +30,25 @@ export async function getCurrentUser(): Promise<AuthResponse<{ user: User }>> {
     };
   }
 
-  const user = await userRepository.getById(authUser.id);
+  const userId = authUser.id;
 
-  if (!user) {
+  const cached = await getCachedCurrentUser<{ user: User }>(userId);
+  const isCached = !!cached;
+
+  if (isCached) {
+    return {
+      success: true,
+      status: 200,
+      message: "User retrieved successfully",
+      data: cached,
+    };
+  }
+
+  const user = await userRepository.getById(userId);
+
+  const userNotFound = !user;
+
+  if (userNotFound) {
     return {
       success: false,
       status: 404,
@@ -32,25 +56,42 @@ export async function getCurrentUser(): Promise<AuthResponse<{ user: User }>> {
     };
   }
 
+  const payload = { user };
+
+  await setCachedCurrentUser(userId, payload);
+
   return {
     success: true,
     status: 200,
     message: "User retrieved successfully",
-    data: { user },
+    data: payload,
   };
 }
 
 export async function signIn(
   data: SignInData,
 ): Promise<AuthResponse<{ user: any }>> {
-  const { email, password } = data;
+  const parsed = signInSchema.safeParse(data);
+  const validationFailed = !parsed.success;
+
+  if (validationFailed) {
+    return {
+      success: false,
+      status: 400,
+      message: `Validation failed: ${formatZodError(parsed.error)}`,
+    };
+  }
+
+  const { email, password } = parsed.data;
 
   const supabase = await createClient();
 
   const { data: authData, error: authError } =
     await supabase.auth.signInWithPassword({ email, password });
 
-  if (authError) {
+  const signInFailed = authError;
+
+  if (signInFailed) {
     return {
       success: false,
       status: 401,
@@ -69,7 +110,18 @@ export async function signIn(
 export async function signUp(
   data: SignUpData,
 ): Promise<AuthResponse<{ user: any }>> {
-  const { email, password, firstName, lastName, storeName } = data;
+  const parsed = signUpSchema.safeParse(data);
+  const validationFailed = !parsed.success;
+
+  if (validationFailed) {
+    return {
+      success: false,
+      status: 400,
+      message: `Validation failed: ${formatZodError(parsed.error)}`,
+    };
+  }
+
+  const { email, password, firstName, lastName, storeName } = parsed.data;
   const supabase = await createClient();
 
   const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -80,11 +132,21 @@ export async function signUp(
     },
   });
 
-  if (authError || !authData.user) {
+  const signUpFailed = authError || !authData.user;
+
+  if (signUpFailed) {
     return {
       success: false,
       status: 400,
       message: `Authentication failed: ${authError?.message ?? "no user"}`,
+    };
+  }
+
+  if (!authData.user) {
+    return {
+      success: false,
+      status: 400,
+      message: "Authentication failed: no user",
     };
   }
 
@@ -126,7 +188,9 @@ export async function signOut(): Promise<AuthResponse<null>> {
 
   const { error } = await supabase.auth.signOut();
 
-  if (error) {
+  const signOutFailed = error;
+
+  if (signOutFailed) {
     return {
       success: false,
       status: 400,

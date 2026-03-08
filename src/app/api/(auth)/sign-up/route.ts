@@ -1,37 +1,30 @@
-import { signUpSchema } from "@/features/auth/validations/auth";
 import { NextRequest, NextResponse } from "next/server";
-import { formatZodError } from "@/lib/utils";
 import { signUp } from "@/features/auth/services/auth";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const parsed = signUpSchema.safeParse(body);
 
-    if (!parsed.success) {
+    const signedUp = await signUp(body);
+    const signedUpError = !signedUp.success;
+
+    if (signedUpError) {
       return NextResponse.json(
         {
-          success: false,
-          message: `Validation failed: ${formatZodError(parsed.error)}`,
+          success: signedUp.success,
+          message: signedUp.message,
         },
-        { status: 400 },
+        { status: signedUp.status },
       );
     }
 
-    const result = await signUp(parsed.data);
-
     return NextResponse.json(
-      result.success
-        ? {
-            success: true,
-            message: result.message,
-            data: result.data,
-          }
-        : {
-            success: false,
-            message: result.message,
-          },
-      { status: result.status },
+      {
+        success: signedUp.success,
+        message: signedUp.message,
+        data: signedUp.data,
+      },
+      { status: signedUp.status },
     );
   } catch (error) {
     return NextResponse.json(
