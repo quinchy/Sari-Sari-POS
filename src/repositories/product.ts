@@ -14,6 +14,7 @@ export class ProductRepository {
         createdById: data.createdById,
         name: productData.name,
         description: productData.description,
+        thumbnail: productData.thumbnail,
         sku: productData.sku,
         barcode: productData.barcode,
         brand: productData.brand,

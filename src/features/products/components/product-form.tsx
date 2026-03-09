@@ -22,6 +22,9 @@ import { Spinner } from "@/components/ui/spinner";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
+import { useState, useRef } from "react";
+import { toast } from "sonner";
+import { uploadThumbnail } from "@/features/products/apis/thumbnail";
 
 export default function ProductForm({
   product,
@@ -32,6 +35,30 @@ export default function ProductForm({
     useCreateProduct();
 
   const isPending = isCreateProductPending;
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(
+    product?.thumbnail ?? null,
+  );
+  const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleThumbnailChange = (file: File | null) => {
+    setThumbnail(file);
+    if (file) {
+      const preview = URL.createObjectURL(file);
+      setThumbnailPreview(preview);
+    } else {
+      setThumbnailPreview(null);
+    }
+  };
+
+  const clearThumbnail = () => {
+    setThumbnail(null);
+    setThumbnailPreview(product?.thumbnail ?? null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
@@ -75,10 +102,29 @@ export default function ProductForm({
     name: "aliases",
   });
 
-  const onSubmit = (productData: ProductFormData) => {
+  const onSubmit = async (productData: ProductFormData) => {
+    let thumbnailPath: string | undefined;
+    let thumbnailId: string | undefined;
+
+    // Upload thumbnail if provided
+    if (thumbnail) {
+      setIsUploadingThumbnail(true);
+      try {
+        const result = await uploadThumbnail(thumbnail, productData.name);
+        thumbnailPath = result.thumbnail;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "Failed to upload thumbnail";
+        toast.error(message);
+        setIsUploadingThumbnail(false);
+        return;
+      }
+      setIsUploadingThumbnail(false);
+    }
+
     createProduct({
       name: productData.name,
       description: productData.description,
+      thumbnail: thumbnailPath,
       sku: productData.sku,
       barcode: productData.barcode,
       brand: productData.brand,
@@ -135,6 +181,43 @@ export default function ProductForm({
             </Field>
           )}
         />
+
+        {/* Thumbnail Upload */}
+        <div className="w-full">
+          <FieldLabel>
+            <FieldTitle>Thumbnail</FieldTitle>
+          </FieldLabel>
+          <div className="flex items-center gap-4">
+            <Input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              className="max-w-xs"
+              onChange={(e) =>
+                handleThumbnailChange(e.target.files?.[0] ?? null)
+              }
+            />
+            {thumbnailPreview && (
+              <div className="relative w-16 h-16 border rounded-md overflow-hidden">
+                <img
+                  src={thumbnailPreview}
+                  alt="Thumbnail preview"
+                  className="w-full h-full object-cover"
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  className="absolute top-0 right-0 bg-black/50 hover:bg-black/70"
+                  onClick={clearThumbnail}
+                >
+                  ×
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+
         <Controller
           control={form.control}
           name="description"
@@ -505,11 +588,11 @@ export default function ProductForm({
           </div>
         </div>
 
-        <Button type="submit" disabled={isPending}>
-          {isPending ? (
+        <Button type="submit" disabled={isPending || isUploadingThumbnail}>
+          {isPending || isUploadingThumbnail ? (
             <>
               <Spinner />
-              Submitting
+              {isUploadingThumbnail ? "Uploading thumbnail..." : "Submitting"}
             </>
           ) : (
             "Submit"

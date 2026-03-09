@@ -8,7 +8,9 @@ import {
 
 export type ProductData = z.infer<typeof productSchema>;
 
-export type CreateProduct = z.input<typeof createProductSchema>;
+export type CreateProduct = z.input<typeof createProductSchema> & {
+  thumbnail?: string;
+};
 
 // ============= Response Types =============
 

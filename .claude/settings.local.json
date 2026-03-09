@@ -5,7 +5,9 @@
       "Bash(npx tsc:*)",
       "Bash(npm run:*)",
       "Bash(cat:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(head:*)",
+      "Bash(npx next:*)"
     ]
   }
 }

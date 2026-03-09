@@ -1,8 +1,22 @@
 import { z } from "zod";
 
+const MAX_THUMBNAIL_SIZE = 5 * 1024 * 1024; // 5MB
+
+const thumbnailSchema = z
+  .instanceof(File)
+  .refine((file) => file.size <= MAX_THUMBNAIL_SIZE, "Thumbnail must be less than 5MB")
+  .refine(
+    (file) => ["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type),
+    "Thumbnail must be a valid image (JPEG, PNG, WebP, or GIF)",
+  )
+  .optional();
+
 export const productSchema = z.strictObject({
   name: z.string().min(1, "Name is required").max(255, "Name must not exceed 255 characters"),
   description: z.string().max(1000, "Description must not exceed 1000 characters").optional(),
+
+  thumbnail: thumbnailSchema,
+  thumbnailId: z.string().uuid().optional(),
 
   sku: z.string().max(100, "SKU must not exceed 100 characters").optional(),
   barcode: z.string().max(100, "Barcode must not exceed 100 characters").optional(),
@@ -56,6 +70,7 @@ export const productSchema = z.strictObject({
 export const createProductSchema = z.strictObject({
   name: productSchema.shape.name,
   description: productSchema.shape.description,
+  thumbnail: z.string().optional(),
   sku: productSchema.shape.sku,
   barcode: productSchema.shape.barcode,
   brand: productSchema.shape.brand,
