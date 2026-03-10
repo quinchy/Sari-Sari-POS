@@ -84,3 +84,26 @@ export const createProductSchema = z.strictObject({
   is_active: productSchema.shape.is_active,
   aliases: productSchema.shape.aliases,
 });
+
+export const updateProductSchema = z.strictObject({
+  id: z.string().uuid("Invalid product ID"),
+  name: productSchema.shape.name,
+  description: productSchema.shape.description,
+  thumbnail: z.string().optional(),
+  sku: productSchema.shape.sku,
+  barcode: productSchema.shape.barcode,
+  brand: productSchema.shape.brand,
+  category: productSchema.shape.category,
+  unit: productSchema.shape.unit,
+  size: productSchema.shape.size,
+  cost_price: productSchema.shape.cost_price,
+  selling_price: productSchema.shape.selling_price,
+  stock: productSchema.shape.stock,
+  min_stock: productSchema.shape.min_stock,
+  is_active: productSchema.shape.is_active,
+  aliases: productSchema.shape.aliases,
+});
+
+export const deleteProductSchema = z.strictObject({
+  id: z.string().uuid("Invalid product ID"),
+});

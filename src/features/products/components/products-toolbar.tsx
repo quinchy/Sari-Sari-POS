@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { PlusSignCircleIcon } from "@hugeicons/core-free-icons";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import ProductForm from "@/features/products/components/product-form";
+import ProductsForm from "@/features/products/components/products-form";
 import { Input } from "@/components/ui/input";
 
 export default function ProductsToolbar() {
@@ -28,8 +28,8 @@ export default function ProductsToolbar() {
             </Button>
           }
         />
-        <SheetContent showCloseButton={false}>
-          <ProductForm />
+        <SheetContent showCloseButton={false} className="overflow-y-auto">
+          <ProductsForm />
         </SheetContent>
       </Sheet>
     </section>

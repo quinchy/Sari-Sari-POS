@@ -48,8 +48,43 @@ export type ProductWithAliasesResponse = ProductResponse & {
   aliases: ProductAliasResponse[];
 };
 
+// ============= Column Types =============
+
+export type ProductColumn = {
+  id: string;
+  thumbnail: string | null;
+  name: string;
+  description: string | null;
+  cost_price: number | null;
+  selling_price: number;
+  stock: number;
+  min_stock: number;
+};
+
+// ============= API Params =============
+
+export interface GetProductsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  category?: string;
+}
+
+// ============= Hook Params =============
+
+export interface UseGetProductsParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  category?: string;
+}
+
 // ============= Component Props =============
 
 export interface ProductFormProps {
   product?: ProductResponse;
+}
+
+export interface ProductActionCellProps {
+  product: ProductColumn;
 }

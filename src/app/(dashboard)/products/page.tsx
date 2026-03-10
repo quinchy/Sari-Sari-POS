@@ -1,5 +1,6 @@
 import AppHeader from "@/components/layout/app-header";
 import ProductsToolbar from "@/features/products/components/products-toolbar";
+import ProductsTable from "@/features/products/components/table/products-table";
 
 export default function ProductsPage() {
   return (
@@ -9,6 +10,7 @@ export default function ProductsPage() {
         description="Add, update, and manage products in your store with streamlined tools and a centralized workflow."
       />
       <ProductsToolbar />
+      <ProductsTable />
     </main>
   );
 }

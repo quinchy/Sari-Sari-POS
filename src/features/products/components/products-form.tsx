@@ -17,7 +17,7 @@ import {
 import { productSchema } from "../validation/products";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Add01FreeIcons, Delete01FreeIcons } from "@hugeicons/core-free-icons";
-import { useCreateProduct } from "@/features/products/hooks/use-product";
+import { useCreateProduct, useUpdateProduct } from "@/features/products/hooks/use-products";
 import { Spinner } from "@/components/ui/spinner";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,13 +26,10 @@ import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { uploadThumbnail } from "@/features/products/apis/thumbnail";
 
-export default function ProductForm({
-  product,
-}: ProductFormProps) {
+export default function ProductsForm({ product }: ProductFormProps) {
   const isEditing = !!product;
 
-  const { isCreateProductPending, createProduct } =
-    useCreateProduct();
+  const { isCreateProductPending, createProduct } = useCreateProduct();
 
   const isPending = isCreateProductPending;
   const [thumbnail, setThumbnail] = useState<File | null>(null);
@@ -113,7 +110,8 @@ export default function ProductForm({
         const result = await uploadThumbnail(thumbnail, productData.name);
         thumbnailPath = result.thumbnail;
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Failed to upload thumbnail";
+        const message =
+          error instanceof Error ? error.message : "Failed to upload thumbnail";
         toast.error(message);
         setIsUploadingThumbnail(false);
         return;
@@ -559,9 +557,7 @@ export default function ProductForm({
                         <Input
                           type="text"
                           placeholder="Enter alias name"
-                          onChange={(e) =>
-                            aliasField.onChange(e.target.value)
-                          }
+                          onChange={(e) => aliasField.onChange(e.target.value)}
                           onBlur={aliasField.onBlur}
                           name={aliasField.name}
                           ref={aliasField.ref}

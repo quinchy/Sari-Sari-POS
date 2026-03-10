@@ -98,6 +98,118 @@ export class ProductRepository {
     };
   }
 
+  async getByStoreIdAndSearch(
+    storeId: string,
+    search: string,
+    page: number = 1,
+    limit: number = 15,
+  ): Promise<{
+    data: Product[];
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  }> {
+    const skip = (page - 1) * limit;
+    const searchLower = search.toLowerCase();
+
+    const where = {
+      storeId,
+      OR: [
+        { name: { contains: searchLower, mode: "insensitive" as const } },
+        { description: { contains: searchLower, mode: "insensitive" as const } },
+        { sku: { contains: searchLower, mode: "insensitive" as const } },
+        { barcode: { contains: searchLower, mode: "insensitive" as const } },
+        { brand: { contains: searchLower, mode: "insensitive" as const } },
+      ],
+    };
+
+    const [data, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        orderBy: { created_at: "desc" },
+        skip,
+        take: limit,
+        include: {
+          aliases: true,
+        },
+      }),
+      prisma.product.count({
+        where,
+      }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data,
+      page,
+      limit,
+      total,
+      totalPages,
+    };
+  }
+
+  async getByStoreIdAndCategory(
+    storeId: string,
+    category: string,
+    page: number = 1,
+    limit: number = 15,
+  ): Promise<{
+    data: Product[];
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  }> {
+    const skip = (page - 1) * limit;
+
+    const where = {
+      storeId,
+      category,
+    };
+
+    const [data, total] = await Promise.all([
+      prisma.product.findMany({
+        where,
+        orderBy: { created_at: "desc" },
+        skip,
+        take: limit,
+        include: {
+          aliases: true,
+        },
+      }),
+      prisma.product.count({
+        where,
+      }),
+    ]);
+
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data,
+      page,
+      limit,
+      total,
+      totalPages,
+    };
+  }
+
+  async getTotalByStoreId(storeId: string): Promise<number> {
+    return prisma.product.count({
+      where: { storeId },
+    });
+  }
+
+  async getLowStockByStoreId(storeId: string): Promise<number> {
+    const products = await prisma.product.findMany({
+      where: { storeId },
+      select: { stock: true, min_stock: true },
+    });
+
+    return products.filter((p) => p.stock <= p.min_stock).length;
+  }
+
   async update(
     data: Partial<CreateProduct & { id: string }>,
   ): Promise<Product> {

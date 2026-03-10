@@ -62,6 +62,15 @@ Each feature (auth, gcash, products) follows the same structure:
 - **Caching**: Redis via Upstash, managed in service layer
 - **Validation**: Zod schemas in `features/*/validation/`
 
+## Next.js Best Practices
+
+- **Images**: Always use `next/image` instead of `<img>` for optimized images with lazy loading and automatic format conversion
+- **Links**: Use `next/link` for internal navigation (automatically prefetches routes)
+- **Fonts**: Use `next/font` (Google Fonts) for optimized font loading with zero layout shift
+- **Server Components**: Default to Server Components for data fetching and static content; use `"use client"` only when needed (interactivity, hooks, browser APIs)
+- **API Routes**: Place in `app/api/` using Route Handlers (`route.ts`) or API Routes (`route.js`)
+- **Environment Variables**: Use `.env.local` for local development, prefix public vars with `NEXT_PUBLIC_`
+
 ## Route Groups
 
 - `(auth)/` - Authentication pages (sign-in, sign-up)
@@ -77,3 +86,11 @@ Each feature (auth, gcash, products) follows the same structure:
 - TanStack React Query + Zustand
 - Tailwind CSS 4 + Shadcn/UI
 - Biome for linting/formatting
+
+## Next.js Best Practices
+
+- **Images**: Always use `next/image` instead of `<img>` for optimized images with lazy loading, automatic format conversion, and better performance.
+- **Links**: Use `next/link` for internal navigation to enable prefetching.
+- **Font**: Use `next/font` (Google Fonts) for optimized font loading with zero layout shift.
+- **Server Components**: Prefer server components for data fetching and static content.
+- **Client Components**: Add `'use client'` only when needed (hooks, event handlers, browser APIs).
