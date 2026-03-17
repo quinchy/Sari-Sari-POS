@@ -7,7 +7,14 @@
   },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+    "includes": [
+      "**",
+      "!prisma/generated",
+      "!!node_modules",
+      "!!.next",
+      "!!dist",
+      "!!build"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -16,6 +23,7 @@
   },
   "linter": {
     "enabled": true,
+    "includes": ["**", "!src/components/ui/**"],
     "rules": {
       "recommended": true,
       "suspicious": {
