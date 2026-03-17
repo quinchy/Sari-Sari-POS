@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Delete01Icon,
+  Edit01Icon,
+  MoreVertical,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,26 +17,31 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { HugeiconsIcon } from "@hugeicons/react";
 import {
-  Edit01Icon,
-  Delete01Icon,
-  MoreVertical,
-} from "@hugeicons/core-free-icons";
-import { useDeleteProduct, useUpdateProduct } from "@/features/products/hooks/use-products";
-import { ProductColumn, ProductActionCellProps } from "@/features/products/types/products";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Spinner } from "@/components/ui/spinner";
 import ProductsForm from "@/features/products/components/products-form";
+import {
+  useDeleteProduct,
+  useUpdateProduct,
+} from "@/features/products/hooks/use-products";
+import {
+  type ProductActionCellProps,
+  ProductColumn,
+} from "@/features/products/types/products";
 
-export function ProductActionCell({
-  product,
-}: ProductActionCellProps) {
+export function ProductActionCell({ product }: ProductActionCellProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditSheetOpen, setIsEditSheetOpen] = useState(false);
   const { isDeleteProductPending, deleteProduct } = useDeleteProduct();
-  const { isUpdateProductPending, updateProduct: updateProductMutate } = useUpdateProduct();
+  const { isUpdateProductPending, updateProduct: updateProductMutate } =
+    useUpdateProduct();
 
   const handleDelete = () => {
     deleteProduct(
@@ -117,8 +122,8 @@ export function ProductActionCell({
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Product</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this product? This action
-              cannot be undone.
+              Are you sure you want to delete this product? This action cannot
+              be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

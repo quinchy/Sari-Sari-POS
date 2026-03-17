@@ -1,5 +1,5 @@
 import { redis } from "@/lib/redis/client";
-import { GetGCashEarningParams } from "../types/gcash";
+import type { GetGCashEarningParams } from "../types/gcash";
 
 /*
   GCash Earning Caching

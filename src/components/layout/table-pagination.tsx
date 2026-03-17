@@ -5,14 +5,14 @@ import { useMemo } from "react";
 import {
   Pagination,
   PaginationContent,
+  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-  PaginationEllipsis,
 } from "@/components/ui/pagination";
-import { TableCell, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TableCell, TableRow } from "@/components/ui/table";
 
 export interface TablePaginationProps {
   pageIndex: number;
@@ -34,54 +34,59 @@ export default function TablePagination({
   const canPreviousPage = pageIndex > 0;
   const canNextPage = pageIndex < totalPages - 1;
 
-  const { firstPages, middlePages, lastPages, showStartEllipsis, showEndEllipsis } =
-    useMemo(() => {
-      if (totalPages <= 4) {
-        return {
-          firstPages: Array.from({ length: totalPages }, (_, i) => i),
-          middlePages: [],
-          lastPages: [],
-          showStartEllipsis: false,
-          showEndEllipsis: false,
-        };
-      }
-
-      if (pageIndex <= 2) {
-        // At the beginning: show 1, 2, 3, 4, ..., 25
-        return {
-          firstPages: [0, 1, 2, 3],
-          middlePages: [],
-          lastPages: [totalPages - 1],
-          showStartEllipsis: false,
-          showEndEllipsis: true,
-        };
-      }
-
-      if (pageIndex >= totalPages - 3) {
-        // At the end: show 1, ..., 22, 23, 24, 25
-        return {
-          firstPages: [0],
-          middlePages: [],
-          lastPages: [
-            totalPages - 4,
-            totalPages - 3,
-            totalPages - 2,
-            totalPages - 1,
-          ],
-          showStartEllipsis: true,
-          showEndEllipsis: false,
-        };
-      }
-
-      // In the middle: show first page, ellipsis, middle pages, ellipsis, last page
+  const {
+    firstPages,
+    middlePages,
+    lastPages,
+    showStartEllipsis,
+    showEndEllipsis,
+  } = useMemo(() => {
+    if (totalPages <= 4) {
       return {
-        firstPages: [0],
-        middlePages: [pageIndex - 1, pageIndex, pageIndex + 1],
+        firstPages: Array.from({ length: totalPages }, (_, i) => i),
+        middlePages: [],
+        lastPages: [],
+        showStartEllipsis: false,
+        showEndEllipsis: false,
+      };
+    }
+
+    if (pageIndex <= 2) {
+      // At the beginning: show 1, 2, 3, 4, ..., 25
+      return {
+        firstPages: [0, 1, 2, 3],
+        middlePages: [],
         lastPages: [totalPages - 1],
-        showStartEllipsis: true,
+        showStartEllipsis: false,
         showEndEllipsis: true,
       };
-    }, [pageIndex, totalPages]);
+    }
+
+    if (pageIndex >= totalPages - 3) {
+      // At the end: show 1, ..., 22, 23, 24, 25
+      return {
+        firstPages: [0],
+        middlePages: [],
+        lastPages: [
+          totalPages - 4,
+          totalPages - 3,
+          totalPages - 2,
+          totalPages - 1,
+        ],
+        showStartEllipsis: true,
+        showEndEllipsis: false,
+      };
+    }
+
+    // In the middle: show first page, ellipsis, middle pages, ellipsis, last page
+    return {
+      firstPages: [0],
+      middlePages: [pageIndex - 1, pageIndex, pageIndex + 1],
+      lastPages: [totalPages - 1],
+      showStartEllipsis: true,
+      showEndEllipsis: true,
+    };
+  }, [pageIndex, totalPages]);
 
   const renderPageLink = (page: number) => (
     <PaginationItem key={page}>

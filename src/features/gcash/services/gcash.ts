@@ -1,28 +1,28 @@
-import { gCashEarningRepository } from "@/repositories/gcash-earning";
-import { Response } from "@/types/shared/response";
-import {
-  CreateGCashEarning as CreateGCashEarningInput,
-  UpdateGCashEarning as UpdateGCashEarningInput,
-  GCashEarningResponse,
-} from "@/features/gcash/types/gcash";
 import { getCurrentUser } from "@/features/auth/services/auth";
-import { GetGCashEarningParams } from "@/features/gcash/types/gcash";
-import { formatZodError } from "@/lib/utils";
 import {
-  getCachedGCashEarnings,
-  setCachedGCashEarnings,
   buildGCashEarningsCacheKey,
-  invalidateAllGCashEarningsCache,
-  getCachedGCashEarningsTotal,
-  setCachedGCashEarningsTotal,
+  getCachedGCashEarnings,
   getCachedGCashEarningsExtreme,
+  getCachedGCashEarningsTotal,
+  invalidateAllGCashEarningsCache,
+  setCachedGCashEarnings,
   setCachedGCashEarningsExtreme,
+  setCachedGCashEarningsTotal,
 } from "@/features/gcash/lib/gcash-redis";
+import type {
+  CreateGCashEarning as CreateGCashEarningInput,
+  GCashEarningResponse,
+  GetGCashEarningParams,
+  UpdateGCashEarning as UpdateGCashEarningInput,
+} from "@/features/gcash/types/gcash";
 import {
   createGCashEarningSchema,
-  updateGCashEarningSchema,
   deleteGCashEarningSchema,
+  updateGCashEarningSchema,
 } from "@/features/gcash/validation/gcash";
+import { formatZodError } from "@/lib/utils";
+import { gCashEarningRepository } from "@/repositories/gcash-earning";
+import type { Response } from "@/types/shared/response";
 
 export async function createGCashEarning(
   data: CreateGCashEarningInput,
@@ -149,9 +149,9 @@ export async function updateGCashEarning(
   }
 }
 
-export async function deleteGCashEarning(
-  data: { id: string },
-): Promise<Response<{ id: string }> & { storeId?: string }> {
+export async function deleteGCashEarning(data: {
+  id: string;
+}): Promise<Response<{ id: string }> & { storeId?: string }> {
   const parsed = deleteGCashEarningSchema.safeParse(data);
   const validationFailed = !parsed.success;
 
@@ -267,13 +267,15 @@ export async function getGCashEarning(
         month,
       );
 
-      const mappedEarnings: GCashEarningResponse[] = earnings.map((earning) => ({
-        id: earning.id,
-        storeId: earning.storeId,
-        amount: earning.amount.toNumber(),
-        created_at: earning.created_at,
-        updated_at: earning.updated_at,
-      }));
+      const mappedEarnings: GCashEarningResponse[] = earnings.map(
+        (earning) => ({
+          id: earning.id,
+          storeId: earning.storeId,
+          amount: earning.amount.toNumber(),
+          created_at: earning.created_at,
+          updated_at: earning.updated_at,
+        }),
+      );
 
       const payload = {
         success: true,

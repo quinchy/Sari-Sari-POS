@@ -1,5 +1,5 @@
 import { redis } from "@/lib/redis/client";
-import { GetProductsParams } from "../types/products";
+import type { GetProductsParams } from "../types/products";
 
 /*
   Products Caching
@@ -94,14 +94,10 @@ export const invalidateProductsCache = async (
   );
 
   // Clear search keys (generic search)
-  const searchKeys = [
-    buildProductsCacheKey(storeId, { search: "" }),
-  ];
+  const searchKeys = [buildProductsCacheKey(storeId, { search: "" })];
 
   // Clear category keys
-  const categoryKeys = [
-    buildProductsCacheKey(storeId, { category: "" }),
-  ];
+  const categoryKeys = [buildProductsCacheKey(storeId, { category: "" })];
 
   await Promise.all(
     [...pageKeys, ...searchKeys, ...categoryKeys].map((k) => redis.del(k)),

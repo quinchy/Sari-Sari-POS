@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { formatDate } from "@/lib/utils";
 import { GCashEarningActionCell } from "@/features/gcash/components/table/gcash-earning-action-cell";
-import { GCashEarningColumn } from "@/features/gcash/types/gcash";
+import type { GCashEarningColumn } from "@/features/gcash/types/gcash";
+import { formatDate } from "@/lib/utils";
 
 export const columns: ColumnDef<GCashEarningColumn>[] = [
   {

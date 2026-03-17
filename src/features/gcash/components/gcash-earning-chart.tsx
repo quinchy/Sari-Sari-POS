@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
 import {
@@ -11,10 +11,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-  type ChartConfig,
 } from "@/components/ui/chart";
 import {
   Select,
@@ -23,8 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useGetGCashEarning } from "@/features/gcash/hooks/use-gcash-earning";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useGetGCashEarning } from "@/features/gcash/hooks/use-gcash-earning";
 
 export const description = "An interactive line chart of GCash Earnings";
 
@@ -89,7 +89,9 @@ export function GCashEarningChart() {
       return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
     };
 
-    const dataMap = new Map(gcashEarnings.map((d) => [toDateString(d.created_at), d.amount]));
+    const dataMap = new Map(
+      gcashEarnings.map((d) => [toDateString(d.created_at), d.amount]),
+    );
     const result: { date: string; amount: number }[] = [];
 
     for (let day = 1; day <= daysInMonth; day++) {

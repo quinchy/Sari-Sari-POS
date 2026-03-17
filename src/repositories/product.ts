@@ -1,6 +1,6 @@
+import type { Product } from "@/../prisma/generated/client";
+import type { CreateProduct } from "@/features/products/types/products";
 import { prisma } from "@/lib/prisma/client";
-import { Product } from "@/../prisma/generated/client";
-import { CreateProduct } from "@/features/products/types/products";
 
 export class ProductRepository {
   async create(
@@ -26,13 +26,14 @@ export class ProductRepository {
         stock: productData.stock ?? 0,
         min_stock: productData.min_stock ?? 0,
         is_active: productData.is_active ?? true,
-        aliases: aliases && aliases.length > 0
-          ? {
-              create: aliases.map((alias) => ({
-                name: alias.name,
-              })),
-            }
-          : undefined,
+        aliases:
+          aliases && aliases.length > 0
+            ? {
+                create: aliases.map((alias) => ({
+                  name: alias.name,
+                })),
+              }
+            : undefined,
       },
       include: {
         aliases: true,
@@ -117,7 +118,9 @@ export class ProductRepository {
       storeId,
       OR: [
         { name: { contains: searchLower, mode: "insensitive" as const } },
-        { description: { contains: searchLower, mode: "insensitive" as const } },
+        {
+          description: { contains: searchLower, mode: "insensitive" as const },
+        },
         { sku: { contains: searchLower, mode: "insensitive" as const } },
         { barcode: { contains: searchLower, mode: "insensitive" as const } },
         { brand: { contains: searchLower, mode: "insensitive" as const } },

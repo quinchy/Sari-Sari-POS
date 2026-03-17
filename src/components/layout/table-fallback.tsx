@@ -1,10 +1,10 @@
 "use client";
 
+import { RepeatIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { RepeatIcon } from "@hugeicons/core-free-icons";
 
 export function TBodyLoading({
   columnsCount = 2,

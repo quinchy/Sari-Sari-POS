@@ -1,10 +1,10 @@
 import type {
+  CurrentUserResponse,
   SignInData as SignInRequest,
   SignInResponse,
+  SignOutResponse,
   SignUpData as SignUpRequest,
   SignUpResponse,
-  SignOutResponse,
-  CurrentUserResponse,
 } from "@/features/auth/types/auth";
 
 export type {

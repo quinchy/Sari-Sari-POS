@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { signUp } from "@/features/auth/services/auth";
 
 export async function POST(request: NextRequest) {

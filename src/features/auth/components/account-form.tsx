@@ -1,20 +1,20 @@
 "use client";
 
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { accountFormSchema } from "@/features/auth/validations/auth";
-import { AccountFormData } from "@/features/auth/types/auth";
+import { Controller, useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldContent,
   FieldError,
+  FieldGroup,
   FieldLabel,
   FieldTitle,
-  FieldGroup,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useSignUpStore } from "@/features/auth/store/use-signup-store";
+import type { AccountFormData } from "@/features/auth/types/auth";
+import { accountFormSchema } from "@/features/auth/validations/auth";
 
 export function AccountForm() {
   const setStep = useSignUpStore((state) => state.setStep);

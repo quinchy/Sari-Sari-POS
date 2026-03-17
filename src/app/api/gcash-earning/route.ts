@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import {
   createGCashEarning,
-  updateGCashEarning,
   deleteGCashEarning,
   getGCashEarning,
+  updateGCashEarning,
 } from "@/features/gcash/services/gcash";
 
 export const dynamic = "force-dynamic";

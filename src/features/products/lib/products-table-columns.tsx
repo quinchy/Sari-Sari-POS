@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import { ProductColumn } from "@/features/products/types/products";
 import { ProductActionCell } from "@/features/products/components/table/product-action-cell";
+import type { ProductColumn } from "@/features/products/types/products";
 
 export const columns: ColumnDef<ProductColumn>[] = [
   {

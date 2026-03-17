@@ -1,19 +1,15 @@
 // app/providers/QueryProvider.tsx
 "use client";
 
-import { ReactNode } from "react";
 import {
   QueryClient,
   QueryClientProvider,
-  // optionally import Devtools:
-  // ReactQueryDevtools
 } from "@tanstack/react-query";
+import type { ReactNode } from "react";
 
-// create a client instance
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      // optional defaults
       refetchOnWindowFocus: false,
       retry: 1,
     },
@@ -28,8 +24,6 @@ export function QueryProvider({ children }: QueryProviderProps) {
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      {/* Uncomment if you want devtools */}
-      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>
   );
 }

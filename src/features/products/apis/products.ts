@@ -1,9 +1,9 @@
-import {
+import type {
   CreateProduct,
   GetProductsParams,
   ProductColumn,
 } from "@/features/products/types/products";
-import { Pagination } from "@/types/shared/pagination";
+import type { Pagination } from "@/types/shared/pagination";
 
 export const getProducts = async (
   params: GetProductsParams = {},

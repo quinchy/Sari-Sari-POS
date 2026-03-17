@@ -9,7 +9,6 @@ export type FailureResponse = {
   success: false;
   status: number;
   message: string;
-  
 };
 
 export type Response<T> = SuccessResponse<T> | FailureResponse;

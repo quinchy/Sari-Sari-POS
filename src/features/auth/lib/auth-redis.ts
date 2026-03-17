@@ -8,7 +8,9 @@ export const getCurrentUserCacheKey = (userId: string): string => {
   return `current-user:${userId}`;
 };
 
-export const getCachedCurrentUser = async <T>(userId: string): Promise<T | null> => {
+export const getCachedCurrentUser = async <T>(
+  userId: string,
+): Promise<T | null> => {
   const cacheKey = getCurrentUserCacheKey(userId);
   const cached = await redis.get<T>(cacheKey);
 

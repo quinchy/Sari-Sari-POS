@@ -1,9 +1,9 @@
-import { z } from "zod";
-import {
-  signInSchema,
+import type { z } from "zod";
+import type {
   accountFormSchema,
-  storeFormSchema,
+  signInSchema,
   signUpSchema,
+  storeFormSchema,
 } from "@/features/auth/validations/auth";
 
 export type SignInData = z.infer<typeof signInSchema>;

@@ -1,10 +1,8 @@
 "use client";
 
-import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSignUp } from "@/features/auth/hooks/use-auth";
-import { storeFormSchema } from "@/features/auth/validations/auth";
-import { StoreFormData } from "@/features/auth/types/auth";
+import { Controller, useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldContent,
@@ -13,9 +11,11 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { useSignUp } from "@/features/auth/hooks/use-auth";
 import { useSignUpStore } from "@/features/auth/store/use-signup-store";
+import type { StoreFormData } from "@/features/auth/types/auth";
+import { storeFormSchema } from "@/features/auth/validations/auth";
 
 export function StoreForm() {
   const { isSigningUp, signUp } = useSignUp();

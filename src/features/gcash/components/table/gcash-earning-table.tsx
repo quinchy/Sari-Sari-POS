@@ -1,30 +1,30 @@
 "use client";
 
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { useState } from "react";
 import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-} from "@tanstack/react-table";
-import { columns } from "@/features/gcash/lib/gcash-earning-table-columns";
-import { GCashEarningColumn } from "@/features/gcash/types/gcash";
-import {
-  Table,
-  TableHead,
-  TableHeader,
-  TableRow,
-  TableBody,
-  TableCell,
-  TableFooter,
-} from "@/components/ui/table";
-import {
-  TBodyLoading,
   TBodyError,
+  TBodyLoading,
   TBodyNoData,
 } from "@/components/layout/table-fallback";
 import TablePagination from "@/components/layout/table-pagination";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useGetGCashEarning } from "@/features/gcash/hooks/use-gcash-earning";
-import { FallbackProvider } from "@/providers/fallback-provider";
+import { columns } from "@/features/gcash/lib/gcash-earning-table-columns";
+import type { GCashEarningColumn } from "@/features/gcash/types/gcash";
+import { FallbackProvider } from "@/components/providers/fallback-provider";
 
 export default function GCashEarningTable() {
   const [pageIndex, setPageIndex] = useState(0);

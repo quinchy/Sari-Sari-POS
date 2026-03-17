@@ -1,16 +1,16 @@
-import { createClient } from "@/lib/supabase/server";
-import { userRepository } from "@/repositories/user";
-import { storeRepository } from "@/repositories/store";
-import { storeMemberRepository } from "@/repositories/store-member";
-import { Response as AuthResponse } from "@/types/shared/response";
-import { SignInData, SignUpData } from "@/features/auth/types/auth";
-import { User } from "@/../prisma/generated/client";
-import { signInSchema, signUpSchema } from "@/features/auth/validations/auth";
-import { formatZodError } from "@/lib/utils";
+import type { User } from "@/../prisma/generated/client";
 import {
   getCachedCurrentUser,
   setCachedCurrentUser,
 } from "@/features/auth/lib/auth-redis";
+import type { SignInData, SignUpData } from "@/features/auth/types/auth";
+import { signInSchema, signUpSchema } from "@/features/auth/validations/auth";
+import { createClient } from "@/lib/supabase/server";
+import { formatZodError } from "@/lib/utils";
+import { storeRepository } from "@/repositories/store";
+import { storeMemberRepository } from "@/repositories/store-member";
+import { userRepository } from "@/repositories/user";
+import type { Response as AuthResponse } from "@/types/shared/response";
 
 export async function getCurrentUser(): Promise<AuthResponse<{ user: User }>> {
   const supabase = await createClient();

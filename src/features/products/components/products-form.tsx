@@ -1,5 +1,13 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Add01FreeIcons, Delete01FreeIcons } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { useRef, useState } from "react";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import FormHeader from "@/components/layout/form-header";
+import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldContent,
@@ -8,23 +16,18 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import FormHeader from "@/components/layout/form-header";
+import { Spinner } from "@/components/ui/spinner";
+import { uploadThumbnail } from "@/features/products/apis/thumbnail";
 import {
+  useCreateProduct,
+  useUpdateProduct,
+} from "@/features/products/hooks/use-products";
+import type {
   ProductData as ProductFormData,
   ProductFormProps,
 } from "@/features/products/types/products";
-import { productSchema } from "../validation/products";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { Add01FreeIcons, Delete01FreeIcons } from "@hugeicons/core-free-icons";
-import { useCreateProduct, useUpdateProduct } from "@/features/products/hooks/use-products";
-import { Spinner } from "@/components/ui/spinner";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "@/lib/utils";
-import { useState, useRef } from "react";
-import { toast } from "sonner";
-import { uploadThumbnail } from "@/features/products/apis/thumbnail";
+import { productSchema } from "../validation/products";
 
 export default function ProductsForm({ product }: ProductFormProps) {
   const isEditing = !!product;

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { getCurrentUser } from "@/features/auth/services/auth";
 import { createClient } from "@/lib/supabase/server";
 import { uploadToSupabaseStorage } from "@/lib/supabase/storage";
@@ -56,7 +56,10 @@ export async function POST(request: NextRequest) {
 
   if (!ALLOWED_TYPES.includes(file.type)) {
     return NextResponse.json(
-      { success: false, message: "File must be a valid image (JPEG, PNG, WebP, or GIF)" },
+      {
+        success: false,
+        message: "File must be a valid image (JPEG, PNG, WebP, or GIF)",
+      },
       { status: 400 },
     );
   }
@@ -93,11 +96,9 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Failed to upload thumbnail";
+    const message =
+      error instanceof Error ? error.message : "Failed to upload thumbnail";
 
-    return NextResponse.json(
-      { success: false, message },
-      { status: 500 },
-    );
+    return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }

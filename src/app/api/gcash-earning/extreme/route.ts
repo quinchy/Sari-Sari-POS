@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import { getGCashEarningExtreme } from "@/features/gcash/services/gcash";
 
 export const dynamic = "force-dynamic";
@@ -11,7 +11,10 @@ export async function GET(request: NextRequest) {
 
   if (invalidType) {
     return NextResponse.json(
-      { success: false, message: "Type is required and must be 'highest' or 'lowest'" },
+      {
+        success: false,
+        message: "Type is required and must be 'highest' or 'lowest'",
+      },
       { status: 400 },
     );
   }

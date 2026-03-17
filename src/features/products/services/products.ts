@@ -1,25 +1,29 @@
-import { productRepository } from "@/repositories/product";
-import { Response } from "@/types/shared/response";
-import {
-  CreateProduct,
-  ProductResponse,
-  ProductColumn,
-  GetProductsParams,
-} from "@/features/products/types/products";
 import { getCurrentUser } from "@/features/auth/services/auth";
-import { formatZodError } from "@/lib/utils";
-import { createProductSchema, updateProductSchema, deleteProductSchema } from "@/features/products/validation/products";
 import {
-  getCachedProducts,
-  setCachedProducts,
   buildProductsCacheKey,
-  invalidateAllProductsCache,
-  getCachedProductsTotal,
-  setCachedProductsTotal,
+  getCachedProducts,
   getCachedProductsLowStock,
+  getCachedProductsTotal,
+  invalidateAllProductsCache,
+  setCachedProducts,
   setCachedProductsLowStock,
+  setCachedProductsTotal,
 } from "@/features/products/lib/products-redis";
+import type {
+  CreateProduct,
+  GetProductsParams,
+  ProductColumn,
+  ProductResponse,
+} from "@/features/products/types/products";
+import {
+  createProductSchema,
+  deleteProductSchema,
+  updateProductSchema,
+} from "@/features/products/validation/products";
 import { getFromSupabaseStorage } from "@/lib/supabase/storage";
+import { formatZodError } from "@/lib/utils";
+import { productRepository } from "@/repositories/product";
+import type { Response } from "@/types/shared/response";
 
 const THUMBNAIL_BUCKET = "products";
 
@@ -167,9 +171,9 @@ export async function updateProduct(
   }
 }
 
-export async function deleteProduct(
-  data: { id: string },
-): Promise<Response<{ id: string }> & { storeId?: string }> {
+export async function deleteProduct(data: {
+  id: string;
+}): Promise<Response<{ id: string }> & { storeId?: string }> {
   const parsed = deleteProductSchema.safeParse(data);
   const validationFailed = !parsed.success;
 
@@ -222,9 +226,7 @@ export async function deleteProduct(
   }
 }
 
-export async function getProducts(
-  params: GetProductsParams = {},
-): Promise<
+export async function getProducts(params: GetProductsParams = {}): Promise<
   Response<ProductColumn[]> & {
     storeId?: string;
     page?: number;
@@ -478,9 +480,7 @@ export async function getProducts(
     return payload;
   } catch (error) {
     const message =
-      error instanceof Error
-        ? error.message
-        : "Failed to retrieve products";
+      error instanceof Error ? error.message : "Failed to retrieve products";
 
     return { success: false, status: 500, message };
   }

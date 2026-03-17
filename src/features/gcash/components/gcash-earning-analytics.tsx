@@ -4,13 +4,16 @@
 
 import {
   Card,
-  CardHeader,
   CardContent,
-  CardTitle,
   CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
-import { useGetGCashEarningTotal, useGetGCashEarningExtreme } from "@/features/gcash/hooks/use-gcash-earning";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  useGetGCashEarningExtreme,
+  useGetGCashEarningTotal,
+} from "@/features/gcash/hooks/use-gcash-earning";
 
 export default function GCashEarningAnalytics() {
   return (

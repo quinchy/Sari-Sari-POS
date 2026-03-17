@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button";
+import { ArrowLeft02Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { FullLogo } from "@/components/layout/app-logo";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowLeft02Icon } from "@hugeicons/core-free-icons";
+import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardTitle,
-  CardDescription,
-  CardHeader,
   CardContent,
+  CardDescription,
   CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 
 export default function NotFound() {

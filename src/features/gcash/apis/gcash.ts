@@ -1,11 +1,11 @@
-import {
+import type {
   CreateGCashEarning,
   DeleteGCashEarning,
-  UpdateGCashEarning,
   GCashEarningResponse,
   GetGCashEarningParams,
+  UpdateGCashEarning,
 } from "@/features/gcash/types/gcash";
-import { Pagination } from "@/types/shared/pagination";
+import type { Pagination } from "@/types/shared/pagination";
 
 export const getGCashEarning = async (
   params: GetGCashEarningParams = {},

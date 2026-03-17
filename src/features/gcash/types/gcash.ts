@@ -1,9 +1,9 @@
-import { z } from "zod";
-import {
-  gcashEarningSchema,
+import type { z } from "zod";
+import type {
   createGCashEarningSchema,
-  updateGCashEarningSchema,
   deleteGCashEarningSchema,
+  gcashEarningSchema,
+  updateGCashEarningSchema,
 } from "../validation/gcash";
 
 // ============= Inferred Types =============
@@ -42,7 +42,7 @@ export interface GetGCashEarningParams {
   limit?: number;
   year?: number;
   month?: number;
-} 
+}
 
 // ============= Hook Params =============
 

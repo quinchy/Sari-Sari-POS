@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useSignOut } from "@/features/auth/hooks/use-auth";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
+import { useSignOut } from "@/features/auth/hooks/use-auth";
 import { createClient } from "@/lib/supabase/client";
 import { uploadToSupabaseStorage } from "@/lib/supabase/storage";
 
@@ -50,7 +50,11 @@ export default function Page() {
         </Button>
       </div>
 
-      <Button onClick={() => signOut()} disabled={isSigningOut} className="mt-4">
+      <Button
+        onClick={() => signOut()}
+        disabled={isSigningOut}
+        className="mt-4"
+      >
         {isSigningOut ? (
           <>
             <Spinner />

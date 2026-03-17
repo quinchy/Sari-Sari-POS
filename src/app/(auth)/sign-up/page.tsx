@@ -1,8 +1,9 @@
 "use client";
 
-import { AccountForm } from "@/features/auth/components/account-form";
-import { StoreForm } from "@/features/auth/components/store-form";
+import { ArrowLeft01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
+import { Activity } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,10 +13,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { HugeiconsIcon } from "@hugeicons/react";
-import { ArrowLeft01Icon } from "@hugeicons/core-free-icons";
+import { AccountForm } from "@/features/auth/components/account-form";
+import { StoreForm } from "@/features/auth/components/store-form";
 import { useSignUpStore } from "@/features/auth/store/use-signup-store";
-import { Activity } from "react";
 
 export default function SignUp() {
   const step = useSignUpStore((state) => state.step);

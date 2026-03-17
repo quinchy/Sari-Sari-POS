@@ -1,29 +1,27 @@
 "use client";
 
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  useSidebar,
-} from "@/components/ui/sidebar";
-import { FullLogo, IconLogo } from "@/components/layout/app-logo";
+  CreditCardIcon,
+  Home01Icon,
+  ShoppingBag01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HugeiconsIcon } from "@hugeicons/react";
+import { FullLogo, IconLogo } from "@/components/layout/app-logo";
 import {
-  Home01Icon,
-  ShoppingBag01Icon,
-  CreditCardIcon,
-} from "@hugeicons/core-free-icons";
-import {
-  SidebarTrigger,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 const navItems = [

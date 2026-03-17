@@ -1,12 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
-import { useSignIn } from "@/features/auth/hooks/use-auth";
-import { signInSchema } from "@/features/auth/validations/auth";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { SignInData as SignInFormData } from "@/features/auth/types/auth";
 import {
   Field,
   FieldContent,
@@ -15,7 +11,11 @@ import {
   FieldLabel,
   FieldTitle,
 } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import { useSignIn } from "@/features/auth/hooks/use-auth";
+import type { SignInData as SignInFormData } from "@/features/auth/types/auth";
+import { signInSchema } from "@/features/auth/validations/auth";
 
 export function SignInForm() {
   const { isSigningIn, signIn } = useSignIn();

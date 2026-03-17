@@ -1,8 +1,8 @@
 import AppHeader from "@/components/layout/app-header";
+import GCashEarningAnalytics from "@/features/gcash/components/gcash-earning-analytics";
 import { GCashEarningChart } from "@/features/gcash/components/gcash-earning-chart";
 import GCashToolbar from "@/features/gcash/components/gcash-toolbar";
 import GCashEarningTable from "@/features/gcash/components/table/gcash-earning-table";
-import GCashEarningAnalytics from "@/features/gcash/components/gcash-earning-analytics";
 
 export default function GCashPage() {
   return (

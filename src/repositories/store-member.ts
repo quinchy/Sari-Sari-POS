@@ -1,6 +1,6 @@
+import type { StoreMember } from "@/../prisma/generated/client";
 import { prisma } from "@/lib/prisma/client";
-import { StoreMember } from "@/../prisma/generated/client";
-import {
+import type {
   CreateStoreMemberInput,
   UpdateStoreMemberInput,
 } from "@/types/domain/store-member";

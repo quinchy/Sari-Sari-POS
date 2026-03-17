@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import {
   createProduct,
-  updateProduct,
   deleteProduct,
   getProducts,
-  getProductsTotal,
   getProductsLowStock,
+  getProductsTotal,
+  updateProduct,
 } from "@/features/products/services/products";
 
 export const dynamic = "force-dynamic";

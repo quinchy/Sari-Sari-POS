@@ -1,30 +1,30 @@
 "use client";
 
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
 import { useState } from "react";
 import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-} from "@tanstack/react-table";
-import { columns } from "@/features/products/lib/products-table-columns";
-import { ProductColumn } from "@/features/products/types/products";
-import {
-  Table,
-  TableHead,
-  TableHeader,
-  TableRow,
-  TableBody,
-  TableCell,
-  TableFooter,
-} from "@/components/ui/table";
-import {
-  TBodyLoading,
   TBodyError,
+  TBodyLoading,
   TBodyNoData,
 } from "@/components/layout/table-fallback";
 import TablePagination from "@/components/layout/table-pagination";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useGetProducts } from "@/features/products/hooks/use-products";
-import { FallbackProvider } from "@/providers/fallback-provider";
+import { columns } from "@/features/products/lib/products-table-columns";
+import type { ProductColumn } from "@/features/products/types/products";
+import { FallbackProvider } from "@/components/providers/fallback-provider";
 
 export default function ProductsTable() {
   const [pageIndex, setPageIndex] = useState(0);

@@ -4,25 +4,43 @@ const MAX_THUMBNAIL_SIZE = 5 * 1024 * 1024; // 5MB
 
 const thumbnailSchema = z
   .instanceof(File)
-  .refine((file) => file.size <= MAX_THUMBNAIL_SIZE, "Thumbnail must be less than 5MB")
   .refine(
-    (file) => ["image/jpeg", "image/png", "image/webp", "image/gif"].includes(file.type),
+    (file) => file.size <= MAX_THUMBNAIL_SIZE,
+    "Thumbnail must be less than 5MB",
+  )
+  .refine(
+    (file) =>
+      ["image/jpeg", "image/png", "image/webp", "image/gif"].includes(
+        file.type,
+      ),
     "Thumbnail must be a valid image (JPEG, PNG, WebP, or GIF)",
   )
   .optional();
 
 export const productSchema = z.strictObject({
-  name: z.string().min(1, "Name is required").max(255, "Name must not exceed 255 characters"),
-  description: z.string().max(1000, "Description must not exceed 1000 characters").optional(),
+  name: z
+    .string()
+    .min(1, "Name is required")
+    .max(255, "Name must not exceed 255 characters"),
+  description: z
+    .string()
+    .max(1000, "Description must not exceed 1000 characters")
+    .optional(),
 
   thumbnail: thumbnailSchema,
   thumbnailId: z.string().uuid().optional(),
 
   sku: z.string().max(100, "SKU must not exceed 100 characters").optional(),
-  barcode: z.string().max(100, "Barcode must not exceed 100 characters").optional(),
+  barcode: z
+    .string()
+    .max(100, "Barcode must not exceed 100 characters")
+    .optional(),
 
   brand: z.string().max(100, "Brand must not exceed 100 characters").optional(),
-  category: z.string().max(100, "Category must not exceed 100 characters").optional(),
+  category: z
+    .string()
+    .max(100, "Category must not exceed 100 characters")
+    .optional(),
 
   unit: z.string().max(50, "Unit must not exceed 50 characters").optional(),
   size: z.string().max(50, "Size must not exceed 50 characters").optional(),
@@ -61,7 +79,10 @@ export const productSchema = z.strictObject({
   aliases: z
     .array(
       z.object({
-        name: z.string().min(1, "Alias name is required").max(255, "Alias must not exceed 255 characters"),
+        name: z
+          .string()
+          .min(1, "Alias name is required")
+          .max(255, "Alias must not exceed 255 characters"),
       }),
     )
     .optional(),

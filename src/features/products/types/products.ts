@@ -1,7 +1,7 @@
-import { z } from "zod";
-import {
-  productSchema,
+import type { z } from "zod";
+import type {
   createProductSchema,
+  productSchema,
 } from "../validation/products";
 
 // ============= Inferred Types =============

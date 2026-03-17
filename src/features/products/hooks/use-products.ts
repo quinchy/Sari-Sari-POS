@@ -1,17 +1,21 @@
 "use client";
 
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   createProduct,
-  updateProduct,
   deleteProduct,
   getProducts,
-  getProductsTotal,
   getProductsLowStock,
+  getProductsTotal,
+  updateProduct,
 } from "@/features/products/apis/products";
-import { keepPreviousData } from "@tanstack/react-query";
-import {
+import type {
   ProductColumn,
   UseGetProductsParams,
 } from "@/features/products/types/products";

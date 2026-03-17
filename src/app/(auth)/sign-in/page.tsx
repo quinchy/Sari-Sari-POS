@@ -1,4 +1,3 @@
-import { SignInForm } from "@/features/auth/components/sign-in-form";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { SignInForm } from "@/features/auth/components/sign-in-form";
 
 export default function SignIn() {
   return (

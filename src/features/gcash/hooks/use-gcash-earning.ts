@@ -1,17 +1,21 @@
 "use client";
 
-import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
   createGCashEarning,
   deleteGCashEarning,
-  updateGCashEarning,
   getGCashEarning,
-  getGCashEarningTotal,
   getGCashEarningExtreme,
+  getGCashEarningTotal,
+  updateGCashEarning,
 } from "@/features/gcash/apis/gcash";
-import { keepPreviousData } from "@tanstack/react-query";
-import {
+import type {
   GCashEarningResponse,
   UseGetGCashEarningParams,
 } from "@/features/gcash/types/gcash";

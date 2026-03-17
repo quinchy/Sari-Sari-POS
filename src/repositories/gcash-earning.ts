@@ -1,9 +1,9 @@
-import { prisma } from "@/lib/prisma/client";
-import { GCashEarning } from "@/../prisma/generated/client";
-import {
+import type { GCashEarning } from "@/../prisma/generated/client";
+import type {
   CreateGCashEarning as CreateGCashEarningInput,
   UpdateGCashEarning as UpdateGCashEarningInput,
 } from "@/features/gcash/types/gcash";
+import { prisma } from "@/lib/prisma/client";
 
 export class GCashEarningRepository {
   async create(
@@ -176,10 +176,14 @@ export class GCashEarningRepository {
   ): Promise<GCashEarning[]> {
     // Use Asia/Manila timezone (UTC+8) to match how dates are stored
     // Start of month in UTC+8
-    const startDate = new Date(`${year}-${month.toString().padStart(2, "0")}-01T00:00:00+08:00`);
+    const startDate = new Date(
+      `${year}-${month.toString().padStart(2, "0")}-01T00:00:00+08:00`,
+    );
     // End of month in UTC+8 (last day, 23:59:59.999)
     const lastDay = new Date(year, month, 0).getDate();
-    const endDate = new Date(`${year}-${month.toString().padStart(2, "0")}-${lastDay.toString().padStart(2, "0")}T23:59:59.999+08:00`);
+    const endDate = new Date(
+      `${year}-${month.toString().padStart(2, "0")}-${lastDay.toString().padStart(2, "0")}T23:59:59.999+08:00`,
+    );
 
     return prisma.gCashEarning.findMany({
       where: {

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { SignUpStore } from "@/features/auth/types/auth";
+import type { SignUpStore } from "@/features/auth/types/auth";
 
 export const useSignUpStore = create<SignUpStore>((set) => ({
   step: 1,

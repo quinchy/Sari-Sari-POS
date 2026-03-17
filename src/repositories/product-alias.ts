@@ -1,8 +1,11 @@
+import type { ProductAlias } from "@/../prisma/generated/client";
 import { prisma } from "@/lib/prisma/client";
-import { ProductAlias } from "@/../prisma/generated/client";
 
 export class ProductAliasRepository {
-  async create(data: { productId: string; name: string }): Promise<ProductAlias> {
+  async create(data: {
+    productId: string;
+    name: string;
+  }): Promise<ProductAlias> {
     return prisma.productAlias.create({
       data: {
         productId: data.productId,

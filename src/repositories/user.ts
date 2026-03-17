@@ -1,6 +1,6 @@
+import type { User } from "@/../prisma/generated/client";
 import { prisma } from "@/lib/prisma/client";
-import { User } from "@/../prisma/generated/client";
-import { CreateUserInput, UpdateUserInput } from "@/types/domain/user";
+import type { CreateUserInput, UpdateUserInput } from "@/types/domain/user";
 
 export class UserRepository {
   async getById(id: string): Promise<User | null> {

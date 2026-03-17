@@ -1,14 +1,13 @@
-import * as React from "react";
 import { Input as InputPrimitive } from "@base-ui/react/input";
-import { HugeiconsIcon } from "@hugeicons/react";
 import {
+  Search01Icon,
   ViewIcon,
   ViewOffIcon,
-  Search01Icon,
 } from "@hugeicons/core-free-icons";
-
-import { cn } from "@/lib/utils";
+import { HugeiconsIcon } from "@hugeicons/react";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export interface InputProps extends React.ComponentProps<"input"> {
   variant?: "default" | "password" | "search";
