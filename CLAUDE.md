@@ -4,36 +4,40 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Qwenta is a modern Point of Sale (POS) application for Sari Sari stores in the Philippines. Built with Next.js 16 (App Router), TypeScript, PostgreSQL (via Prisma), and Redis (Upstash) for caching.
+The project is Qwenta, a Point of Sale (POS) application for Sari Sari Stores. The project uses Next.js for both frontend and backend.
 
-## Common Commands
+## Tech Stack
 
-```bash
-# Install dependencies
-npm install
+- Next.js v16.1.6 (App Router)
+- React v19.2.3
+- TailwindCSS v4
+- ShadcnUI v3.8.5
+- Prisma v7.4.1 (PostgreSQL)
+- Supabase Auth via supabase/ssr v0.8.0
+- Redis via @upstash/redis v1.36.2
+- TanStack React Query v5.90.21
+- TanStack React Table v8.21.3
+- Zustand v5.0.11
+- Zod v4.3.6
+- React Hook Form v7.71.2
+- Motion (for Animation) v12.34.3
+- Biome v2.2.0
 
-# Run database migrations
-npx prisma migrate dev
+## Commands
 
-# Start development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm run start
-
-# Lint code with Biome
-npm run lint
-
-# Format code with Biome
-npm run format
-```
+- `bun run dev`  Starts the development server for local development.
+- `bun run build`  Creates the production build of the project.
+- `bun run start`  Starts the app using the production build.
+- `bun run lint`  Runs Biome checks for the project.
+- `bun run lint:fix`  Runs Biome checks and applies safe fixes automatically.
+- `bun run format`  Formats the project files with Biome.
+- `bunx prisma db push`  Pushes the current Prisma schema to the database without creating a migration.
+- `bunx prisma db pull`  Pulls the current database schema into `schema.prisma`.
+- `bunx prisma generate`  Regenerates the Prisma Client based on the current Prisma schema.
 
 ## Architecture
 
-This project uses a **layered, feature-based architecture**:
+This project uses a **layered, feature-based architecture** for frontend stuffs and **services-repositories** for backend stuffs
 
 1. **Pages/Components** → Call React Query hooks
 2. **APIs** (`features/*/apis/*.ts`) → Client-side fetch wrappers
@@ -75,17 +79,6 @@ Each feature (auth, gcash, products) follows the same structure:
 
 - `(auth)/` - Authentication pages (sign-in, sign-up)
 - `(dashboard)/` - Protected dashboard pages (gcash, products)
-
-## Tech Stack
-
-- Next.js 16.1.6 (App Router)
-- React 19.2.3
-- Prisma 7.4.1 (PostgreSQL)
-- Redis via @upstash/redis
-- Supabase Auth
-- TanStack React Query + Zustand
-- Tailwind CSS 4 + Shadcn/UI
-- Biome for linting/formatting
 
 ## Next.js Best Practices
 
