@@ -37,53 +37,40 @@ The project is Qwenta, a Point of Sale (POS) application for Sari Sari Stores. T
 
 ## Architecture
 
-This project uses a **layered, feature-based architecture** for frontend stuffs and **services-repositories** for backend stuffs
+This project uses a **Hybrid Feature-Based Modular Monolith with Layered Tendencies** More specifically, it is closest to vertical slice / feature-first organization for business code, combined with shared technical layers for reusable app-wide code, plus a repository pattern for data access. It is more like Feature-Sliced Design mixed with classic layered organization inside a single Next.js codebase.
 
-1. **Pages/Components** → Call React Query hooks
-2. **APIs** (`features/*/apis/*.ts`) → Client-side fetch wrappers
-3. **API Routes** (`app/api/*/route.ts`) → Request validation, delegate to services
-4. **Services** (`features/*/services/*.ts`) → Business logic, validation, cache management
-5. **Repositories** (`repositories/*.ts`) → Database access via Prisma
+The features folder follows the same structure or add these folder if necessary:
+- `features/feature-name/apis/` - Client-side fetch call functions
+- `features/feature-name/components/` - UI components
+- `features/feature-name/data/` - Constants or Static datas
+- `features/feature-name/hooks/` - Custom React Query hooks or Custom React Hooks
+- `features/feature-name/lib/` - Feature-specific utilities
+- `features/feature-name/services/` - Business logic
+- `features/feature-name/store/` - Zustand store/state management
+- `features/feature-name/types/` - TypeScript types
+- `features/feature-name/validation/` - Zod validation schemas
 
-## Feature Modules
+## Project's Key Patterns
 
-Each feature (auth, gcash, products) follows the same structure:
-- `apis/` - Client-side fetch wrappers
-- `components/` - React UI components
-- `hooks/` - React Query hooks
-- `lib/` - Feature-specific utilities
-- `services/` - Business logic
-- `store/` - Zustand store/state management
-- `types/` - TypeScript types
-- `validation/` - Zod validation schemas
-
-## Key Patterns
-
-- **Data fetching**: Use React Query hooks in `features/*/hooks/`
-- **API calls**: Use client functions in `features/*/apis/`
-- **Server-side logic**: Services in `features/*/services/`
-- **Database access**: Repositories in `repositories/`
-- **Caching**: Redis via Upstash, managed in service layer
-- **Validation**: Zod schemas in `features/*/validation/`
+- **Data fetching and mutation**: Use Tanstack React Query hooks such as `useQuery` or `useMutation`.
+- **API calls**: Use exportable client API call functions to be used by Tanstack React Query.
+- **Server-side logic**: Use a Services Layer for Route Handlers. Services should handle validation, caching, repository calls, business logic, response shaping, and status code decisions.
+- **Database access**: Use a Repositories Layer for reusable queries per table/model.
+- **Caching**: Use Redis Upstash to manage server-side caching.
+- **Rate limiting**: Use Redis Upstash to manage server-side rate limiting for API routes.
+- **Validation**: Use Zod for both client-side and server-side validation, with inferred types where applicable.
+- **API Routes**: Place in `app/api/` using Next.js Route Handlers (`route.ts`) and follow RESTful resource-based routing. Use noun-based paths such as `/api/users` and `/api/users/[id]`, and let the HTTP method (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`) define the action instead of action-based endpoints like `/api/get-users` or `/api/create-user` which should be avoided at all cause.
+- **Route Handler responsibility**: Keep Route Handlers thin. They should mainly parse the request, call the appropriate service, and return the service result using `NextResponse.json()`. Do not place business logic, database logic, caching logic, or heavy validation directly inside Route Handlers.
+- **Response contract**: Maintain a consistent API response shape for all endpoints. Every response should include `status`, `success`, and `message`. Successful responses should also include `data`. Failed responses should also include `error`, where `error` contains `code` and `details`.
+- **Status codes**: Always return the appropriate HTTP status code based on the result of the service, such as `200`, `201`, `400`, `401`, `403`, `404`, `409`, `422`, or `500`. Services should decide the correct response status, and Route Handlers should preserve and return it.
+- **ORM / database source of truth**: This project uses Prisma as the main database access layer. Define and update models in `root/prisma/schema.prisma`.
+- **Prisma types**: Prefer Prisma's generated model and query typings from `root/prisma/generated/client` instead of redefining database model types manually.
+- **Supabase usage**: This project uses Supabase as the database provider/infrastructure, but application data access should go through Prisma, not through direct Supabase queries or client calls.
 
 ## Next.js Best Practices
 
 - **Images**: Always use `next/image` instead of `<img>` for optimized images with lazy loading and automatic format conversion
 - **Links**: Use `next/link` for internal navigation (automatically prefetches routes)
 - **Fonts**: Use `next/font` (Google Fonts) for optimized font loading with zero layout shift
-- **Server Components**: Default to Server Components for data fetching and static content; use `"use client"` only when needed (interactivity, hooks, browser APIs)
-- **API Routes**: Place in `app/api/` using Route Handlers (`route.ts`) or API Routes (`route.js`)
-- **Environment Variables**: Use `.env.local` for local development, prefix public vars with `NEXT_PUBLIC_`
-
-## Route Groups
-
-- `(auth)/` - Authentication pages (sign-in, sign-up)
-- `(dashboard)/` - Protected dashboard pages (gcash, products)
-
-## Next.js Best Practices
-
-- **Images**: Always use `next/image` instead of `<img>` for optimized images with lazy loading, automatic format conversion, and better performance.
-- **Links**: Use `next/link` for internal navigation to enable prefetching.
-- **Font**: Use `next/font` (Google Fonts) for optimized font loading with zero layout shift.
-- **Server Components**: Prefer server components for data fetching and static content.
-- **Client Components**: Add `'use client'` only when needed (hooks, event handlers, browser APIs).
+- **Server Components**: Default to Server Components for pages; use `"use client"` only for components that needs (data fetching/mutation, interactivity, hooks, browser APIs)
+- **Route Groups**: Use Next.js Route Groups to organize pages and endpoints by feature or access scope without affecting the URL structure. Group related routes under folders for example, such as `(auth)` for authentication flows and `(dashboard)` for protected app areas like gcash and products.
