@@ -12,6 +12,7 @@ import {
   TBodyNoData,
 } from "@/components/layout/table-fallback";
 import TablePagination from "@/components/layout/table-pagination";
+import { FallbackProvider } from "@/components/providers/fallback-provider";
 import {
   Table,
   TableBody,
@@ -24,7 +25,6 @@ import {
 import { useGetGCashEarning } from "@/features/gcash/hooks/use-gcash-earning";
 import { columns } from "@/features/gcash/lib/gcash-earning-table-columns";
 import type { GCashEarningColumn } from "@/features/gcash/types/gcash";
-import { FallbackProvider } from "@/components/providers/fallback-provider";
 
 export default function GCashEarningTable() {
   const [pageIndex, setPageIndex] = useState(0);
