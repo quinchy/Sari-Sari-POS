@@ -16,7 +16,7 @@ export type {
 };
 
 export async function getCurrentUser(): Promise<CurrentUserResponse> {
-  const response = await fetch("/api/current-user", {
+  const response = await fetch("/api/auth/get-user", {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -35,7 +35,7 @@ export async function getCurrentUser(): Promise<CurrentUserResponse> {
 export async function signIn(
   credentials: SignInRequest,
 ): Promise<SignInResponse> {
-  const response = await fetch("/api/sign-in", {
+  const response = await fetch("/api/auth/sign-in", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export async function signIn(
 export async function signUp(
   credentials: SignUpRequest,
 ): Promise<SignUpResponse> {
-  const response = await fetch("/api/sign-up", {
+  const response = await fetch("/api/auth/sign-up", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export async function signUp(
 }
 
 export async function signOut(): Promise<SignOutResponse> {
-  const response = await fetch("/api/sign-out", {
+  const response = await fetch("/api/auth/sign-out", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
