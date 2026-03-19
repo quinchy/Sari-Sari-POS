@@ -3,6 +3,12 @@ import { prisma } from "@/lib/prisma/client";
 import type { CreateStoreInput, UpdateStoreInput } from "@/types/domain/store";
 
 export class StoreRepository {
+  async getById(id: string): Promise<Store | null> {
+    return prisma.store.findUnique({
+      where: { id },
+    });
+  }
+
   async create(data: CreateStoreInput): Promise<Store> {
     return prisma.store.create({
       data: {
