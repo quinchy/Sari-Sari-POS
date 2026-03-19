@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Public_Sans } from "next/font/google";
+import { QueryProvider } from "@/components/providers/query-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryProvider } from "@/components/providers/query-provider";
 import "./globals.css";
 
 const publicSans = Public_Sans({ subsets: ["latin"], variable: "--font-sans" });
