@@ -12,6 +12,7 @@ import {
   TBodyNoData,
 } from "@/components/layout/table-fallback";
 import TablePagination from "@/components/layout/table-pagination";
+import { FallbackProvider } from "@/components/providers/fallback-provider";
 import {
   Table,
   TableBody,
@@ -24,7 +25,6 @@ import {
 import { useGetProducts } from "@/features/products/hooks/use-products";
 import { columns } from "@/features/products/lib/products-table-columns";
 import type { ProductColumn } from "@/features/products/types/products";
-import { FallbackProvider } from "@/components/providers/fallback-provider";
 
 export default function ProductsTable() {
   const [pageIndex, setPageIndex] = useState(0);
