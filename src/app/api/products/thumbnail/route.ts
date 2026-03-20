@@ -1,8 +1,8 @@
 import { type NextRequest } from "next/server";
-import { getCurrentUser } from "@/features/auth/services/auth";
 import { createClient } from "@/lib/supabase/server";
 import { uploadToSupabaseStorage } from "@/lib/supabase/storage";
 import { sendResponse } from "@/lib/response";
+import { getUser as getAccountUser } from "@/features/account/services/account";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -11,7 +11,7 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
 export async function POST(request: NextRequest) {
-  const currentUserResult = await getCurrentUser();
+  const currentUserResult = await getAccountUser();
 
   if (!currentUserResult.success) {
     return sendResponse({

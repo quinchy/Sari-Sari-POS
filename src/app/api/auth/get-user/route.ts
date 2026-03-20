@@ -1,5 +1,5 @@
 import { type NextRequest } from "next/server";
-import { getSupabaseUser } from "@/features/auth/services/get-user";
+import { getUser } from "@/features/auth/services/auth";
 import { sendResponse } from "@/lib/response";
 
 export const dynamic = "force-dynamic";
@@ -7,7 +7,7 @@ export const revalidate = 0;
 
 export async function GET(_request: NextRequest) {
   try {
-    const user = await getSupabaseUser();
+    const user = await getUser();
     const userError = !user.success;
 
     if (userError) {
