@@ -19,6 +19,7 @@ export async function getCurrentStore(): Promise<Response<{ store: Store }>> {
       success: false,
       status: 401,
       message: "User not authenticated",
+      error: { code: "NOT_AUTHENTICATED", details: authError?.message },
     };
   }
 
@@ -33,6 +34,7 @@ export async function getCurrentStore(): Promise<Response<{ store: Store }>> {
       success: false,
       status: 404,
       message: "User not found",
+      error: { code: "USER_NOT_FOUND" },
     };
   }
 
@@ -45,6 +47,7 @@ export async function getCurrentStore(): Promise<Response<{ store: Store }>> {
       success: false,
       status: 404,
       message: "No current store set for user",
+      error: { code: "NO_CURRENT_STORE" },
     };
   }
 
@@ -57,6 +60,7 @@ export async function getCurrentStore(): Promise<Response<{ store: Store }>> {
       success: false,
       status: 404,
       message: "Store not found",
+      error: { code: "STORE_NOT_FOUND" },
     };
   }
 

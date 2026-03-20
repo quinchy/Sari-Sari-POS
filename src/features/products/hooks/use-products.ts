@@ -124,7 +124,7 @@ export const useGetProducts = (params: UseGetProductsParams = {}) => {
     placeholderData: isPaginated ? keepPreviousData : undefined,
   });
 
-  const products = (data?.data?.items ?? []) as ProductColumn[];
+  const products = (data?.data ?? []) as ProductColumn[];
 
   return {
     products,
@@ -133,7 +133,7 @@ export const useGetProducts = (params: UseGetProductsParams = {}) => {
     isProductsEmpty: isSuccess && products.length === 0,
     productsError: error,
     refetchProducts: refetch,
-    pagination: data?.data?.pagination ?? {
+    pagination: data?.pagination ?? {
       page: 1,
       limit: 15,
       total: 0,

@@ -81,7 +81,7 @@ export async function signIn(
       success: false,
       status: 400,
       message: `Validation failed: ${formatZodError(parsed.error)}`,
-      error: { code: "VALIDATION_FAILED", details: parsed.error.errors },
+      error: { code: "VALIDATION_FAILED", details: parsed.error.issues },
     };
   }
 
@@ -99,6 +99,10 @@ export async function signIn(
       success: false,
       status: 401,
       message: `Authentication failed: ${authError.message}`,
+      error: {
+        code: "AUTHENTICATION_FAILED",
+        details: authError.message,
+      },
     };
   }
 
@@ -121,7 +125,7 @@ export async function signUp(
       success: false,
       status: 400,
       message: `Validation failed: ${formatZodError(parsed.error)}`,
-      error: { code: "VALIDATION_FAILED", details: parsed.error.errors },
+      error: { code: "VALIDATION_FAILED", details: parsed.error.issues },
     };
   }
 
@@ -143,6 +147,10 @@ export async function signUp(
       success: false,
       status: 400,
       message: `Authentication failed: ${authError?.message ?? "no user"}`,
+      error: {
+        code: "SIGNUP_FAILED",
+        details: authError?.message ?? "no user",
+      },
     };
   }
 
@@ -151,6 +159,9 @@ export async function signUp(
       success: false,
       status: 400,
       message: "Authentication failed: no user",
+      error: {
+        code: "NO_USER_RETURNED",
+      },
     };
   }
 
@@ -199,6 +210,10 @@ export async function signOut(): Promise<AuthResponse<null>> {
       success: false,
       status: 400,
       message: error.message,
+      error: {
+        code: "SIGN_OUT_FAILED",
+        details: error.message,
+      },
     };
   }
 

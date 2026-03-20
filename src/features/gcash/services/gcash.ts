@@ -35,6 +35,7 @@ export async function createGCashEarning(
       success: false,
       status: 400,
       message: `Validation failed: ${formatZodError(parsed.error)}`,
+      error: { code: "VALIDATION_FAILED", details: parsed.error.issues },
     };
   }
 
@@ -46,6 +47,7 @@ export async function createGCashEarning(
       success: currentUserResult.success,
       status: currentUserResult.status,
       message: currentUserResult.message,
+      error: currentUserResult.error,
     };
   }
 
@@ -58,6 +60,7 @@ export async function createGCashEarning(
       success: false,
       status: 400,
       message: "You don't have a current store. Please create a store first.",
+      error: { code: "NO_CURRENT_STORE" },
     };
   }
 
@@ -87,10 +90,16 @@ export async function createGCashEarning(
         success: false,
         status: 409,
         message: "You already have a GCash earning for that date",
+        error: { code: "DUPLICATE_GCASH_EARNING" },
       };
     }
 
-    return { success: false, status: 500, message };
+    return {
+      success: false,
+      status: 500,
+      message,
+      error: { code: "GCASH_EARNING_CREATE_FAILED", details: message },
+    };
   }
 }
 
@@ -105,6 +114,7 @@ export async function updateGCashEarning(
       success: false,
       status: 400,
       message: `Validation failed: ${formatZodError(parsed.error)}`,
+      error: { code: "VALIDATION_FAILED", details: parsed.error.issues },
     };
   }
 
@@ -131,6 +141,7 @@ export async function updateGCashEarning(
         success: false,
         status: 404,
         message: "GCash earning record not found",
+        error: { code: "GCASH_EARNING_NOT_FOUND" },
       };
     }
 
@@ -142,10 +153,16 @@ export async function updateGCashEarning(
         status: 409,
         message:
           "Another GCash earning record already exists for this store on the target date. Please choose a different date or update the existing record.",
+        error: { code: "DUPLICATE_GCASH_EARNING" },
       };
     }
 
-    return { success: false, status: 500, message };
+    return {
+      success: false,
+      status: 500,
+      message,
+      error: { code: "GCASH_EARNING_UPDATE_FAILED", details: message },
+    };
   }
 }
 
@@ -160,6 +177,7 @@ export async function deleteGCashEarning(data: {
       success: false,
       status: 400,
       message: `Validation failed: ${formatZodError(parsed.error)}`,
+      error: { code: "VALIDATION_FAILED", details: parsed.error.issues },
     };
   }
 
@@ -172,6 +190,7 @@ export async function deleteGCashEarning(data: {
         success: false,
         status: 404,
         message: "GCash earning record not found",
+        error: { code: "GCASH_EARNING_NOT_FOUND" },
       };
     }
 
@@ -197,10 +216,16 @@ export async function deleteGCashEarning(data: {
         success: false,
         status: 404,
         message: "GCash earning record not found",
+        error: { code: "GCASH_EARNING_NOT_FOUND" },
       };
     }
 
-    return { success: false, status: 500, message };
+    return {
+      success: false,
+      status: 500,
+      message,
+      error: { code: "GCASH_EARNING_DELETE_FAILED", details: message },
+    };
   }
 }
 
@@ -226,6 +251,7 @@ export async function getGCashEarning(
       success: currentUser.success,
       status: currentUser.status,
       message: currentUser.message,
+      error: currentUser.error,
     };
   }
 
@@ -239,6 +265,7 @@ export async function getGCashEarning(
       status: 400,
       message:
         "You don't have a store selected. Please select or create a store first.",
+      error: { code: "NO_STORE_SELECTED" },
     };
   }
 
@@ -277,13 +304,14 @@ export async function getGCashEarning(
         }),
       );
 
-      const payload = {
+      const payload: Response<GCashEarningResponse[]> & { storeId: string } =
+        {
         success: true,
         status: 200,
         message: "GCash earnings retrieved successfully",
         data: mappedEarnings,
         storeId,
-      };
+        };
 
       await setCachedGCashEarnings(payload, storeId, {
         year,
@@ -310,7 +338,13 @@ export async function getGCashEarning(
         }),
       );
 
-      const payload = {
+      const payload: Response<GCashEarningResponse[]> & {
+        storeId: string;
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+      } = {
         success: true,
         status: 200,
         message: "GCash earnings retrieved successfully",
@@ -342,7 +376,10 @@ export async function getGCashEarning(
       }),
     );
 
-    const payload = {
+    const payload: Response<GCashEarningResponse[]> & {
+      storeId: string;
+      total: number;
+    } = {
       success: true,
       status: 200,
       message: "GCash earnings retrieved successfully",
@@ -360,7 +397,12 @@ export async function getGCashEarning(
         ? error.message
         : "Failed to retrieve GCash earnings";
 
-    return { success: false, status: 500, message };
+    return {
+      success: false,
+      status: 500,
+      message,
+      error: { code: "GCASH_EARNINGS_FETCH_FAILED", details: message },
+    };
   }
 }
 
@@ -373,6 +415,7 @@ export async function getGCashEarningTotal(): Promise<Response<number>> {
       success: currentUserResult.success,
       status: currentUserResult.status,
       message: currentUserResult.message,
+      error: currentUserResult.error,
     };
   }
 
@@ -385,6 +428,7 @@ export async function getGCashEarningTotal(): Promise<Response<number>> {
       success: false,
       status: 400,
       message: "You don't have a current store. Please create a store first.",
+      error: { code: "NO_CURRENT_STORE" },
     };
   }
 
@@ -417,7 +461,12 @@ export async function getGCashEarningTotal(): Promise<Response<number>> {
         ? error.message
         : "Failed to retrieve GCash earnings total";
 
-    return { success: false, status: 500, message };
+    return {
+      success: false,
+      status: 500,
+      message,
+      error: { code: "GCASH_EARNINGS_TOTAL_FETCH_FAILED", details: message },
+    };
   }
 }
 
@@ -432,6 +481,7 @@ export async function getGCashEarningExtreme(
       success: currentUserResult.success,
       status: currentUserResult.status,
       message: currentUserResult.message,
+      error: currentUserResult.error,
     };
   }
 
@@ -444,6 +494,7 @@ export async function getGCashEarningExtreme(
       success: false,
       status: 400,
       message: "You don't have a current store. Please create a store first.",
+      error: { code: "NO_CURRENT_STORE" },
     };
   }
 
@@ -496,6 +547,11 @@ export async function getGCashEarningExtreme(
         ? error.message
         : `Failed to retrieve GCash ${type} earning`;
 
-    return { success: false, status: 500, message };
+    return {
+      success: false,
+      status: 500,
+      message,
+      error: { code: "GCASH_EARNINGS_EXTREME_FETCH_FAILED", details: message },
+    };
   }
 }

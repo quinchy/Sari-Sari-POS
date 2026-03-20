@@ -67,6 +67,7 @@ export async function createProduct(
       success: false,
       status: 400,
       message: `Validation failed: ${formatZodError(parsed.error)}`,
+      error: { code: "VALIDATION_FAILED", details: parsed.error.issues },
     };
   }
 
@@ -78,6 +79,7 @@ export async function createProduct(
       success: currentUserResult.success,
       status: currentUserResult.status,
       message: currentUserResult.message,
+      error: currentUserResult.error,
     };
   }
 
@@ -90,6 +92,7 @@ export async function createProduct(
       success: false,
       status: 400,
       message: "You don't have a current store. Please create a store first.",
+      error: { code: "NO_CURRENT_STORE" },
     };
   }
 
@@ -100,6 +103,7 @@ export async function createProduct(
       success: false,
       status: 400,
       message: "Unable to identify the current user.",
+      error: { code: "USER_ID_MISSING" },
     };
   }
 
@@ -123,7 +127,12 @@ export async function createProduct(
     const message =
       error instanceof Error ? error.message : "Failed to create product";
 
-    return { success: false, status: 500, message };
+    return {
+      success: false,
+      status: 500,
+      message,
+      error: { code: "PRODUCT_CREATE_FAILED", details: message },
+    };
   }
 }
 
@@ -138,6 +147,7 @@ export async function updateProduct(
       success: false,
       status: 400,
       message: `Validation failed: ${formatZodError(parsed.error)}`,
+      error: { code: "VALIDATION_FAILED", details: parsed.error.issues },
     };
   }
 
@@ -164,10 +174,16 @@ export async function updateProduct(
         success: false,
         status: 404,
         message: "Product not found",
+        error: { code: "PRODUCT_NOT_FOUND" },
       };
     }
 
-    return { success: false, status: 500, message };
+    return {
+      success: false,
+      status: 500,
+      message,
+      error: { code: "PRODUCT_UPDATE_FAILED", details: message },
+    };
   }
 }
 
@@ -182,6 +198,7 @@ export async function deleteProduct(data: {
       success: false,
       status: 400,
       message: `Validation failed: ${formatZodError(parsed.error)}`,
+      error: { code: "VALIDATION_FAILED", details: parsed.error.issues },
     };
   }
 
@@ -194,6 +211,7 @@ export async function deleteProduct(data: {
         success: false,
         status: 404,
         message: "Product not found",
+        error: { code: "PRODUCT_NOT_FOUND" },
       };
     }
 
@@ -219,10 +237,16 @@ export async function deleteProduct(data: {
         success: false,
         status: 404,
         message: "Product not found",
+        error: { code: "PRODUCT_NOT_FOUND" },
       };
     }
 
-    return { success: false, status: 500, message };
+    return {
+      success: false,
+      status: 500,
+      message,
+      error: { code: "PRODUCT_DELETE_FAILED", details: message },
+    };
   }
 }
 
@@ -246,6 +270,7 @@ export async function getProducts(params: GetProductsParams = {}): Promise<
       success: currentUser.success,
       status: currentUser.status,
       message: currentUser.message,
+      error: currentUser.error,
     };
   }
 
@@ -259,6 +284,7 @@ export async function getProducts(params: GetProductsParams = {}): Promise<
       status: 400,
       message:
         "You don't have a store selected. Please select or create a store first.",
+      error: { code: "NO_STORE_SELECTED" },
     };
   }
 
@@ -313,7 +339,13 @@ export async function getProducts(params: GetProductsParams = {}): Promise<
         }),
       );
 
-      const payload = {
+      const payload: Response<ProductColumn[]> & {
+        storeId: string;
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+      } = {
         success: true,
         status: 200,
         message: "Products retrieved successfully",
@@ -366,7 +398,13 @@ export async function getProducts(params: GetProductsParams = {}): Promise<
         }),
       );
 
-      const payload = {
+      const payload: Response<ProductColumn[]> & {
+        storeId: string;
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+      } = {
         success: true,
         status: 200,
         message: "Products retrieved successfully",
@@ -418,7 +456,13 @@ export async function getProducts(params: GetProductsParams = {}): Promise<
         }),
       );
 
-      const payload = {
+      const payload: Response<ProductColumn[]> & {
+        storeId: string;
+        page: number;
+        limit: number;
+        total: number;
+        totalPages: number;
+      } = {
         success: true,
         status: 200,
         message: "Products retrieved successfully",
@@ -466,7 +510,10 @@ export async function getProducts(params: GetProductsParams = {}): Promise<
       ),
     );
 
-    const payload = {
+    const payload: Response<ProductColumn[]> & {
+      storeId: string;
+      total: number;
+    } = {
       success: true,
       status: 200,
       message: "Products retrieved successfully",
@@ -482,7 +529,12 @@ export async function getProducts(params: GetProductsParams = {}): Promise<
     const message =
       error instanceof Error ? error.message : "Failed to retrieve products";
 
-    return { success: false, status: 500, message };
+    return {
+      success: false,
+      status: 500,
+      message,
+      error: { code: "PRODUCTS_FETCH_FAILED", details: message },
+    };
   }
 }
 
@@ -495,6 +547,7 @@ export async function getProductsTotal(): Promise<Response<number>> {
       success: currentUserResult.success,
       status: currentUserResult.status,
       message: currentUserResult.message,
+      error: currentUserResult.error,
     };
   }
 
@@ -507,6 +560,7 @@ export async function getProductsTotal(): Promise<Response<number>> {
       success: false,
       status: 400,
       message: "You don't have a current store. Please create a store first.",
+      error: { code: "NO_CURRENT_STORE" },
     };
   }
 
@@ -539,7 +593,12 @@ export async function getProductsTotal(): Promise<Response<number>> {
         ? error.message
         : "Failed to retrieve products total";
 
-    return { success: false, status: 500, message };
+    return {
+      success: false,
+      status: 500,
+      message,
+      error: { code: "PRODUCTS_TOTAL_FETCH_FAILED", details: message },
+    };
   }
 }
 
@@ -552,6 +611,7 @@ export async function getProductsLowStock(): Promise<Response<number>> {
       success: currentUserResult.success,
       status: currentUserResult.status,
       message: currentUserResult.message,
+      error: currentUserResult.error,
     };
   }
 
@@ -564,6 +624,7 @@ export async function getProductsLowStock(): Promise<Response<number>> {
       success: false,
       status: 400,
       message: "You don't have a current store. Please create a store first.",
+      error: { code: "NO_CURRENT_STORE" },
     };
   }
 
@@ -596,6 +657,11 @@ export async function getProductsLowStock(): Promise<Response<number>> {
         ? error.message
         : "Failed to retrieve products low stock count";
 
-    return { success: false, status: 500, message };
+    return {
+      success: false,
+      status: 500,
+      message,
+      error: { code: "PRODUCTS_LOW_STOCK_FETCH_FAILED", details: message },
+    };
   }
 }

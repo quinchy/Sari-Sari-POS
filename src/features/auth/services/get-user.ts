@@ -21,6 +21,7 @@ export async function getSupabaseUser(): Promise<
       success: false,
       status: 401,
       message: "User not authenticated",
+      error: { code: "NOT_AUTHENTICATED", details: authError?.message },
     };
   }
 
@@ -49,6 +50,7 @@ export async function getUserFromPrisma(): Promise<
       success: false,
       status: 401,
       message: "User not authenticated",
+      error: { code: "NOT_AUTHENTICATED", details: authError?.message },
     };
   }
 
@@ -63,6 +65,7 @@ export async function getUserFromPrisma(): Promise<
       success: false,
       status: 404,
       message: "User not found",
+      error: { code: "USER_NOT_FOUND" },
     };
   }
 
