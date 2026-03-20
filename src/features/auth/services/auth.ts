@@ -1,4 +1,4 @@
-import type { User } from "@/../prisma/generated/client";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 import {
   getCachedCurrentUser,
   setCachedCurrentUser,
@@ -12,7 +12,7 @@ import { storeMemberRepository } from "@/repositories/store-member";
 import { userRepository } from "@/repositories/user";
 import type { Response as AuthResponse } from "@/types/shared/response";
 
-export async function getCurrentUser(): Promise<AuthResponse<{ user: User }>> {
+export async function getUser(): Promise<AuthResponse<{ user: SupabaseUser }>> {
   const supabase = await createClient();
 
   const {
@@ -27,13 +27,13 @@ export async function getCurrentUser(): Promise<AuthResponse<{ user: User }>> {
       success: false,
       status: 401,
       message: "User not authenticated",
-      error: { code: "NOT_AUTHENTICATED" },
+      error: { code: "NOT_AUTHENTICATED", details: authError?.message },
     };
   }
 
   const userId = authUser.id;
 
-  const cached = await getCachedCurrentUser<{ user: User }>(userId);
+  const cached = await getCachedCurrentUser<{ user: SupabaseUser }>(userId);
   const isCached = !!cached;
 
   if (isCached) {
@@ -45,22 +45,9 @@ export async function getCurrentUser(): Promise<AuthResponse<{ user: User }>> {
     };
   }
 
-  const user = await userRepository.getById(userId);
+  const payload = { user: authUser };
 
-  const userNotFound = !user;
-
-  if (userNotFound) {
-    return {
-      success: false,
-      status: 404,
-      message: "User not found",
-      error: { code: "USER_NOT_FOUND" },
-    };
-  }
-
-  const payload = { user };
-
-  await setCachedCurrentUser(userId, payload);
+  await setCachedCurrentUser<{ user: SupabaseUser }>(userId, payload);
 
   return {
     success: true,
