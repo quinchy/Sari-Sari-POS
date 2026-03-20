@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/features/auth/services/auth";
+import { getUser as getAccountUser } from "@/features/account/services/account";
 import {
   buildProductsCacheKey,
   getCachedProducts,
@@ -71,7 +71,7 @@ export async function createProduct(
     };
   }
 
-  const currentUserResult = await getCurrentUser();
+  const currentUserResult = await getAccountUser();
   const failedToGetCurrentUser = !currentUserResult.success;
 
   if (failedToGetCurrentUser) {
@@ -261,7 +261,7 @@ export async function getProducts(params: GetProductsParams = {}): Promise<
 > {
   const { page, limit, search, category } = params;
 
-  const currentUser = await getCurrentUser();
+  const currentUser = await getAccountUser();
 
   const errorCurrentUser = !currentUser.success;
 
@@ -539,7 +539,7 @@ export async function getProducts(params: GetProductsParams = {}): Promise<
 }
 
 export async function getProductsTotal(): Promise<Response<number>> {
-  const currentUserResult = await getCurrentUser();
+  const currentUserResult = await getAccountUser();
   const failedToGetCurrentUser = !currentUserResult.success;
 
   if (failedToGetCurrentUser) {
@@ -603,7 +603,7 @@ export async function getProductsTotal(): Promise<Response<number>> {
 }
 
 export async function getProductsLowStock(): Promise<Response<number>> {
-  const currentUserResult = await getCurrentUser();
+  const currentUserResult = await getAccountUser();
   const failedToGetCurrentUser = !currentUserResult.success;
 
   if (failedToGetCurrentUser) {

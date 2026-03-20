@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/features/auth/services/auth";
+import { getUser as getAccountUser } from "@/features/account/services/account";
 import {
   buildGCashEarningsCacheKey,
   getCachedGCashEarnings,
@@ -39,7 +39,7 @@ export async function createGCashEarning(
     };
   }
 
-  const currentUserResult = await getCurrentUser();
+  const currentUserResult = await getAccountUser();
   const failedToGetCurrentUser = !currentUserResult.success;
 
   if (failedToGetCurrentUser) {
@@ -242,7 +242,7 @@ export async function getGCashEarning(
 > {
   const { page, limit, year, month } = params;
 
-  const currentUser = await getCurrentUser();
+  const currentUser = await getAccountUser();
 
   const errorCurrentUser = !currentUser.success;
 
@@ -407,7 +407,7 @@ export async function getGCashEarning(
 }
 
 export async function getGCashEarningTotal(): Promise<Response<number>> {
-  const currentUserResult = await getCurrentUser();
+  const currentUserResult = await getAccountUser();
   const failedToGetCurrentUser = !currentUserResult.success;
 
   if (failedToGetCurrentUser) {
@@ -473,7 +473,7 @@ export async function getGCashEarningTotal(): Promise<Response<number>> {
 export async function getGCashEarningExtreme(
   type: "highest" | "lowest",
 ): Promise<Response<{ id: string; amount: number; created_at: Date }>> {
-  const currentUserResult = await getCurrentUser();
+  const currentUserResult = await getAccountUser();
   const failedToGetCurrentUser = !currentUserResult.success;
 
   if (failedToGetCurrentUser) {
