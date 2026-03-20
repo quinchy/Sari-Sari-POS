@@ -1,10 +1,11 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
 import {
   createGCashEarning,
   deleteGCashEarning,
   getGCashEarning,
   updateGCashEarning,
 } from "@/features/gcash/services/gcash";
+import { sendResponse } from "@/lib/response";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -31,17 +32,20 @@ export async function GET(request: NextRequest) {
   const isGCashEarningError = !gcashEarning.success;
 
   if (isGCashEarningError) {
-    return NextResponse.json(
-      { success: gcashEarning.success, message: gcashEarning.message },
-      { status: gcashEarning.status },
-    );
+    return sendResponse({
+      success: gcashEarning.success,
+      status: gcashEarning.status,
+      message: gcashEarning.message,
+      error: { code: "GET_GCASH_EARNING_ERROR" },
+    });
   }
 
-  return NextResponse.json(
-    {
-      success: gcashEarning.success,
-      message: gcashEarning.message,
-      data: gcashEarning.data ?? [],
+  return sendResponse({
+    success: gcashEarning.success,
+    status: gcashEarning.status,
+    message: gcashEarning.message,
+    data: {
+      items: gcashEarning.data ?? [],
       pagination: {
         page: gcashEarning.page,
         limit: gcashEarning.limit,
@@ -49,8 +53,7 @@ export async function GET(request: NextRequest) {
         totalPages: gcashEarning.totalPages,
       },
     },
-    { status: gcashEarning.status },
-  );
+  });
 }
 
 export async function POST(request: NextRequest) {
@@ -60,23 +63,20 @@ export async function POST(request: NextRequest) {
   const createdGCashEarningError = !createdGCashEarning.success;
 
   if (createdGCashEarningError) {
-    return NextResponse.json(
-      {
-        success: createdGCashEarning.success,
-        message: createdGCashEarning.message,
-      },
-      { status: createdGCashEarning.status },
-    );
+    return sendResponse({
+      success: createdGCashEarning.success,
+      status: createdGCashEarning.status,
+      message: createdGCashEarning.message,
+      error: { code: "CREATE_GCASH_EARNING_FAILED" },
+    });
   }
 
-  return NextResponse.json(
-    {
-      success: createdGCashEarning.success,
-      message: createdGCashEarning.message,
-      data: createdGCashEarning.data,
-    },
-    { status: createdGCashEarning.status },
-  );
+  return sendResponse({
+    success: createdGCashEarning.success,
+    status: createdGCashEarning.status,
+    message: createdGCashEarning.message,
+    data: createdGCashEarning.data,
+  });
 }
 
 export async function PUT(request: NextRequest) {
@@ -86,23 +86,20 @@ export async function PUT(request: NextRequest) {
   const updatedGCashEarningError = !updatedGCashEarning.success;
 
   if (updatedGCashEarningError) {
-    return NextResponse.json(
-      {
-        success: updatedGCashEarning.success,
-        message: updatedGCashEarning.message,
-      },
-      { status: updatedGCashEarning.status },
-    );
+    return sendResponse({
+      success: updatedGCashEarning.success,
+      status: updatedGCashEarning.status,
+      message: updatedGCashEarning.message,
+      error: { code: "UPDATE_GCASH_EARNING_FAILED" },
+    });
   }
 
-  return NextResponse.json(
-    {
-      success: updatedGCashEarning.success,
-      message: updatedGCashEarning.message,
-      data: updatedGCashEarning.data,
-    },
-    { status: updatedGCashEarning.status },
-  );
+  return sendResponse({
+    success: updatedGCashEarning.success,
+    status: updatedGCashEarning.status,
+    message: updatedGCashEarning.message,
+    data: updatedGCashEarning.data,
+  });
 }
 
 export async function DELETE(request: NextRequest) {
@@ -112,21 +109,18 @@ export async function DELETE(request: NextRequest) {
   const deletedGCashEarningError = !deletedGCashEarning.success;
 
   if (deletedGCashEarningError) {
-    return NextResponse.json(
-      {
-        success: deletedGCashEarning.success,
-        message: deletedGCashEarning.message,
-      },
-      { status: deletedGCashEarning.status },
-    );
+    return sendResponse({
+      success: deletedGCashEarning.success,
+      status: deletedGCashEarning.status,
+      message: deletedGCashEarning.message,
+      error: { code: "DELETE_GCASH_EARNING_FAILED" },
+    });
   }
 
-  return NextResponse.json(
-    {
-      success: deletedGCashEarning.success,
-      message: deletedGCashEarning.message,
-      data: deletedGCashEarning.data,
-    },
-    { status: deletedGCashEarning.status },
-  );
+  return sendResponse({
+    success: deletedGCashEarning.success,
+    status: deletedGCashEarning.status,
+    message: deletedGCashEarning.message,
+    data: deletedGCashEarning.data,
+  });
 }

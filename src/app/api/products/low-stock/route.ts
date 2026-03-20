@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { getProductsLowStock } from "@/features/products/services/products";
+import { sendResponse } from "@/lib/response";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -9,18 +9,18 @@ export async function GET() {
   const isLowStockError = !lowStock.success;
 
   if (isLowStockError) {
-    return NextResponse.json(
-      { success: lowStock.success, message: lowStock.message },
-      { status: lowStock.status },
-    );
+    return sendResponse({
+      success: lowStock.success,
+      status: lowStock.status,
+      message: lowStock.message,
+      error: { code: "GET_LOW_STOCK_FAILED" },
+    });
   }
 
-  return NextResponse.json(
-    {
-      success: lowStock.success,
-      message: lowStock.message,
-      data: lowStock.data,
-    },
-    { status: lowStock.status },
-  );
+  return sendResponse({
+    success: lowStock.success,
+    status: lowStock.status,
+    message: lowStock.message,
+    data: lowStock.data,
+  });
 }

@@ -1,5 +1,6 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
 import { getSupabaseUser } from "@/features/auth/services/get-user";
+import { sendResponse } from "@/lib/response";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -10,28 +11,27 @@ export async function GET(_request: NextRequest) {
     const userError = !user.success;
 
     if (userError) {
-      return NextResponse.json(
-        { success: user.success, message: user.message },
-        { status: user.status },
-      );
+      return sendResponse({
+        success: user.success,
+        status: user.status,
+        message: user.message,
+        error: { code: "GET_SUPABASE_USER_FAILED" },
+      });
     }
 
-    return NextResponse.json(
-      {
-        success: user.success,
-        message: user.message,
-        data: user.data,
-      },
-      { status: user.status },
-    );
+    return sendResponse({
+      success: user.success,
+      status: user.status,
+      message: user.message,
+      data: user.data,
+    });
   } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        message:
-          error instanceof Error ? error.message : "Internal server error",
-      },
-      { status: 500 },
-    );
+    return sendResponse({
+      success: false,
+      status: 500,
+      message:
+        error instanceof Error ? error.message : "Internal server error",
+      error: { code: "INTERNAL_SERVER_ERROR" },
+    });
   }
 }

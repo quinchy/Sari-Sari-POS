@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
 import { getProductsTotal } from "@/features/products/services/products";
+import { sendResponse } from "@/lib/response";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -9,18 +9,18 @@ export async function GET() {
   const isTotalError = !total.success;
 
   if (isTotalError) {
-    return NextResponse.json(
-      { success: total.success, message: total.message },
-      { status: total.status },
-    );
+    return sendResponse({
+      success: total.success,
+      status: total.status,
+      message: total.message,
+      error: { code: "GET_PRODUCTS_TOTAL_FAILED" },
+    });
   }
 
-  return NextResponse.json(
-    {
-      success: total.success,
-      message: total.message,
-      data: total.data,
-    },
-    { status: total.status },
-  );
+  return sendResponse({
+    success: total.success,
+    status: total.status,
+    message: total.message,
+    data: total.data,
+  });
 }

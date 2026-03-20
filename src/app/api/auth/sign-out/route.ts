@@ -1,31 +1,32 @@
-import { NextResponse } from "next/server";
 import { signOut } from "@/features/auth/services/auth";
+import { sendResponse } from "@/lib/response";
 
 export async function POST() {
   try {
     const result = await signOut();
 
-    return NextResponse.json(
-      result.success
-        ? {
-            success: true,
-            message: result.message,
-            data: result.data,
-          }
-        : {
-            success: false,
-            message: result.message,
-          },
-      { status: result.status },
-    );
+    if (!result.success) {
+      return sendResponse({
+        success: result.success,
+        status: result.status,
+        message: result.message,
+        error: { code: "SIGN_OUT_FAILED" },
+      });
+    }
+
+    return sendResponse({
+      success: result.success,
+      status: result.status,
+      message: result.message,
+      data: result.data,
+    });
   } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        message:
-          error instanceof Error ? error.message : "Internal server error",
-      },
-      { status: 500 },
-    );
+    return sendResponse({
+      success: false,
+      status: 500,
+      message:
+        error instanceof Error ? error.message : "Internal server error",
+      error: { code: "INTERNAL_SERVER_ERROR" },
+    });
   }
 }

@@ -1,5 +1,6 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
 import { signUp } from "@/features/auth/services/auth";
+import { sendResponse } from "@/lib/response";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,31 +10,27 @@ export async function POST(request: NextRequest) {
     const signedUpError = !signedUp.success;
 
     if (signedUpError) {
-      return NextResponse.json(
-        {
-          success: signedUp.success,
-          message: signedUp.message,
-        },
-        { status: signedUp.status },
-      );
+      return sendResponse({
+        success: signedUp.success,
+        status: signedUp.status,
+        message: signedUp.message,
+        error: { code: "SIGN_UP_FAILED" },
+      });
     }
 
-    return NextResponse.json(
-      {
-        success: signedUp.success,
-        message: signedUp.message,
-        data: signedUp.data,
-      },
-      { status: signedUp.status },
-    );
+    return sendResponse({
+      success: signedUp.success,
+      status: signedUp.status,
+      message: signedUp.message,
+      data: signedUp.data,
+    });
   } catch (error) {
-    return NextResponse.json(
-      {
-        success: false,
-        message:
-          error instanceof Error ? error.message : "Internal server error",
-      },
-      { status: 500 },
-    );
+    return sendResponse({
+      success: false,
+      status: 500,
+      message:
+        error instanceof Error ? error.message : "Internal server error",
+      error: { code: "INTERNAL_SERVER_ERROR" },
+    });
   }
 }

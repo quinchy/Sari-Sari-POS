@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
 import {
   createProduct,
   deleteProduct,
@@ -7,6 +7,7 @@ import {
   getProductsTotal,
   updateProduct,
 } from "@/features/products/services/products";
+import { sendResponse } from "@/lib/response";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -31,17 +32,20 @@ export async function GET(request: NextRequest) {
   const isProductsError = !products.success;
 
   if (isProductsError) {
-    return NextResponse.json(
-      { success: products.success, message: products.message },
-      { status: products.status },
-    );
+    return sendResponse({
+      success: products.success,
+      status: products.status,
+      message: products.message,
+      error: { code: "GET_PRODUCTS_FAILED" },
+    });
   }
 
-  return NextResponse.json(
-    {
-      success: products.success,
-      message: products.message,
-      data: products.data ?? [],
+  return sendResponse({
+    success: products.success,
+    status: products.status,
+    message: products.message,
+    data: {
+      items: products.data ?? [],
       pagination: {
         page: products.page,
         limit: products.limit,
@@ -49,8 +53,7 @@ export async function GET(request: NextRequest) {
         totalPages: products.totalPages,
       },
     },
-    { status: products.status },
-  );
+  });
 }
 
 export async function POST(request: NextRequest) {
@@ -60,23 +63,20 @@ export async function POST(request: NextRequest) {
   const createdProductError = !createdProduct.success;
 
   if (createdProductError) {
-    return NextResponse.json(
-      {
-        success: createdProduct.success,
-        message: createdProduct.message,
-      },
-      { status: createdProduct.status },
-    );
+    return sendResponse({
+      success: createdProduct.success,
+      status: createdProduct.status,
+      message: createdProduct.message,
+      error: { code: "CREATE_PRODUCT_FAILED" },
+    });
   }
 
-  return NextResponse.json(
-    {
-      success: createdProduct.success,
-      message: createdProduct.message,
-      data: createdProduct.data,
-    },
-    { status: createdProduct.status },
-  );
+  return sendResponse({
+    success: createdProduct.success,
+    status: createdProduct.status,
+    message: createdProduct.message,
+    data: createdProduct.data,
+  });
 }
 
 export async function PUT(request: NextRequest) {
@@ -86,23 +86,20 @@ export async function PUT(request: NextRequest) {
   const updatedProductError = !updatedProduct.success;
 
   if (updatedProductError) {
-    return NextResponse.json(
-      {
-        success: updatedProduct.success,
-        message: updatedProduct.message,
-      },
-      { status: updatedProduct.status },
-    );
+    return sendResponse({
+      success: updatedProduct.success,
+      status: updatedProduct.status,
+      message: updatedProduct.message,
+      error: { code: "UPDATE_PRODUCT_FAILED" },
+    });
   }
 
-  return NextResponse.json(
-    {
-      success: updatedProduct.success,
-      message: updatedProduct.message,
-      data: updatedProduct.data,
-    },
-    { status: updatedProduct.status },
-  );
+  return sendResponse({
+    success: updatedProduct.success,
+    status: updatedProduct.status,
+    message: updatedProduct.message,
+    data: updatedProduct.data,
+  });
 }
 
 export async function DELETE(request: NextRequest) {
@@ -112,21 +109,18 @@ export async function DELETE(request: NextRequest) {
   const deletedProductError = !deletedProduct.success;
 
   if (deletedProductError) {
-    return NextResponse.json(
-      {
-        success: deletedProduct.success,
-        message: deletedProduct.message,
-      },
-      { status: deletedProduct.status },
-    );
+    return sendResponse({
+      success: deletedProduct.success,
+      status: deletedProduct.status,
+      message: deletedProduct.message,
+      error: { code: "DELETE_PRODUCT_FAILED" },
+    });
   }
 
-  return NextResponse.json(
-    {
-      success: deletedProduct.success,
-      message: deletedProduct.message,
-      data: deletedProduct.data,
-    },
-    { status: deletedProduct.status },
-  );
+  return sendResponse({
+    success: deletedProduct.success,
+    status: deletedProduct.status,
+    message: deletedProduct.message,
+    data: deletedProduct.data,
+  });
 }

@@ -1,7 +1,8 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest } from "next/server";
 import { getCurrentUser } from "@/features/auth/services/auth";
 import { createClient } from "@/lib/supabase/server";
 import { uploadToSupabaseStorage } from "@/lib/supabase/storage";
+import { sendResponse } from "@/lib/response";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -13,20 +14,24 @@ export async function POST(request: NextRequest) {
   const currentUserResult = await getCurrentUser();
 
   if (!currentUserResult.success) {
-    return NextResponse.json(
-      { success: false, message: currentUserResult.message },
-      { status: currentUserResult.status },
-    );
+    return sendResponse({
+      success: false,
+      status: currentUserResult.status,
+      message: currentUserResult.message,
+      error: { code: "GET_CURRENT_USER_FAILED" },
+    });
   }
 
   const user = currentUserResult.data.user;
   const storeId = user?.currentStoreId;
 
   if (!storeId) {
-    return NextResponse.json(
-      { success: false, message: "No current store found" },
-      { status: 400 },
-    );
+    return sendResponse({
+      success: false,
+      status: 400,
+      message: "No current store found",
+      error: { code: "NO_STORE_FOUND" },
+    });
   }
 
   const formData = await request.formData();
@@ -34,34 +39,39 @@ export async function POST(request: NextRequest) {
   const name = formData.get("name") as string | null;
 
   if (!file) {
-    return NextResponse.json(
-      { success: false, message: "No file provided" },
-      { status: 400 },
-    );
+    return sendResponse({
+      success: false,
+      status: 400,
+      message: "No file provided",
+      error: { code: "NO_FILE_PROVIDED" },
+    });
   }
 
   if (!name) {
-    return NextResponse.json(
-      { success: false, message: "Product name is required" },
-      { status: 400 },
-    );
+    return sendResponse({
+      success: false,
+      status: 400,
+      message: "Product name is required",
+      error: { code: "NO_NAME_PROVIDED" },
+    });
   }
 
   if (file.size > MAX_FILE_SIZE) {
-    return NextResponse.json(
-      { success: false, message: "File must be less than 5MB" },
-      { status: 400 },
-    );
+    return sendResponse({
+      success: false,
+      status: 400,
+      message: "File must be less than 5MB",
+      error: { code: "FILE_TOO_LARGE" },
+    });
   }
 
   if (!ALLOWED_TYPES.includes(file.type)) {
-    return NextResponse.json(
-      {
-        success: false,
-        message: "File must be a valid image (JPEG, PNG, WebP, or GIF)",
-      },
-      { status: 400 },
-    );
+    return sendResponse({
+      success: false,
+      status: 400,
+      message: "File must be a valid image (JPEG, PNG, WebP, or GIF)",
+      error: { code: "INVALID_FILE_TYPE" },
+    });
   }
 
   try {
@@ -87,8 +97,9 @@ export async function POST(request: NextRequest) {
     });
 
     // Return the path to be stored in the database
-    return NextResponse.json({
+    return sendResponse({
       success: true,
+      status: 200,
       message: "Thumbnail uploaded successfully",
       data: {
         thumbnailId: productId,
@@ -99,6 +110,11 @@ export async function POST(request: NextRequest) {
     const message =
       error instanceof Error ? error.message : "Failed to upload thumbnail";
 
-    return NextResponse.json({ success: false, message }, { status: 500 });
+    return sendResponse({
+      success: false,
+      status: 500,
+      message,
+      error: { code: "UPLOAD_FAILED" },
+    });
   }
 }
