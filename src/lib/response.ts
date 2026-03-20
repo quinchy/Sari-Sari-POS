@@ -1,39 +1,11 @@
 import { NextResponse } from "next/server";
-
-export type ErrorDetails = {
-  code: string;
-  details?: unknown;
-};
-
-export type SuccessResponse<T> = Readonly<{
-  success: true;
-  status: number;
-  message: string;
-  data: T;
-}>;
-
-export type FailureResponse = Readonly<{
-  success: false;
-  status: number;
-  message: string;
-  error: ErrorDetails;
-}>;
-
-export type ApiResponse<T> = SuccessResponse<T> | FailureResponse;
-
-type SuccessParams<T> = {
-  success: true;
-  status: number;
-  message: string;
-  data: T;
-};
-
-type FailureParams = {
-  success: false;
-  status: number;
-  message: string;
-  error: ErrorDetails;
-};
+import type {
+  ApiResponse,
+  FailureResponse,
+  FailureParams,
+  SuccessResponse,
+  SuccessParams,
+} from "@/types/shared/response";
 
 export function sendResponse<T>(
   params: SuccessParams<T> | FailureParams
