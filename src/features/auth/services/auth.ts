@@ -27,6 +27,7 @@ export async function getCurrentUser(): Promise<AuthResponse<{ user: User }>> {
       success: false,
       status: 401,
       message: "User not authenticated",
+      error: { code: "NOT_AUTHENTICATED" },
     };
   }
 
@@ -53,6 +54,7 @@ export async function getCurrentUser(): Promise<AuthResponse<{ user: User }>> {
       success: false,
       status: 404,
       message: "User not found",
+      error: { code: "USER_NOT_FOUND" },
     };
   }
 
@@ -79,6 +81,7 @@ export async function signIn(
       success: false,
       status: 400,
       message: `Validation failed: ${formatZodError(parsed.error)}`,
+      error: { code: "VALIDATION_FAILED", details: parsed.error.errors },
     };
   }
 
@@ -118,6 +121,7 @@ export async function signUp(
       success: false,
       status: 400,
       message: `Validation failed: ${formatZodError(parsed.error)}`,
+      error: { code: "VALIDATION_FAILED", details: parsed.error.errors },
     };
   }
 
