@@ -61,11 +61,19 @@ The features folder follows the same structure or add these folder if necessary:
 - **Validation**: Use Zod for both client-side and server-side validation, with inferred types where applicable.
 - **API Routes**: Place in `app/api/` using Next.js Route Handlers (`route.ts`) and follow RESTful resource-based routing. Use noun-based paths such as `/api/users` and `/api/users/[id]`, and let the HTTP method (`GET`, `POST`, `PUT`, `PATCH`, `DELETE`) define the action instead of action-based endpoints like `/api/get-users` or `/api/create-user` which should be avoided at all cause.
 - **Route Handler responsibility**: Keep Route Handlers thin. They should mainly parse the request, call the appropriate service, and return the service result using `NextResponse.json()`. Do not place business logic, database logic, caching logic, or heavy validation directly inside Route Handlers.
-- **Response contract**: Maintain a consistent API response shape for all endpoints. Every response should include `status`, `success`, and `message`. Successful responses should also include `data`. Failed responses should also include `error`, where `error` contains `code` and `details`.
+- **Response contract**: Use the `sendResponse` utility from `@/lib/response`. Response shape must be exactly: `success`, `status`, `message`, and either `data` (for success) or `error` (for failure). Never add extra top-level properties—put additional data inside `data`.
+- **Types / DRY**: Always reuse existing types from `src/types/shared/` instead of redefining them. Use TypeScript's `type` and `interface` with `extends` for composition. Keep a single source of truth for each type—don't duplicate types across files.
 - **Status codes**: Always return the appropriate HTTP status code based on the result of the service, such as `200`, `201`, `400`, `401`, `403`, `404`, `409`, `422`, or `500`. Services should decide the correct response status, and Route Handlers should preserve and return it.
 - **ORM / database source of truth**: This project uses Prisma as the main database access layer. Define and update models in `root/prisma/schema.prisma`.
 - **Prisma types**: Prefer Prisma's generated model and query typings from `root/prisma/generated/client` instead of redefining database model types manually.
 - **Supabase usage**: This project uses Supabase as the database provider/infrastructure, but application data access should go through Prisma, not through direct Supabase queries or client calls.
+
+## DRY Principles for Types
+
+- **Centralize shared types**: Define reusable types in `src/types/shared/` and import them across the codebase. Never duplicate type definitions.
+- **Use TypeScript's extends**: When creating types that build upon existing ones, use `extends` or intersection types instead of redefining properties.
+- **Import from single source**: If a type is used in multiple places (e.g., `ErrorDetails`, `SuccessResponse`, `FailureResponse`), define it once in `src/types/shared/` and re-export where needed.
+- **Leverage type inference**: Let TypeScript infer types from existing code (e.g., Zod schemas, Prisma models) rather than manually defining them.
 
 ## Next.js Best Practices
 
