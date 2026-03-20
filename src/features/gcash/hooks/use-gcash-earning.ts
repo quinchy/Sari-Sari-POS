@@ -124,7 +124,7 @@ export const useGetGCashEarning = (params: UseGetGCashEarningParams = {}) => {
     placeholderData: isPaginated ? keepPreviousData : undefined,
   });
 
-  const gcashEarnings = (data?.data ?? []) as GCashEarningResponse[];
+  const gcashEarnings = (data?.data?.items ?? []) as GCashEarningResponse[];
 
   return {
     gcashEarnings,
@@ -133,7 +133,7 @@ export const useGetGCashEarning = (params: UseGetGCashEarningParams = {}) => {
     isGCashEarningsEmpty: isSuccess && gcashEarnings.length === 0,
     gcashEarningsError: error,
     refetchGCashEarnings: refetch,
-    pagination: data?.pagination ?? {
+    pagination: data?.data?.pagination ?? {
       page: 1,
       limit: 15,
       total: 0,

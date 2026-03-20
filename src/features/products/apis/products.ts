@@ -10,8 +10,10 @@ export const getProducts = async (
 ): Promise<{
   success: boolean;
   message: string;
-  data?: ProductColumn[];
-  pagination?: Pagination;
+  data?: {
+    items: ProductColumn[];
+    pagination: Pagination;
+  };
 }> => {
   const urlParams = new URLSearchParams();
 

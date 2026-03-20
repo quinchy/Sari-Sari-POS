@@ -12,8 +12,10 @@ export const getGCashEarning = async (
 ): Promise<{
   success: boolean;
   message: string;
-  data?: GCashEarningResponse[];
-  pagination?: Pagination;
+  data?: {
+    items: GCashEarningResponse[];
+    pagination: Pagination;
+  };
 }> => {
   const urlParams = new URLSearchParams();
 
